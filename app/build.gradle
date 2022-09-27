@@ -3,6 +3,11 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+
+def keyProperty = rootProject.file('local.properties')
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keyProperty))
+
 android {
     namespace 'com.thoughtworks.androidtrain'
     compileSdk 32
@@ -17,8 +22,27 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        debug {
+            storeFile file(keystoreProperties['storeDebugFile'])
+            storePassword keystoreProperties['storeDebugPassword']
+            keyAlias keystoreProperties['keyDebugAlias']
+            keyPassword keystoreProperties['keyDebugPassword']
+        }
+        release {
+            storeFile file(keystoreProperties['storeReleaseFile'])
+            storePassword keystoreProperties['storeReleasePassword']
+            keyAlias keystoreProperties['keyReleaseAlias']
+            keyPassword keystoreProperties['keyReleasePassword']
+        }
+    }
+
     buildTypes {
         release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
