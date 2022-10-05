@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">HelloWorld-Kotlin</string>
+    <string name="to" >to</string>
+    <string name="subject">subject</string>
+    <string name="message">message</string>
+    <string name="send">send</string>
+    <string name="i_am_first_layer">我是第一层</string>
+    <string name="i_am_second_layer">我是第二层</string>
+    <string name="welcome">welcome</string>
+    <string name="hello">hello</string>
 </resources>
