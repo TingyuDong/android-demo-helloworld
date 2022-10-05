@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HelloWorld-Kotlin</string>
+    <string name="to">到达</string>
+    <string name="subject">物体</string>
+    <string name="message">信息</string>
+    <string name="send">发送</string>
+    <string name="i_am_first_layer">我是第一层</string>
+    <string name="i_am_second_layer">我是第二层</string>
+    <string name="welcome">欢迎</string>
+    <string name="hello">你好</string>
+    <string name="button_1">按钮1</string>
+    <string name="button_2">按钮2</string>
+    <string name="button_3">按钮3</string>
+</resources>
