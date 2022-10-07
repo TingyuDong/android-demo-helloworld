@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scroll)
+        setContentView(R.layout.activity_frame_homework)
         Log.i(List.TAG,"onCreate")
     }
 }
