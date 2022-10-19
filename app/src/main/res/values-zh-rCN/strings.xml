@@ -20,4 +20,9 @@
     <string name="button_8">按钮8</string>
     <string name="button_9">按钮9</string>
     <string name="button_10">按钮10</string>
+    <string name="hello_2">你好！</string>
+    <string name="login">登陆</string>
+    <string name="signup">注册</string>
+    <string name="reminder">提醒</string>
+    <string name="done">已完成</string>
 </resources>

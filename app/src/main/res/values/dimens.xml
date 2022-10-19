@@ -2,4 +2,7 @@
 <resources>
     <dimen name="dimen_300">300dp</dimen>
     <dimen name="dimen_150">150dp</dimen>
+    <dimen name="dimen_16">16dp</dimen>
+    <dimen name="dimen_32">32dp</dimen>
+    <dimen name="dimen_200">200dp</dimen>
 </resources>

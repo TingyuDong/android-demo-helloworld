@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">HelloWorld-Kotlin</string>
-    <string name="to" >to</string>
+    <string name="to">to</string>
     <string name="subject">subject</string>
     <string name="message">message</string>
     <string name="send">send</string>
@@ -8,6 +8,7 @@
     <string name="i_am_second_layer">second level</string>
     <string name="welcome">welcome</string>
     <string name="hello">hello</string>
+    <string name="hello_2">Hello!</string>
     <string name="button_1">button 1</string>
     <string name="button_2">button 2</string>
     <string name="button_3">button 3</string>
@@ -19,4 +20,8 @@
     <string name="button_8">button 8</string>
     <string name="button_9">button 9</string>
     <string name="button_10">button 10</string>
+    <string name="reminder">reminder</string>
+    <string name="done">done</string>
+    <string name="signup">Signup</string>
+    <string name="login">Login</string>
 </resources>
