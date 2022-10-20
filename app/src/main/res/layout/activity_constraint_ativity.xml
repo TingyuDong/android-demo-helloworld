@@ -30,16 +30,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
     </Button>
+
     <Button
         android:id="@+id/login_button"
         android:layout_width="@dimen/dimen_200"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/gray"
+        android:onClick="login"
         android:text="@string/login"
         android:textAllCaps="false"
-        android:backgroundTint="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-    </Button>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
