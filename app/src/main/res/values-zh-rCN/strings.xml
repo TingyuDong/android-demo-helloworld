@@ -25,4 +25,10 @@
     <string name="signup">注册</string>
     <string name="reminder">提醒</string>
     <string name="done">已完成</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="remember_me">记住我</string>
+    <string name="fogot_password">忘记密码</string>
+    <string name="or_connect_with">或联系</string>
+    <string name="sign_up_with_email">用邮箱登陆</string>
 </resources>
