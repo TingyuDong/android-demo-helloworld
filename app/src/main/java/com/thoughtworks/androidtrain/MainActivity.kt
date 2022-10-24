@@ -38,6 +38,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    private fun showContact(cursor: Cursor) {
+        if (cursor.moveToFirst()) {
+            val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+            val phoneNum = cursor.getString(numberIndex)
+            //                                val nameIndex=cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+            //                                val contactName=cursor.getString(nameIndex)
+            Toast.makeText(this, "$phoneNum", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
