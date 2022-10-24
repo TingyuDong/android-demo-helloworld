@@ -35,4 +35,7 @@
     <string name="logo">标志</string>
     <string name="facebook_button">FaceBook按钮</string>
     <string name="twitter_button">Twitter按钮</string>
+    <string name="fragment">fragment</string>
+    <string name="android">安卓</string>
+    <string name="java">Java</string>
 </resources>
