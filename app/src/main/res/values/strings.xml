@@ -37,4 +37,5 @@
     <string name="fragment">fragment</string>
     <string name="android">Android</string>
     <string name="java">Java</string>
+    <string name="java_introduce" translatable="false">Java is a High Level, class-based, object-oriented programming language that is designed to have as few implementation dependencies as possible.</string>
 </resources>
