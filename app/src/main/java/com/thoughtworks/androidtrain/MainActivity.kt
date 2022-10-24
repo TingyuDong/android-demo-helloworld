@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             val phoneNum = cursor.getString(numberIndex)
             //                                val nameIndex=cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
             //                                val contactName=cursor.getString(nameIndex)
-            Toast.makeText(this, "$phoneNum", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, phoneNum, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -90,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         Log.i(List.TAG, "onDestroy")
     }
 
-    fun sendMessage(view: View) {
+    fun sendMessage() {
 //        val editText = findViewById<EditText>(R.id.reminder)
 //        val message = editText.text.toString()
 //        val intent = Intent(this, ConstraintAtivity::class.java).apply {
