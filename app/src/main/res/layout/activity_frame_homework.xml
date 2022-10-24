@@ -34,10 +34,11 @@
                 android:backgroundTint="@color/gray" />
 
             <Button
+                android:id="@+id/btn_pick_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/button_3"
+                android:text="@string/pick_contact"
                 android:backgroundTint="@color/gray" />
 
             <Button
