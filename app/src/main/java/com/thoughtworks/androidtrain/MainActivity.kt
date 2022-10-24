@@ -22,15 +22,13 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.data != null && it.resultCode == Activity.RESULT_OK) {
                 val contactUri: Uri? = it.data!!.data
-                val projection: Array<String> = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                val projection: Array<String> =
+                    arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
                 if (contactUri != null) {
-                    contentResolver.query(contactUri, projection, null, null, null).use { cursor ->
+                    contentResolver.query(contactUri, projection, null, null,
+                        null).use { cursor ->
                         if (cursor != null) {
-                            if (cursor.moveToFirst()) {
-                                val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-                                val phoneNum = cursor.getString(numberIndex)
-                                Toast.makeText(this, "$phoneNum", Toast.LENGTH_SHORT).show();
-                            }
+                            showContact(cursor)
                         }
                     }
                 }
