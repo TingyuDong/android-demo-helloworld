@@ -24,10 +24,12 @@ class MainActivity : AppCompatActivity() {
                 val projection: Array<String> =
                     arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
                 if (contactUri != null) {
-                    contentResolver.query(contactUri, projection, null, null,
-                        null).use { cursor ->
+                    contentResolver.query(
+                        contactUri, projection, null, null, null
+                    ).use { cursor ->
                         if (cursor != null) {
-                            showContact(cursor)
+                            showContactToast(cursor)
+
                         }
                     }
                 }
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private fun showContact(cursor: Cursor) {
+    private fun showContactToast(cursor: Cursor) {
         if (cursor.moveToFirst()) {
             val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
             val phoneNum = cursor.getString(numberIndex)
