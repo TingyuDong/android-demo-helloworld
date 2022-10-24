@@ -2,12 +2,15 @@ package com.thoughtworks.androidtrain
 
 import android.app.Activity
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 
 class MainActivity : AppCompatActivity() {
@@ -17,9 +20,21 @@ class MainActivity : AppCompatActivity() {
 
     private val startActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            //此处是跳转的result回调方法
             if (it.data != null && it.resultCode == Activity.RESULT_OK) {
-
+                val contactUri: Uri? = it.data!!.data
+                val projection: Array<String> = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                if (contactUri != null) {
+                    contentResolver.query(contactUri, projection, null, null, null).use { cursor ->
+                        if (cursor != null) {
+                            if (cursor.moveToFirst()) {
+                                val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                                val phoneNum = cursor.getString(numberIndex)
+                                Toast.makeText(this, "$phoneNum", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+                Log.i(List.TAG, it.data!!.data.toString())
             }
         }
 
