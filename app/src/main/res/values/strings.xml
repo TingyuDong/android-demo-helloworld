@@ -34,4 +34,5 @@
     <string name="logo">logo</string>
     <string name="facebook_button">facebook_button</string>
     <string name="twitter_button">twitter_button</string>
+    <string name="fragment">fragment</string>
 </resources>

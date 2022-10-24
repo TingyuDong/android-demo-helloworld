@@ -60,24 +60,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun addBtnEvent() {
+        val btnPickContact: Button = findViewById(R.id.btn_pick_contact)
+        val btnFragment: Button = findViewById(R.id.btn_fragment)
+        btnPickContact.setOnClickListener {
+            pickContact()
+        }
+        btnFragment.setOnClickListener {
+            fragment()
+        }
+
+    }
+
+    private fun pickContact() {
+        val intent = Intent(Intent.ACTION_PICK, Uri.parse("content://contacts")).apply {
+            addCategory(Intent.CATEGORY_DEFAULT)
+            type = "vnd.android.cursor.dir/phone_v2"
+        }
+        startActivity.launch(intent)
+    }
+
+    private fun fragment(){
+        val intent = Intent(this,LanguageSelectionActivity::class.java)
+        startActivity(intent)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_frame_homework)
         Log.i(List.TAG, "onCreate")
-        viewContact()
+        addBtnEvent()
     }
 
-    private fun viewContact() {
-        val btnPickContact: Button = findViewById(R.id.btn_pick_contact)
-        btnPickContact.setOnClickListener() {
-            val intent = Intent(Intent.ACTION_PICK, Uri.parse("content://contacts")).apply {
-                addCategory(Intent.CATEGORY_DEFAULT)
-                type = "vnd.android.cursor.dir/phone_v2"
-            }
-            startActivity.launch(intent)
-        }
-    }
 
     override fun onStart() {
         super.onStart()
