@@ -14,7 +14,8 @@
         android:background="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></ImageView>
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/logo" />
 
     <EditText
         android:id="@+id/username"
@@ -26,7 +27,9 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo"></EditText>
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        android:autofillHints=""
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/password"
@@ -38,7 +41,9 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/username"></EditText>
+        app:layout_constraintTop_toBottomOf="@id/username"
+        android:autofillHints=""
+        android:inputType="textPassword" />
 
     <CheckBox
         android:id="@+id/checkbox"
@@ -46,28 +51,28 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         app:layout_constraintStart_toStartOf="@id/password"
-        app:layout_constraintTop_toBottomOf="@id/password"></CheckBox>
+        app:layout_constraintTop_toBottomOf="@id/password" />
 
     <TextView
         android:id="@+id/remember_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="22.5dp"
         android:text="@string/remember_me"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/password"
-        app:layout_constraintTop_toBottomOf="@id/password"></TextView>
+        app:layout_constraintTop_toBottomOf="@id/password" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="37.5dp"
+        android:layout_marginStart="37.5dp"
         android:layout_marginTop="22.5dp"
         android:text="@string/fogot_password"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@id/remember_me"
-        app:layout_constraintTop_toBottomOf="@id/password"></TextView>
+        app:layout_constraintTop_toBottomOf="@id/password" />
 
     <Button
         android:id="@+id/login_button"
@@ -80,7 +85,7 @@
         app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/remember_me"></Button>
+        app:layout_constraintTop_toBottomOf="@id/remember_me" />
 
     <TextView
         android:id="@+id/or_connect_with"
@@ -90,7 +95,7 @@
         android:text="@string/or_connect_with"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_button"></TextView>
+        app:layout_constraintTop_toBottomOf="@id/login_button" />
 
     <ImageButton
         android:id="@+id/facebook"
@@ -99,7 +104,8 @@
         android:layout_marginTop="29.5dp"
         android:background="@drawable/facebook_button"
         app:layout_constraintStart_toStartOf="@id/password"
-        app:layout_constraintTop_toBottomOf="@id/or_connect_with"></ImageButton>
+        app:layout_constraintTop_toBottomOf="@id/or_connect_with"
+        android:contentDescription="@string/facebook_button" />
 
     <ImageButton
         android:layout_width="@dimen/dimen_120"
@@ -108,8 +114,7 @@
         android:background="@drawable/twitter_button"
         app:layout_constraintEnd_toEndOf="@id/password"
         app:layout_constraintTop_toBottomOf="@id/or_connect_with"
-
-        ></ImageButton>
+        android:contentDescription="@string/twitter_button" />
 
     <Button
         android:layout_width="@dimen/dimen_250"
@@ -122,7 +127,7 @@
         app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/facebook"></Button>
+        app:layout_constraintTop_toBottomOf="@id/facebook" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
