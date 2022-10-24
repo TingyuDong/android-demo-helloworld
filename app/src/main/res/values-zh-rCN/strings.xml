@@ -31,4 +31,8 @@
     <string name="fogot_password">忘记密码</string>
     <string name="or_connect_with">或联系</string>
     <string name="sign_up_with_email">用邮箱登陆</string>
+    <string name="pick_contact">选择联系人</string>
+    <string name="logo">标志</string>
+    <string name="facebook_button">FaceBook按钮</string>
+    <string name="twitter_button">Twitter按钮</string>
 </resources>
