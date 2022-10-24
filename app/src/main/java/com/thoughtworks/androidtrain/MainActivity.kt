@@ -1,6 +1,7 @@
 package com.thoughtworks.androidtrain
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
@@ -29,13 +30,25 @@ class MainActivity : AppCompatActivity() {
                     ).use { cursor ->
                         if (cursor != null) {
                             showContactToast(cursor)
-
+                            showContactDialog(cursor)
                         }
                     }
                 }
                 Log.i(List.TAG, it.data!!.data.toString())
             }
         }
+
+    private fun showContactDialog(cursor:Cursor) {
+        val builder=AlertDialog.Builder(this)
+        val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+        val phoneNum = cursor.getString(numberIndex)
+        builder.setMessage(phoneNum)
+        builder.setPositiveButton("OK"){ _, _ ->}
+        val dialog:AlertDialog=builder.create()
+        if (!dialog.isShowing) {
+            dialog.show()
+        }
+    }
 
     private fun showContactToast(cursor: Cursor) {
         if (cursor.moveToFirst()) {
