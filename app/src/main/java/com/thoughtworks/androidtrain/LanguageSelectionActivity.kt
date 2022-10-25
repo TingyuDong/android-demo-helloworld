@@ -3,6 +3,9 @@ package com.thoughtworks.androidtrain
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.thoughtworks.androidtrain.fragments.AndroidLanguageFragment
+import com.thoughtworks.androidtrain.fragments.JavaLanguageFragment
+import com.thoughtworks.androidtrain.utils.UiUtils
 
 class LanguageSelectionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,11 +15,29 @@ class LanguageSelectionActivity : AppCompatActivity() {
     }
 
     private fun addBtnEvent() {
-        val btn_android: Button = findViewById(R.id.btn_android)
-        val btn_java: Button = findViewById(R.id.btn_java)
-        btn_android.setOnClickListener {
+        val btnAndroid: Button = findViewById(R.id.btn_android)
+        val btnJava: Button = findViewById(R.id.btn_java)
+        UiUtils().replaceFragment(
+            supportFragmentManager,
+            JavaLanguageFragment(),
+            R.id.text_box,
+            null
+        )
+        btnAndroid.setOnClickListener {
+            UiUtils().replaceFragment(
+                supportFragmentManager,
+                AndroidLanguageFragment(),
+                R.id.text_box,
+                null
+            )
         }
-        btn_java.setOnClickListener {
+        btnJava.setOnClickListener {
+            UiUtils().replaceFragment(
+                supportFragmentManager,
+                JavaLanguageFragment(),
+                R.id.text_box,
+                null
+            )
         }
 
     }

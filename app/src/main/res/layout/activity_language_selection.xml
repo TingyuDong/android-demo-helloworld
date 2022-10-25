@@ -7,6 +7,7 @@
     tools:context=".LanguageSelectionActivity">
 
     <TextView
+        android:id="@+id/btn_box"
         android:layout_width="180dp"
         android:layout_height="match_parent"
         android:background="@color/blue"
@@ -35,5 +36,12 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="70dp"
         android:layout_marginStart="35dp"/>
+
+    <FrameLayout
+        android:id="@+id/text_box"
+        android:layout_width="220dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_box"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
