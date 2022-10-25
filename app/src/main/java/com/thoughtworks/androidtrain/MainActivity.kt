@@ -22,8 +22,6 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.data != null && it.resultCode == Activity.RESULT_OK) {
                 val contactUri: Uri? = it.data!!.data
-                val projection: Array<String> =
-                    arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
                 if (contactUri != null) {
                     contentResolver.query(
                         contactUri, arrayOf("display_name", "data1"), null, null, null
@@ -67,13 +65,21 @@ class MainActivity : AppCompatActivity() {
     private fun addBtnEvent() {
         val btnPickContact: Button = findViewById(R.id.btn_pick_contact)
         val btnFragment: Button = findViewById(R.id.btn_fragment)
+        val btnRecyclerview: Button = findViewById(R.id.btn_recyclerView)
         btnPickContact.setOnClickListener {
             pickContact()
         }
         btnFragment.setOnClickListener {
             fragment()
         }
+        btnRecyclerview.setOnClickListener {
+            recyclerview()
+        }
+    }
 
+    private fun recyclerview() {
+        val intent = Intent(this, TweetsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun pickContact() {
@@ -84,8 +90,8 @@ class MainActivity : AppCompatActivity() {
         startActivity.launch(intent)
     }
 
-    private fun fragment(){
-        val intent = Intent(this,LanguageSelectionActivity::class.java)
+    private fun fragment() {
+        val intent = Intent(this, LanguageSelectionActivity::class.java)
         startActivity(intent)
     }
 
