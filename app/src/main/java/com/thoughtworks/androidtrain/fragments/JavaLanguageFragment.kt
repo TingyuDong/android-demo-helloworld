@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.thoughtworks.androidtrain.R
 
-class JavaLanguageFragment: Fragment() {
+class JavaLanguageFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
