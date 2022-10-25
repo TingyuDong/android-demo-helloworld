@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:text="@string/java_introduce"
-        android:textSize="20sp"
         android:layout_marginStart="@dimen/dimen_40"
         android:layout_marginEnd="@dimen/dimen_40"
         android:layout_marginTop="600dp"/>
