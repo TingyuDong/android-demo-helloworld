@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
                     arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
                 if (contactUri != null) {
                     contentResolver.query(
-                        contactUri, projection, null, null, null
+                        contactUri, arrayOf("display_name", "data1"), null, null, null
                     ).use { cursor ->
                         if (cursor != null) {
                             showContactToast(cursor)
@@ -38,13 +38,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private fun showContactDialog(cursor:Cursor) {
-        val builder=AlertDialog.Builder(this)
+    private fun showContactDialog(cursor: Cursor) {
+        val builder = AlertDialog.Builder(this)
         val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
         val phoneNum = cursor.getString(numberIndex)
         builder.setMessage(phoneNum)
-        builder.setPositiveButton("OK"){ _, _ ->}
-        val dialog:AlertDialog=builder.create()
+        builder.setPositiveButton("OK") { _, _ -> }
+        val dialog: AlertDialog = builder.create()
         if (!dialog.isShowing) {
             dialog.show()
         }
@@ -52,11 +52,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun showContactToast(cursor: Cursor) {
         if (cursor.moveToFirst()) {
-            val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-            val phoneNum = cursor.getString(numberIndex)
-            //                                val nameIndex=cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
-            //                                val contactName=cursor.getString(nameIndex)
-            Toast.makeText(this, phoneNum, Toast.LENGTH_SHORT).show()
+            val phoneNum: String
+            val contactName: String
+            with(cursor) {
+                val numberIndex = getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                phoneNum = getString(numberIndex)
+                val nameIndex = getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+                contactName = getString(nameIndex)
+            }
+            Toast.makeText(this, "$contactName $phoneNum", Toast.LENGTH_SHORT).show()
         }
     }
 
