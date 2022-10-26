@@ -15,12 +15,7 @@
         android:theme="@style/Theme.HelloWorldKotlin"
         tools:targetApi="31">
         <activity
-            android:name=".TweetsActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:name=".TweetsActivity"/>
         <activity
             android:name=".LanguageSelectionActivity"
             android:exported="false">
