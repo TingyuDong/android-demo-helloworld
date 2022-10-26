@@ -25,7 +25,8 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val tweetViewHolder = holder as TweetViewHolder
-        tweetViewHolder.tweetView.text = tweets[position].toString()
+        tweetViewHolder.tweetName.text = tweets[position].sender?.username
+        tweetViewHolder.tweetContent.text = tweets[position].content
     }
 
     override fun getItemCount(): Int {
@@ -33,7 +34,8 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
     }
 
     class TweetViewHolder(itemView: View) : ViewHolder(itemView) {
-        var tweetView: TextView = itemView.findViewById(R.id.tweet)
+        var tweetName: TextView = itemView.findViewById(R.id.tweet_name)
+        var tweetContent: TextView = itemView.findViewById(R.id.tweet_content)
 
     }
 }
