@@ -2,7 +2,6 @@ package com.thoughtworks.androidtrain
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -39,7 +38,6 @@ class TweetsActivity : AppCompatActivity() {
         tweetsAdapter = TweetsAdapter()
         recyclerView.adapter = tweetsAdapter
         createTweets()?.let { tweetsAdapter.setTweet(it) }
-        Toast.makeText(this, tweetsAdapter.tweets.toString(), Toast.LENGTH_SHORT).show()
     }
 
     private fun createTweets(): ArrayList<Tweet>? {
