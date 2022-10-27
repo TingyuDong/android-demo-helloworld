@@ -10,6 +10,11 @@ import com.thoughtworks.androidtrain.R
 import com.thoughtworks.androidtrain.model.Tweet
 
 class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
+    object ViewType {
+        const val TWEET_TYPE = 0
+        const val LAST_TYPE = 1
+    }
+
     var tweets = arrayListOf<Tweet>()
 
     fun setTweet(tweetsObj: ArrayList<Tweet>) {
@@ -20,13 +25,28 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val from: LayoutInflater = LayoutInflater.from(parent.context)
-        return TweetViewHolder(from.inflate(R.layout.tweets_item_layout, parent, false))
+        return when (viewType) {
+            ViewType.TWEET_TYPE -> TweetViewHolder(
+                from.inflate(R.layout.tweets_item_layout,parent,false)
+            )
+            else -> {
+                bottomViewHolder(
+                    from.inflate(R.layout.bottom_item_layout, parent, false)
+                )
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val tweetViewHolder = holder as TweetViewHolder
-        tweetViewHolder.tweetName.text = tweets[position].sender?.username
-        tweetViewHolder.tweetContent.text = tweets[position].content
+        if (tweets.lastIndex != position) {
+            val tweetViewHolder = holder as TweetViewHolder
+            tweetViewHolder.tweetName.text = tweets[position].sender?.username
+            tweetViewHolder.tweetContent.text = tweets[position].content
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (tweets.lastIndex != position) return ViewType.TWEET_TYPE else ViewType.LAST_TYPE
     }
 
     override fun getItemCount(): Int {
@@ -36,6 +56,7 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
     class TweetViewHolder(itemView: View) : ViewHolder(itemView) {
         var tweetName: TextView = itemView.findViewById(R.id.tweet_name)
         var tweetContent: TextView = itemView.findViewById(R.id.tweet_content)
-
     }
+
+    class bottomViewHolder(itemView: View) : ViewHolder(itemView)
 }

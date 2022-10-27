@@ -42,4 +42,5 @@
     <string name="recyclerview" translatable="false">RecyclerView</string>
     <string name="aiolos" translatable="false">Aiolos</string>
     <string name="avatar">avatar</string>
+    <string name="have_been_to_the_bottom">Have been to the bottom</string>
 </resources>
