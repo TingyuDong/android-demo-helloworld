@@ -55,10 +55,10 @@ class TweetsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tweet)
-        getJson()
+        initUI()
     }
 
-    private fun getJson() {
+    private fun initUI() {
         val recyclerView: RecyclerView = findViewById(R.id.tweet_recycle)
         recyclerView.layoutManager = LinearLayoutManager(this)
         tweetsAdapter = TweetsAdapter()
