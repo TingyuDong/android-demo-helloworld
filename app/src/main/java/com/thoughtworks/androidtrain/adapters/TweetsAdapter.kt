@@ -30,7 +30,7 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
                 from.inflate(R.layout.tweets_item_layout,parent,false)
             )
             else -> {
-                bottomViewHolder(
+                BottomViewHolder(
                     from.inflate(R.layout.bottom_item_layout, parent, false)
                 )
             }
@@ -58,5 +58,5 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
         var tweetContent: TextView = itemView.findViewById(R.id.tweet_content)
     }
 
-    class bottomViewHolder(itemView: View) : ViewHolder(itemView)
+    class BottomViewHolder(itemView: View) : ViewHolder(itemView)
 }
