@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity() {
         val btnPickContact: Button = findViewById(R.id.btn_pick_contact)
         val btnFragment: Button = findViewById(R.id.btn_fragment)
         val btnRecyclerview: Button = findViewById(R.id.btn_recyclerView)
+        val btnSharedPreference: Button = findViewById(R.id.shared_preference)
         btnPickContact.setOnClickListener {
             pickContact()
         }
@@ -83,6 +84,14 @@ class MainActivity : AppCompatActivity() {
         btnRecyclerview.setOnClickListener {
             recyclerview()
         }
+        btnSharedPreference.setOnClickListener {
+            sharedPreference()
+        }
+    }
+
+    private fun sharedPreference() {
+        val intent = Intent(this, SharedPreferenceActivity::class.java)
+        startActivity(intent)
     }
 
     private fun recyclerview() {
