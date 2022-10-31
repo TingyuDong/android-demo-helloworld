@@ -15,7 +15,6 @@
     <string name="apractice">Android 练习</string>
     <string name="button_4">按钮4</string>
     <string name="button_5">按钮5</string>
-    <string name="button_6">按钮6</string>
     <string name="button_7">按钮7</string>
     <string name="button_8">按钮8</string>
     <string name="button_9">按钮9</string>
@@ -40,4 +39,6 @@
     <string name="java">Java</string>
     <string name="avatar">头像</string>
     <string name="have_been_to_the_bottom">已到底</string>
+    <string name="tips">提示信息：点击\"知道了\"不再提示</string>
+    <string name="i_know">知道了</string>
 </resources>
