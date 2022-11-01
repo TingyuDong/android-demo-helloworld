@@ -42,8 +42,9 @@
     <string name="aiolos" translatable="false">Aiolos</string>
     <string name="avatar">avatar</string>
     <string name="have_been_to_the_bottom">Have been to the bottom</string>
-    <string name="tips">tips:
+    <string name="tips_shown">tips:
 Click "I know" and no longer prompt</string>
+    <string name="tips_not_shown">Welcome back</string>
     <string name="i_know">I Know</string>
     <string name="shared_preference" translatable="false">SharedPreference</string>
 </resources>

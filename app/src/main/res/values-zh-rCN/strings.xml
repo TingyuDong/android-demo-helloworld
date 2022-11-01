@@ -39,6 +39,7 @@
     <string name="java">Java</string>
     <string name="avatar">头像</string>
     <string name="have_been_to_the_bottom">已到底</string>
-    <string name="tips">提示信息：点击\"知道了\"不再提示</string>
+    <string name="tips_shown">提示信息：点击\"知道了\"不再提示</string>
     <string name="i_know">知道了</string>
+    <string name="tips_not_shown">欢迎您回来</string>
 </resources>
