@@ -30,6 +30,16 @@ class TweetsActivity : AppCompatActivity() {
     private fun createTweets(): ArrayList<Tweet>? {
         val type = object : TypeToken<ArrayList<Tweet>>() {}.type
         val jsonString = JSONResourceUtils().jsonResourceReader(resources, R.raw.tweets)
-        return Gson().fromJson(jsonString, type)
+        val tweets = Gson().fromJson<ArrayList<Tweet>?>(jsonString, type)
+        addEmptyData(tweets)
+        return tweets
+    }
+
+    private fun addEmptyData(tweets: ArrayList<Tweet>) {
+        val tweet = Tweet(
+            tweets.size + 1,
+            null, null, null, null, null, null
+        )
+        tweets.add(tweet)
     }
 }
