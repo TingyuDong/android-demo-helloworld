@@ -31,8 +31,8 @@ class SharedPreferenceActivity : AppCompatActivity() {
         val textView: TextView = findViewById(R.id.tip)
         val textShow: String = resources.getString(R.string.tips_shown)
         val textNotShow: String = resources.getString(R.string.tips_not_shown)
-        val isHintShown: Boolean? = sharedPreferenceUtils.readBoolean(this, IS_HINT_SHOWN, true)
-        if (isHintShown == true) textView.text = textShow
+        val isHintShown: Boolean = sharedPreferenceUtils.readBoolean(this, IS_HINT_SHOWN, true)
+        if (isHintShown) textView.text = textShow
         else textView.text = textNotShow
     }
 
