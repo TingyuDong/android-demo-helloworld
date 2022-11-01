@@ -12,7 +12,7 @@ data class Tweet(
     val unknownError: String?
 
 ) {
-    override fun toString(): String {
-        return "Tweet(content=$content, sender=$sender, images=$images, comments=$comments, error=$error, unknownError=$unknownError)"
-    }
+//    override fun toString(): String {
+//        return "Tweet(content=$content, sender=$sender, images=$images, comments=$comments, error=$error, unknownError=$unknownError)"
+//    }
 }
