@@ -3,6 +3,8 @@ package com.thoughtworks.androidtrain
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.TextView
 import com.thoughtworks.androidtrain.utils.SharedPreferenceUtils
@@ -30,10 +32,17 @@ class SharedPreferenceActivity : AppCompatActivity() {
     private fun initUI() {
         val textView: TextView = findViewById(R.id.tip)
         val textShow: String = resources.getString(R.string.tips_shown)
+        val btnHint: Button = findViewById(R.id.btn_hint)
         val textNotShow: String = resources.getString(R.string.tips_not_shown)
         val isHintShown: Boolean = sharedPreferenceUtils.readBoolean(this, IS_HINT_SHOWN, true)
-        if (isHintShown) textView.text = textShow
-        else textView.text = textNotShow
+        if (isHintShown) {
+            textView.text = textShow
+            btnHint.visibility=VISIBLE
+        }
+        else {
+            textView.text = textNotShow
+            btnHint.visibility=GONE
+        }
     }
 
     override fun onPause() {
