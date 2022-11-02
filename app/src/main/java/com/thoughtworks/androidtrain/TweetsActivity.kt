@@ -2,7 +2,6 @@ package com.thoughtworks.androidtrain
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -11,8 +10,12 @@ import com.thoughtworks.androidtrain.adapters.TweetsAdapter
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import com.thoughtworks.androidtrain.utils.JSONResourceUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
-class TweetsActivity : AppCompatActivity() {
+class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var tweetsAdapter: TweetsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,12 +25,16 @@ class TweetsActivity : AppCompatActivity() {
         initData()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        cancel()
+    }
+
     private fun initData() {
-        val db: AppDatabase = (application as TweetApplication).getDb()
-        val all = db.tweetDao().getAll()
-        Toast.makeText(this, all.size.toString(), Toast.LENGTH_SHORT).show()
-
-
+        launch {
+            val db: AppDatabase = (application as TweetApplication).getDb()
+            val all = db.tweetDao().getAll()
+        }
     }
 
     private fun initUI() {
