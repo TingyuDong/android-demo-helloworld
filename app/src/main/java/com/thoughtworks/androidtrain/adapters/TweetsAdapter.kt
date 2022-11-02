@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.thoughtworks.androidtrain.R
-import com.thoughtworks.androidtrain.model.Tweet
+import com.thoughtworks.androidtrain.data.model.Tweet
 
 class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
     object ViewType {

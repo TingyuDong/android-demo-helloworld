@@ -1,4 +1,4 @@
-package com.thoughtworks.androidtrain.model
+package com.thoughtworks.androidtrain.data.model
 
 data class Sender(
     val username: String,
