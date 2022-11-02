@@ -14,6 +14,7 @@ data class Tweet(
 
 ) {
     override fun toString(): String {
-        return "Tweet(content=$content, sender=$sender, images=$images, comments=$comments, error=$error, unknownError=$unknownError)"
+        return "Tweet(content=$content, sender=$sender, images=$images, comments=$comments," +
+                " error=$error, unknownError=$unknownError)"
     }
 }
