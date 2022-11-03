@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var tweetsAdapter: TweetsAdapter
+    private val repository = Repository.get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +34,7 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     private fun initData() {
         launch {
-            val db: AppDatabase = (application as TweetApplication).getDb()
-            val all = db.tweetDao().getAll()
+            val all = repository.fetchTweets()
         }
     }
 
