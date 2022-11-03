@@ -11,6 +11,8 @@ class Sender(
     val senderId: Int,
     @ColumnInfo(name = "user_name")
     val userName: String,
+    @ColumnInfo(name = "nick")
+    val nick: String,
     @ColumnInfo(name = "avatar")
     val avatar: String
 ) {

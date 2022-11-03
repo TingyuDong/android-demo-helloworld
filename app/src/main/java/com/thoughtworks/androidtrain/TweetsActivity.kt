@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.adapters.TweetsAdapter
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.repository.Repository
-import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import com.thoughtworks.androidtrain.utils.JSONResourceUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -33,12 +32,15 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     private fun initData() {
-        launch {
-            val all = repository.fetchTweets()
-        }
+//        launch {
+//            val all = repository.fetchTweets()
+//        }
     }
 
     private fun initUI() {
+        launch {
+            val all = repository.fetchTweets()
+        }
         val recyclerView: RecyclerView = findViewById(R.id.tweet_recycle)
         recyclerView.layoutManager = LinearLayoutManager(this)
         tweetsAdapter = TweetsAdapter()

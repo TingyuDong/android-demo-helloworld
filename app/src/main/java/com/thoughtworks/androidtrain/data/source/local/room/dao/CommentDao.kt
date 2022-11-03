@@ -10,5 +10,5 @@ interface CommentDao {
     fun getAll(): List<Comment>
 
     @Query("SELECT * FROM comments where tweet_id =:tweetId")
-    suspend fun getComment(tweetId: Int): List<Comment>?
+    fun getComments(tweetId: Int): List<Comment>?
 }

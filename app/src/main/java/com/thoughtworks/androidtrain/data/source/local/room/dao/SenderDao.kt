@@ -7,5 +7,5 @@ import com.thoughtworks.androidtrain.data.source.local.room.entity.Sender
 @Dao
 interface SenderDao {
     @Query("SELECT * FROM sender where id =:senderId")
-    suspend fun getSender(senderId: Int): Sender?
+    fun getSender(senderId: Int): Sender?
 }
