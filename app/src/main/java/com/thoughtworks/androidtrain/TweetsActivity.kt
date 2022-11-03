@@ -13,7 +13,6 @@ import com.thoughtworks.androidtrain.utils.JSONResourceUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 
 class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var tweetsAdapter: TweetsAdapter
@@ -38,9 +37,6 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     private fun initUI() {
-        launch {
-            val all = repository.fetchTweets()
-        }
         val recyclerView: RecyclerView = findViewById(R.id.tweet_recycle)
         recyclerView.layoutManager = LinearLayoutManager(this)
         tweetsAdapter = TweetsAdapter()
@@ -52,6 +48,7 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         val type = object : TypeToken<ArrayList<Tweet>>() {}.type
         val jsonString = JSONResourceUtils().jsonResourceReader(resources, R.raw.tweets)
         val tweets = Gson().fromJson<ArrayList<Tweet>?>(jsonString, type)
+        tweets.addAll(repository.fetchTweets())
         addEmptyData(tweets)
         return tweets
     }

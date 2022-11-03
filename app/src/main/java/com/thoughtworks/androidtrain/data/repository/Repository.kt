@@ -35,7 +35,7 @@ class Repository private constructor(context: Context) : TweetRepository {
         }
     }
 
-    override fun fetchTweets(): List<Tweet> {
+    override fun fetchTweets(): ArrayList<Tweet> {
         val tweets = tweetDao.getAll()
         val tweetData: List<Tweet> = tweets.stream().map {
             val sender = it.senderId?.let { it1 -> getSender(it1) }
@@ -43,11 +43,11 @@ class Repository private constructor(context: Context) : TweetRepository {
             val comments = getComments(it.tweetId)
             Tweet(it.tweetId, it.content, sender, images, comments, it.error, it.unknownError)
         }.collect(Collectors.toList())
-        return tweetData
+        return ArrayList(tweetData)
     }
 
-    override fun getSender(id: Int): Sender? {
-        val sender = senderDao.getSender(id)
+    override fun getSender(senderId: Int): Sender? {
+        val sender = senderDao.getSender(senderId)
         if (sender != null) {
             return Sender(sender.userName, sender.nick, sender.avatar)
         }
