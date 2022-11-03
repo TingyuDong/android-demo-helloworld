@@ -4,11 +4,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "comments")
 class Comment(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val commentId: Int,
+    @ColumnInfo(name = "tweet_id")
+    val TweetId: Int,
     @ColumnInfo(name = "content")
     val content: String,
     @ColumnInfo(name = "sender_id")

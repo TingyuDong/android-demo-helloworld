@@ -8,7 +8,9 @@ import androidx.room.PrimaryKey
 class Image(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val imageId: Int,
+    val id: Int,
+    @ColumnInfo(name = "tweet_id")
+    val tweetId: String,
     @ColumnInfo(name = "url")
     val url: String
 ) {
