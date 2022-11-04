@@ -4,8 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.thoughtworks.androidtrain.data.model.Image
-import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import com.thoughtworks.androidtrain.data.source.local.room.entity.ImagePO
 
 @Dao

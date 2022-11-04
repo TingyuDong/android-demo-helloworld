@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 
 @Dao

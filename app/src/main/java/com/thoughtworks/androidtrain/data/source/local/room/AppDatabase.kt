@@ -11,7 +11,10 @@ import com.thoughtworks.androidtrain.data.source.local.room.entity.ImagePO
 import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 
-@Database(entities = [TweetPO::class, CommentPO::class, ImagePO::class, SenderPO::class], version = 2)
+@Database(
+    entities = [TweetPO::class, CommentPO::class, ImagePO::class, SenderPO::class],
+    version = 2
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun tweetDao(): TweetDao
     abstract fun commentDao(): CommentDao

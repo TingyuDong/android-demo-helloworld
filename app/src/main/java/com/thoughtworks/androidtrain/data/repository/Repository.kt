@@ -49,9 +49,9 @@ class Repository private constructor(context: Context) : TweetRepository {
         val tweets = tweetDao.getAll()
         val tweetData: List<Tweet> = tweets.stream().map {
             val sender = it.senderId?.let { it1 -> senderRepository.getSender(it1) }
-            val images = getImages(it.tweetId)
-            val comments = getComments(it.tweetId)
-            Tweet(it.tweetId, it.content, sender, images, comments, it.error, it.unknownError)
+            val images = getImages(it.id)
+            val comments = getComments(it.id)
+            Tweet(it.id, it.content, sender, images, comments, it.error, it.unknownError)
         }.collect(Collectors.toList())
         return ArrayList(tweetData)
     }
@@ -91,7 +91,7 @@ class Repository private constructor(context: Context) : TweetRepository {
                 Comment(it.content,
                     sender?.let { it1 ->
                         Sender(
-                            it1.senderId,
+                            it1.id,
                             it1.userName,
                             sender.nick,
                             sender.avatar

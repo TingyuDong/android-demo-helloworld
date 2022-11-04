@@ -13,5 +13,4 @@ class ImagePO(
     val tweetId: Int,
     @ColumnInfo(name = "url")
     val url: String
-) {
-}
+)

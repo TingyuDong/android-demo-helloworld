@@ -8,12 +8,11 @@ import androidx.room.PrimaryKey
 class SenderPO(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val senderId: Int,
+    val id: Int,
     @ColumnInfo(name = "user_name")
     val userName: String,
     @ColumnInfo(name = "nick")
     val nick: String,
     @ColumnInfo(name = "avatar")
     val avatar: String
-) {
-}
+)

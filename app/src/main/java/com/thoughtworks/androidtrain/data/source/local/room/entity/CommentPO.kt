@@ -8,12 +8,11 @@ import androidx.room.PrimaryKey
 class CommentPO(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val commentId: Int,
+    val id: Int,
     @ColumnInfo(name = "tweet_id")
     val TweetId: Int,
     @ColumnInfo(name = "content")
     val content: String,
     @ColumnInfo(name = "sender_id")
     val senderId: Int
-) {
-}
+)

@@ -8,14 +8,13 @@ import androidx.room.PrimaryKey
 class TweetPO(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val tweetId: Int,
-    @ColumnInfo(name="content")
+    val id: Int,
+    @ColumnInfo(name = "content")
     val content: String?,
-    @ColumnInfo(name="sender_id")
+    @ColumnInfo(name = "sender_id")
     val senderId: Int?,
-    @ColumnInfo(name="error")
+    @ColumnInfo(name = "error")
     val error: String?,
-    @ColumnInfo(name="unknown_error")
+    @ColumnInfo(name = "unknown_error")
     val unknownError: String?
-    ) {
-}
+)
