@@ -9,9 +9,11 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 
 interface TweetRepository {
     fun fetchTweets(): List<Tweet>
-//    fun addTweet(tweet: Tweet): Tweet
+    fun addTweet(tweet: Tweet)
     fun getSender(senderId: Int): Sender?
     fun getImages(tweetId: Int): List<Image>?
     fun getComments(tweetId: Int): List<Comment>?
-    fun addComments(comments: List<Comment>?)
+    fun addComments(comments: List<Comment>?,tweetId: Int)
+    fun addImages(images: List<Image>?, id: Int)
+    fun addSender(sender: Sender?)
 }

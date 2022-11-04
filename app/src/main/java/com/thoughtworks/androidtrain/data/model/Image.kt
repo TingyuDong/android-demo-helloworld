@@ -1,3 +1,6 @@
 package com.thoughtworks.androidtrain.data.model
 
-data class Image(val url: String)
+data class Image(
+    val id: Int?,
+    val url: String
+)

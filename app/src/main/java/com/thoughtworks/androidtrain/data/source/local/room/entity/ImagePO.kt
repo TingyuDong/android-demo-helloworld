@@ -10,7 +10,7 @@ class ImagePO(
     @ColumnInfo(name = "id")
     val id: Int,
     @ColumnInfo(name = "tweet_id")
-    val tweetId: String,
+    val tweetId: Int,
     @ColumnInfo(name = "url")
     val url: String
 ) {
