@@ -9,7 +9,6 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import com.thoughtworks.androidtrain.data.source.local.room.entity.ImagePO
-import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
@@ -115,9 +114,9 @@ class Repository private constructor(context: Context) : TweetRepository {
 
     override fun addImages(images: List<Image>?, tweetId: Int) {
         val imagesCollect = images?.stream()?.map {
-            if(it.id==null){
+            if (it.id == null) {
                 ImagePO(0, tweetId, it.url)
-            }else{
+            } else {
                 ImagePO(it.id, tweetId, it.url)
             }
         }?.collect(Collectors.toList())
