@@ -31,7 +31,7 @@ class Repository private constructor(context: Context) : TweetRepository {
         }
 
         fun get(): Repository {
-            return INSTANCE ?: throw IllegalStateException("CrimeRepository must be initialized")
+            return INSTANCE ?: throw IllegalStateException("Repository must be initialized")
         }
     }
 
@@ -45,6 +45,10 @@ class Repository private constructor(context: Context) : TweetRepository {
         }.collect(Collectors.toList())
         return ArrayList(tweetData)
     }
+
+//    override fun addTweet(tweet: Tweet): Tweet {
+//        addComments(tweet.comments)
+//    }
 
     override fun getSender(senderId: Int): Sender? {
         val sender = senderDao.getSender(senderId)
@@ -64,12 +68,16 @@ class Repository private constructor(context: Context) : TweetRepository {
 
     override fun getComments(tweetId: Int): List<Comment>? {
         val comments = commentDao.getComments(tweetId)
-        if (comments != null){
+        if (comments != null) {
             return comments.stream().map {
                 val sender = senderDao.getSender(it.senderId)
-                Comment(it.content,sender)
+                Comment(it.content, sender)
             }.collect(Collectors.toList())
         }
         return null
+    }
+
+    override fun addComments(comments: List<Comment>?) {
+
     }
 }

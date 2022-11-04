@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "tweets")
-class Tweet(
+class TweetPO(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val tweetId: Int,

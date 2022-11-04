@@ -4,16 +4,14 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-class Sender(
+@Entity(tableName = "image")
+class ImagePO(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val senderId: Int,
-    @ColumnInfo(name = "user_name")
-    val userName: String,
-    @ColumnInfo(name = "nick")
-    val nick: String,
-    @ColumnInfo(name = "avatar")
-    val avatar: String
+    val id: Int,
+    @ColumnInfo(name = "tweet_id")
+    val tweetId: String,
+    @ColumnInfo(name = "url")
+    val url: String
 ) {
 }
