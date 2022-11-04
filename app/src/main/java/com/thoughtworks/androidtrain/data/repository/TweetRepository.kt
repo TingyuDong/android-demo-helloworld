@@ -15,5 +15,5 @@ interface TweetRepository {
     fun getComments(tweetId: Int): List<Comment>?
     fun addComments(comments: List<Comment>?,tweetId: Int)
     fun addImages(images: List<Image>?, id: Int)
-    fun addSender(sender: Sender?)
+    fun addSender(sender: Sender?): Long?
 }

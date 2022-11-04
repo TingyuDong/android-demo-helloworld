@@ -12,5 +12,5 @@ interface SenderDao {
     fun getSender(senderId: Int): SenderPO?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertSender(sender: SenderPO)
+    fun insertSender(sender: SenderPO): Long
 }

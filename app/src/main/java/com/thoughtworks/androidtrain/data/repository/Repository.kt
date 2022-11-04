@@ -10,6 +10,7 @@ import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import com.thoughtworks.androidtrain.data.source.local.room.entity.ImagePO
 import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
+import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
@@ -51,15 +52,24 @@ class Repository private constructor(context: Context) : TweetRepository {
     }
 
     override fun addTweet(tweet: Tweet) {
-        addComments(tweet.comments,tweet.id)
-        addImages(tweet.images,tweet.id)
-        addSender(tweet.sender)
+        var senderId = addSender(tweet.sender)
+        var tweetId = tweetDao.insertTweet(
+            TweetPO(
+                0,
+                "hhh",
+                senderId?.toInt(),
+                tweet.error,
+                tweet.unknownError
+            )
+        )
+        addComments(tweet.comments, tweetId.toInt())
+        addImages(tweet.images, tweetId.toInt())
     }
 
     override fun getSender(senderId: Int): Sender? {
         val senderPO = senderDao.getSender(senderId)
         if (senderPO != null) {
-            return Sender(senderId,senderPO.userName, senderPO.nick, senderPO.avatar)
+            return Sender(senderId, senderPO.userName, senderPO.nick, senderPO.avatar)
         }
         return null
     }
@@ -67,7 +77,7 @@ class Repository private constructor(context: Context) : TweetRepository {
     override fun getImages(tweetId: Int): List<Image>? {
         val imagesPO = imageDao.getImages(tweetId)
         if (imagesPO != null) {
-            return imagesPO.stream().map { Image(it.id,it.url) }.collect(Collectors.toList())
+            return imagesPO.stream().map { Image(it.id, it.url) }.collect(Collectors.toList())
         }
         return null
     }
@@ -78,13 +88,20 @@ class Repository private constructor(context: Context) : TweetRepository {
             return commentsPO.stream().map {
                 val sender = senderDao.getSender(it.senderId)
                 Comment(it.content,
-                    sender?.let { it1 -> Sender(it1.senderId,it1.userName,sender.nick,sender.avatar) })
+                    sender?.let { it1 ->
+                        Sender(
+                            it1.senderId,
+                            it1.userName,
+                            sender.nick,
+                            sender.avatar
+                        )
+                    })
             }.collect(Collectors.toList())
         }
         return null
     }
 
-    override fun addComments(comments: List<Comment>?,tweetId: Int) {
+    override fun addComments(comments: List<Comment>?, tweetId: Int) {
         val commentsCollect = comments?.stream()?.map {
             it.sender?.id?.let { it1 ->
                 CommentPO(0, tweetId, it.content, it1)
@@ -106,10 +123,12 @@ class Repository private constructor(context: Context) : TweetRepository {
         }
     }
 
-    override fun addSender(sender: Sender?) {
-        val senderPO = sender?.id?.let { SenderPO(it,sender.username,sender.nick,sender.avatar) }
+    override fun addSender(sender: Sender?): Long? {
+        val senderPO = sender?.id?.let { SenderPO(it, sender.username, sender.nick, sender.avatar) }
         if (senderPO != null) {
-            senderDao.insertSender(senderPO)
+            var insertSender = senderDao.insertSender(senderPO)
+            return insertSender
         }
+        return null
     }
 }
