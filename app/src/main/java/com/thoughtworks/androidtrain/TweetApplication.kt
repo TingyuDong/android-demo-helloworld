@@ -2,26 +2,22 @@ package com.thoughtworks.androidtrain
 
 import android.app.Application
 import android.util.Log
-import androidx.room.Room
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
 import com.thoughtworks.androidtrain.data.repository.Repository
 import com.thoughtworks.androidtrain.data.repository.SenderRepository
-import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 class TweetApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        Repository.initialize(this)
-        val repository = Repository.get()
-        addTweet(repository)
+        DatabaseRepository.initialize(this)
+        addTweet()
     }
 
-    private fun addTweet(repository: Repository) {
-        val senderRepository = SenderRepository(repository)
+    private fun addTweet() {
+        val repository = Repository()
+        val senderRepository = SenderRepository()
         val sender = Sender(
             8,
             "Aiolia",

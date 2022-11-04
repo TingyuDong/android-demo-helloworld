@@ -1,43 +1,21 @@
 package com.thoughtworks.androidtrain.data.repository
 
-import android.content.Context
-import androidx.room.Room
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
-private const val DATABASE_NAME = "tweet"
+class Repository : RepositoryInterface {
+    private val databaseRepository = DatabaseRepository.get()
 
-class Repository private constructor(context: Context) : RepositoryInterface {
-    private val database: AppDatabase =
-        Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DATABASE_NAME)
-            .allowMainThreadQueries()
-            .build()
+    private val database: AppDatabase = databaseRepository.getDatabase()
 
     private val tweetDao = database.tweetDao()
 
-    private val senderRepository = SenderRepository(this)
-    private val commentRepository = CommentRepository(this)
-    private val imageRepository = ImageRepository(this)
-
-    companion object {
-        private var INSTANCE: Repository? = null
-        fun initialize(context: Context) {
-            if (INSTANCE == null) {
-                INSTANCE = Repository(context)
-            }
-        }
-
-        fun get(): Repository {
-            return INSTANCE ?: throw IllegalStateException("Repository must be initialized")
-        }
-    }
-
-    fun getDatabase(): AppDatabase {
-        return database
-    }
+    private val senderRepository = SenderRepository()
+    private val commentRepository = CommentRepository()
+    private val imageRepository = ImageRepository()
 
     override fun fetchTweets(): ArrayList<Tweet> {
         val tweets = tweetDao.getAll()

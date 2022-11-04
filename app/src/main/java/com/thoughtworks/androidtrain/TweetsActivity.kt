@@ -16,7 +16,7 @@ import kotlinx.coroutines.cancel
 
 class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var tweetsAdapter: TweetsAdapter
-    private val repository = Repository.get()
+    private val repository = Repository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

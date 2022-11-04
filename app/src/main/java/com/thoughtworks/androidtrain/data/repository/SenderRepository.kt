@@ -3,8 +3,9 @@ package com.thoughtworks.androidtrain.data.repository
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 
-class SenderRepository(repository: Repository): SenderRepositoryInterface {
-    private val database = repository.getDatabase()
+class SenderRepository : SenderRepositoryInterface {
+    private val databaseRepository = DatabaseRepository.get()
+    private val database = databaseRepository.getDatabase()
 
     private val senderDao = database.senderDao()
 

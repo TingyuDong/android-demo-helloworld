@@ -5,8 +5,9 @@ import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import com.thoughtworks.androidtrain.data.source.local.room.entity.ImagePO
 import java.util.stream.Collectors
 
-class ImageRepository(repository: Repository) : ImageRepositoryInterface {
-    private val database: AppDatabase = repository.getDatabase()
+class ImageRepository : ImageRepositoryInterface {
+    private val databaseRepository = DatabaseRepository.get()
+    private val database: AppDatabase = databaseRepository.getDatabase()
 
     private val imageDao = database.imageDao()
 

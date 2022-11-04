@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity() {
         const val TAG: String = "MainActivity"
     }
 
-    private val repository = Repository.get()
-    private val senderRepository = SenderRepository(repository)
+    private val senderRepository = SenderRepository()
+    private val repository = Repository()
 
     private val startActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             sharedPreference()
         }
         btnRoom.setOnClickListener {
-            addTweet(repository)
+            addTweet()
         }
     }
 
@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun addTweet(repository: Repository) {
+    private fun addTweet() {
         val tweetSender = Sender(
             null,
             "Aiolia",
