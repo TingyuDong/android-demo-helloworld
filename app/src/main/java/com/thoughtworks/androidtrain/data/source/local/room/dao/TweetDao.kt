@@ -11,7 +11,7 @@ interface TweetDao {
     @Query("SELECT * FROM tweets")
     fun getAll(): List<TweetPO>
 
-    @Query("SELECT * FROM sender where id =:tweetId")
+    @Query("SELECT * FROM tweets where id =:tweetId")
     fun getTweet(tweetId: Int): TweetPO?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
