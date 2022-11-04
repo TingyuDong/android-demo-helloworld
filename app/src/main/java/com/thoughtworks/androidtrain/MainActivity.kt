@@ -17,6 +17,7 @@ import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.repository.Repository
+import com.thoughtworks.androidtrain.data.repository.SenderRepository
 
 class MainActivity : AppCompatActivity() {
     object List {
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val repository = Repository.get()
+    private val senderRepository = SenderRepository(repository)
 
     private val startActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -186,7 +188,7 @@ class MainActivity : AppCompatActivity() {
             "Saga",
             "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
         )
-        val senderId = repository.addSender(
+        val senderId = senderRepository.addSender(
             tweetSender
         )
         if (senderId != null) {

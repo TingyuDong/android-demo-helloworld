@@ -11,10 +11,8 @@ interface TweetRepository {
     fun fetchTweets(): List<Tweet>
     fun addTweet(tweet: Tweet)
     fun addAllTweet(tweets: ArrayList<Tweet>)
-    fun getSender(senderId: Int): Sender?
     fun getImages(tweetId: Int): List<Image>?
     fun getComments(tweetId: Int): List<Comment>?
     fun addComments(comments: List<Comment>?,tweetId: Int)
     fun addImages(images: List<Image>?, tweetId: Int)
-    fun addSender(sender: Sender?): Long?
 }
