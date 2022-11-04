@@ -12,11 +12,18 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.thoughtworks.androidtrain.data.model.Comment
+import com.thoughtworks.androidtrain.data.model.Image
+import com.thoughtworks.androidtrain.data.model.Sender
+import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.data.repository.Repository
 
 class MainActivity : AppCompatActivity() {
     object List {
         const val TAG: String = "MainActivity"
     }
+
+    private val repository = Repository.get()
 
     private val startActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -75,6 +82,7 @@ class MainActivity : AppCompatActivity() {
         val btnFragment: Button = findViewById(R.id.btn_fragment)
         val btnRecyclerview: Button = findViewById(R.id.btn_recyclerView)
         val btnSharedPreference: Button = findViewById(R.id.shared_preference)
+        val btnRoom: Button = findViewById(R.id.room)
         btnPickContact.setOnClickListener {
             pickContact()
         }
@@ -86,6 +94,9 @@ class MainActivity : AppCompatActivity() {
         }
         btnSharedPreference.setOnClickListener {
             sharedPreference()
+        }
+        btnRoom.setOnClickListener {
+            addTweet(repository)
         }
     }
 
@@ -160,5 +171,44 @@ class MainActivity : AppCompatActivity() {
 //        intent.putExtra(EXTRA_MESSAGE, message)
 //        intent.putExtra(EXTRA_MESSAGE, message)
         startActivity(intent)
+    }
+
+    private fun addTweet(repository: Repository) {
+        val tweetSender = Sender(
+            null,
+            "Aiolia",
+            "Aio",
+            "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
+        )
+        val commentSender = Sender(
+            null,
+            "Saga",
+            "Saga",
+            "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
+        )
+        val senderId = repository.addSender(
+            tweetSender
+        )
+        if (senderId != null) {
+            tweetSender.setId(senderId.toInt())
+        }
+
+        val image = Image(
+            null,
+            "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
+        )
+        val comment = Comment("真不错",commentSender)
+        repository.addTweet(
+            Tweet(
+                0,
+                "沙发",
+                tweetSender,
+                listOf(image),
+                listOf(comment),
+                null,
+                null
+            )
+        )
+        Log.i("TweetApplication:", senderId.toString())
     }
 }

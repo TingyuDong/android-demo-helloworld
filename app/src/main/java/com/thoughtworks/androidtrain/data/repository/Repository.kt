@@ -52,12 +52,11 @@ class Repository private constructor(context: Context) : TweetRepository {
     }
 
     override fun addTweet(tweet: Tweet) {
-        var senderId = addSender(tweet.sender)
         var tweetId = tweetDao.insertTweet(
             TweetPO(
-                0,
-                "hhh",
-                senderId?.toInt(),
+                tweet.id,
+                tweet.content,
+                tweet.sender?.id,
                 tweet.error,
                 tweet.unknownError
             )
@@ -65,6 +64,11 @@ class Repository private constructor(context: Context) : TweetRepository {
         addComments(tweet.comments, tweetId.toInt())
         addImages(tweet.images, tweetId.toInt())
     }
+
+    override fun addAllTweet(tweets: ArrayList<Tweet>) {
+        tweets.forEach { tweet -> addTweet(tweet) }
+    }
+
 
     override fun getSender(senderId: Int): Sender? {
         val senderPO = senderDao.getSender(senderId)
@@ -103,20 +107,21 @@ class Repository private constructor(context: Context) : TweetRepository {
 
     override fun addComments(comments: List<Comment>?, tweetId: Int) {
         val commentsCollect = comments?.stream()?.map {
-            it.sender?.id?.let { it1 ->
-                CommentPO(0, tweetId, it.content, it1)
-//                commentDao.insertComments(commentPO)
-            }
+            val senderId = addSender(it.sender)
+            senderId?.let { it1 -> CommentPO(0, tweetId, it.content, it1.toInt()) }
         }?.collect(Collectors.toList())
         if (commentsCollect != null) {
             commentDao.insertAllComments(commentsCollect)
         }
-
     }
 
     override fun addImages(images: List<Image>?, tweetId: Int) {
         val imagesCollect = images?.stream()?.map {
-            it.id?.let { it1 -> ImagePO(it1, tweetId, it.url) }
+            if(it.id==null){
+                ImagePO(0, tweetId, it.url)
+            }else{
+                ImagePO(it.id, tweetId, it.url)
+            }
         }?.collect(Collectors.toList())
         if (imagesCollect != null) {
             imageDao.insertAllImages(imagesCollect)
@@ -124,10 +129,13 @@ class Repository private constructor(context: Context) : TweetRepository {
     }
 
     override fun addSender(sender: Sender?): Long? {
-        val senderPO = sender?.id?.let { SenderPO(it, sender.username, sender.nick, sender.avatar) }
-        if (senderPO != null) {
-            var insertSender = senderDao.insertSender(senderPO)
-            return insertSender
+        if (sender != null) {
+            val senderPO = if (sender.id==null){
+                SenderPO(0, sender.username, sender.nick, sender.avatar)
+            }else{
+                SenderPO(sender.id!!, sender.username, sender.nick, sender.avatar)
+            }
+            return senderDao.insertSender(senderPO)
         }
         return null
     }

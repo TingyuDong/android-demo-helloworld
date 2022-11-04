@@ -2,6 +2,7 @@ package com.thoughtworks.androidtrain
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -49,9 +50,7 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         val type = object : TypeToken<ArrayList<Tweet>>() {}.type
         val jsonString = JSONResourceUtils().jsonResourceReader(resources, R.raw.tweets)
         val tweets = Gson().fromJson<ArrayList<Tweet>?>(jsonString, type)
-        launch {
-            tweets.addAll(repository.fetchTweets())
-        }
+        tweets.addAll(repository.fetchTweets())
         addEmptyData(tweets)
         return tweets
     }

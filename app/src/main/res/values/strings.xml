@@ -47,4 +47,5 @@ Click "I know" and no longer prompt</string>
     <string name="tips_not_shown">Welcome back</string>
     <string name="i_know">I Know</string>
     <string name="shared_preference" translatable="false">SharedPreference</string>
+    <string name="room">room</string>
 </resources>
