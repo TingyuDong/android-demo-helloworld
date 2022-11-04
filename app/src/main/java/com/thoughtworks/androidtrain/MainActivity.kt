@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity() {
             null,
             "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
         )
-        val comment = Comment("真不错",commentSender)
+        val comment = Comment("真不错", commentSender)
         repository.addTweet(
             Tweet(
                 0,

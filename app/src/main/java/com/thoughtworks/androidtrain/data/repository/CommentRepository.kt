@@ -6,7 +6,7 @@ import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import java.util.stream.Collectors
 
-class CommentRepository() : CommentRepositoryInterface {
+class CommentRepository : CommentRepositoryInterface {
     private val databaseRepository = DatabaseRepository.get()
     private val database: AppDatabase = databaseRepository.getDatabase()
 

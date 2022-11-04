@@ -15,7 +15,7 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
         const val LAST_TYPE = 1
     }
 
-    var tweets = arrayListOf<Tweet>()
+    private var tweets = arrayListOf<Tweet>()
 
     fun setTweet(tweetsObj: ArrayList<Tweet>) {
         tweets.clear()
