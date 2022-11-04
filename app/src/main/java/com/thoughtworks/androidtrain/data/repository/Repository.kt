@@ -2,12 +2,9 @@ package com.thoughtworks.androidtrain.data.repository
 
 import android.content.Context
 import androidx.room.Room
-import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
-import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
-import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import com.thoughtworks.androidtrain.data.source.local.room.entity.ImagePO
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import java.util.stream.Collectors
@@ -22,11 +19,10 @@ class Repository private constructor(context: Context) : TweetRepository {
             .build()
 
     private val tweetDao = database.tweetDao()
-    private val senderDao = database.senderDao()
     private val imageDao = database.imageDao()
-    private val commentDao = database.commentDao()
 
     private val senderRepository = SenderRepository(this)
+    private val commentRepository = CommentRepository(this)
 
     companion object {
         private var INSTANCE: Repository? = null
@@ -50,7 +46,7 @@ class Repository private constructor(context: Context) : TweetRepository {
         val tweetData: List<Tweet> = tweets.stream().map {
             val sender = it.senderId?.let { it1 -> senderRepository.getSender(it1) }
             val images = getImages(it.id)
-            val comments = getComments(it.id)
+            val comments = commentRepository.getComments(it.id)
             Tweet(it.id, it.content, sender, images, comments, it.error, it.unknownError)
         }.collect(Collectors.toList())
         return ArrayList(tweetData)
@@ -67,7 +63,7 @@ class Repository private constructor(context: Context) : TweetRepository {
                 tweet.unknownError
             )
         )
-        addComments(tweet.comments, tweetId.toInt())
+        commentRepository.addComments(tweet.comments, tweetId.toInt())
         addImages(tweet.images, tweetId.toInt())
     }
 
@@ -81,35 +77,6 @@ class Repository private constructor(context: Context) : TweetRepository {
             return imagesPO.stream().map { Image(it.id, it.url) }.collect(Collectors.toList())
         }
         return null
-    }
-
-    override fun getComments(tweetId: Int): List<Comment>? {
-        val commentsPO = commentDao.getComments(tweetId)
-        if (commentsPO != null) {
-            return commentsPO.stream().map {
-                val sender = senderDao.getSender(it.senderId)
-                Comment(it.content,
-                    sender?.let { it1 ->
-                        Sender(
-                            it1.id,
-                            it1.userName,
-                            sender.nick,
-                            sender.avatar
-                        )
-                    })
-            }.collect(Collectors.toList())
-        }
-        return null
-    }
-
-    override fun addComments(comments: List<Comment>?, tweetId: Int) {
-        val commentsCollect = comments?.stream()?.map {
-            val senderId = senderRepository.addSender(it.sender)
-            senderId?.let { it1 -> CommentPO(0, tweetId, it.content, it1.toInt()) }
-        }?.collect(Collectors.toList())
-        if (commentsCollect != null) {
-            commentDao.insertAllComments(commentsCollect)
-        }
     }
 
     override fun addImages(images: List<Image>?, tweetId: Int) {

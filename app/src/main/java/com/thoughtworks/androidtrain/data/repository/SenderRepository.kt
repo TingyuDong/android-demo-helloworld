@@ -4,9 +4,9 @@ import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 
 class SenderRepository(repository: Repository): SenderRepositoryInterface {
-    private val db = repository.getDatabase()
+    private val database = repository.getDatabase()
 
-    private val senderDao = db.senderDao()
+    private val senderDao = database.senderDao()
 
     override fun getSender(senderId: Int): Sender? {
         val senderPO = senderDao.getSender(senderId)

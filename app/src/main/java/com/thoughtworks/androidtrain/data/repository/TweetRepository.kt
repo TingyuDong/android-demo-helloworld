@@ -1,6 +1,5 @@
 package com.thoughtworks.androidtrain.data.repository
 
-import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Tweet
 
@@ -9,7 +8,5 @@ interface TweetRepository {
     fun addTweet(tweet: Tweet)
     fun addAllTweet(tweets: ArrayList<Tweet>)
     fun getImages(tweetId: Int): List<Image>?
-    fun getComments(tweetId: Int): List<Comment>?
-    fun addComments(comments: List<Comment>?, tweetId: Int)
     fun addImages(images: List<Image>?, tweetId: Int)
 }
