@@ -3,7 +3,7 @@ package com.thoughtworks.androidtrain.data.repository
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Tweet
 
-interface TweetRepository {
+interface RepositoryInterface {
     fun fetchTweets(): List<Tweet>
     fun addTweet(tweet: Tweet)
     fun addAllTweet(tweets: ArrayList<Tweet>)

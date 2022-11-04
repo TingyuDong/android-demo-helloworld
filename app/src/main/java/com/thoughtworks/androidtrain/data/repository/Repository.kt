@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
 
 private const val DATABASE_NAME = "tweet"
 
-class Repository private constructor(context: Context) : TweetRepository {
+class Repository private constructor(context: Context) : RepositoryInterface {
     private val database: AppDatabase =
         Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DATABASE_NAME)
             .allowMainThreadQueries()
