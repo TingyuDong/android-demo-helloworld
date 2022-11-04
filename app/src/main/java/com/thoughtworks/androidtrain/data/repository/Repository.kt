@@ -52,11 +52,12 @@ class Repository private constructor(context: Context) : TweetRepository {
     }
 
     override fun addTweet(tweet: Tweet) {
-        var tweetId = tweetDao.insertTweet(
+        val senderId = addSender(tweet.sender)
+        val tweetId = tweetDao.insertTweet(
             TweetPO(
                 tweet.id,
                 tweet.content,
-                tweet.sender?.id,
+                senderId?.toInt(),
                 tweet.error,
                 tweet.unknownError
             )
