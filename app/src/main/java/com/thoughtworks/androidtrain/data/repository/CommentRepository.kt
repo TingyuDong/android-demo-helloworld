@@ -8,7 +8,7 @@ import java.util.stream.Collectors
 
 interface CommentRepositoryInterface {
     fun getComments(tweetId: Int): List<Comment>?
-    fun addComments(comments: List<Comment>?, tweetId: Int)
+    fun addComments(comments: List<Comment>, tweetId: Int)
 }
 
 class CommentRepository : CommentRepositoryInterface {
@@ -39,9 +39,9 @@ class CommentRepository : CommentRepositoryInterface {
         return null
     }
 
-    override fun addComments(comments: List<Comment>?, tweetId: Int) {
-        val commentsCollect = comments?.stream()?.map {
-            val senderId = senderRepository.addSender(it.sender)
+    override fun addComments(comments: List<Comment>, tweetId: Int) {
+        val commentsCollect = comments.stream().map {
+            val senderId = it.sender?.let { it1 -> senderRepository.addSender(it1) }
             senderId?.let { it1 -> CommentPO(0, tweetId, it.content, it1.toInt()) }
         }?.collect(Collectors.toList())
         if (commentsCollect != null) {

@@ -7,7 +7,7 @@ import java.util.stream.Collectors
 
 interface ImageRepositoryInterface {
     fun getImages(tweetId: Int): List<Image>?
-    fun addImages(images: List<Image>?, tweetId: Int)
+    fun addImages(images: List<Image>, tweetId: Int)
 }
 
 class ImageRepository : ImageRepositoryInterface {
@@ -24,8 +24,8 @@ class ImageRepository : ImageRepositoryInterface {
         return null
     }
 
-    override fun addImages(images: List<Image>?, tweetId: Int) {
-        val imagesCollect = images?.stream()?.map {
+    override fun addImages(images: List<Image>, tweetId: Int) {
+        val imagesCollect = images.stream().map {
             ImagePO(0, tweetId, it.url)
         }?.collect(Collectors.toList())
         if (imagesCollect != null) {

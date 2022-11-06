@@ -5,7 +5,7 @@ import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 
 interface SenderRepositoryInterface {
     fun getSender(senderId: Int): Sender?
-    fun addSender(sender: Sender?): Long?
+    fun addSender(sender: Sender): Long?
 }
 
 class SenderRepository : SenderRepositoryInterface {
@@ -22,16 +22,13 @@ class SenderRepository : SenderRepositoryInterface {
         return null
     }
 
-    override fun addSender(sender: Sender?): Long? {
-        if (sender != null) {
-            val senderPO = if (sender.id==null){
-                SenderPO(0, sender.username, sender.nick, sender.avatar)
-            }else{
-                SenderPO(sender.id!!, sender.username, sender.nick, sender.avatar)
-            }
-            return senderDao.insertSender(senderPO)
+    override fun addSender(sender: Sender): Long {
+        val senderPO = if (sender.id==null){
+            SenderPO(0, sender.username, sender.nick, sender.avatar)
+        }else{
+            SenderPO(sender.id!!, sender.username, sender.nick, sender.avatar)
         }
-        return null
+        return senderDao.insertSender(senderPO)
     }
 
 }
