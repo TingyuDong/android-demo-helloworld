@@ -8,8 +8,8 @@ import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 
 @Dao
 interface SenderDao {
-    @Query("SELECT * FROM sender where id =:senderId")
-    fun getSender(senderId: Int): SenderPO?
+    @Query("SELECT * FROM sender where user_name =:userName")
+    fun getSender(userName: String): SenderPO?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSender(sender: SenderPO): Long

@@ -26,7 +26,7 @@ class TweetRepository : TweetRepositoryInterface {
     override fun fetchTweets(): ArrayList<Tweet> {
         val tweets = tweetDao.getAll()
         val tweetData: List<Tweet> = tweets.stream().map {
-            val sender = it.senderId?.let { it1 -> senderRepository.getSender(it1) }
+            val sender = it.senderName?.let { it1 -> senderRepository.getSender(it1) }
             val images = imageRepository.getImages(it.id)
             val comments = commentRepository.getComments(it.id)
             Tweet(it.id, it.content, sender, images, comments, it.error, it.unknownError)
@@ -35,12 +35,12 @@ class TweetRepository : TweetRepositoryInterface {
     }
 
     override fun addTweet(tweet: Tweet) {
-        val senderId = tweet.sender?.let { senderRepository.addSender(it) }
+        tweet.sender?.let { senderRepository.addSender(it) }
         val tweetId = tweetDao.insertTweet(
             TweetPO(
                 tweet.id,
                 tweet.content,
-                senderId?.toInt(),
+                senderName = tweet.sender?.username,
                 tweet.error,
                 tweet.unknownError
             )

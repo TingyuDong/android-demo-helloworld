@@ -19,7 +19,6 @@ class TweetApplication : Application() {
         val tweetRepository = TweetRepository()
         val senderRepository = SenderRepository()
         val sender = Sender(
-            8,
             "Aiolia",
             "Aio",
             "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
@@ -27,9 +26,6 @@ class TweetApplication : Application() {
         val senderId = senderRepository.addSender(
             sender
         )
-        if (senderId != null) {
-            sender.setId(senderId.toInt())
-        }
         tweetRepository.addTweet(
             Tweet(
                 7,

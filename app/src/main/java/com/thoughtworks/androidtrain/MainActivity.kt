@@ -186,23 +186,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun addTweet() {
         val tweetSender = Sender(
-            null,
             "Aiolia",
             "Aio",
             "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
         )
         val commentSender = Sender(
-            null,
             "Saga",
             "Saga",
             "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
         )
-        val senderId = senderRepository.addSender(
+        senderRepository.addSender(
             tweetSender
         )
-        if (senderId != null) {
-            tweetSender.setId(senderId.toInt())
-        }
+        senderRepository.addSender(
+            commentSender
+        )
 
         val image = Image(
             "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
@@ -219,6 +217,5 @@ class MainActivity : AppCompatActivity() {
                 null
             )
         )
-        Log.i("TweetApplication:", senderId.toString())
     }
 }

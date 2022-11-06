@@ -24,11 +24,10 @@ class CommentRepository : CommentRepositoryInterface {
         val commentsPO = commentDao.getComments(tweetId)
         if (commentsPO != null) {
             return commentsPO.stream().map {
-                val sender = senderDao.getSender(it.senderId)
+                val sender = senderDao.getSender(it.senderName)
                 Comment(it.content,
                     sender?.let { it1 ->
                         Sender(
-                            it1.id,
                             it1.userName,
                             sender.nick,
                             sender.avatar
@@ -41,8 +40,10 @@ class CommentRepository : CommentRepositoryInterface {
 
     override fun addComments(comments: List<Comment>, tweetId: Int) {
         val commentsCollect = comments.stream().map {
-            val senderId = it.sender?.let { it1 -> senderRepository.addSender(it1) }
-            senderId?.let { it1 -> CommentPO(0, tweetId, it.content, it1.toInt()) }
+            it.sender?.let { it1 ->
+                senderRepository.addSender(it1)
+                CommentPO(0, tweetId, it.content, it.sender.username)
+            }
         }?.collect(Collectors.toList())
         if (commentsCollect != null) {
             commentDao.insertAllComments(commentsCollect)

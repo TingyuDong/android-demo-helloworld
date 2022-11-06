@@ -13,6 +13,6 @@ class CommentPO(
     val TweetId: Int,
     @ColumnInfo(name = "content")
     val content: String,
-    @ColumnInfo(name = "sender_id")
-    val senderId: Int
+    @ColumnInfo(name = "sender_name")
+    val senderName: String
 )
