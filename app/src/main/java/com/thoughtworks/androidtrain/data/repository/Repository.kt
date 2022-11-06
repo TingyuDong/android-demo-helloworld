@@ -6,7 +6,13 @@ import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
-class Repository : RepositoryInterface {
+interface TweetRepositoryInterface {
+    fun fetchTweets(): List<Tweet>
+    fun addTweet(tweet: Tweet)
+    fun addAllTweet(tweets: ArrayList<Tweet>)
+}
+
+class Repository : TweetRepositoryInterface {
     private val databaseRepository = DatabaseRepository.get()
 
     private val database: AppDatabase = databaseRepository.getDatabase()

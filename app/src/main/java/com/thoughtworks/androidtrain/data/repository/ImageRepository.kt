@@ -5,6 +5,11 @@ import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import com.thoughtworks.androidtrain.data.source.local.room.entity.ImagePO
 import java.util.stream.Collectors
 
+interface ImageRepositoryInterface {
+    fun getImages(tweetId: Int): List<Image>?
+    fun addImages(images: List<Image>?, tweetId: Int)
+}
+
 class ImageRepository : ImageRepositoryInterface {
     private val databaseRepository = DatabaseRepository.get()
     private val database: AppDatabase = databaseRepository.getDatabase()

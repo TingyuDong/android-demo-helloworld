@@ -6,6 +6,10 @@ import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 
 private const val DATABASE_NAME = "tweet"
 
+interface DatabaseRepositoryInterface {
+    fun getDatabase(): AppDatabase
+}
+
 class DatabaseRepository private constructor(context: Context) : DatabaseRepositoryInterface {
     private val database: AppDatabase =
         Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DATABASE_NAME)

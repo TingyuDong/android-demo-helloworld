@@ -80,11 +80,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addBtnEvent() {
+        val btnLogin: Button = findViewById(R.id.pick_login)
         val btnPickContact: Button = findViewById(R.id.btn_pick_contact)
         val btnFragment: Button = findViewById(R.id.btn_fragment)
         val btnRecyclerview: Button = findViewById(R.id.btn_recyclerView)
         val btnSharedPreference: Button = findViewById(R.id.shared_preference)
         val btnRoom: Button = findViewById(R.id.room)
+        btnLogin.setOnClickListener {
+            login()
+        }
         btnPickContact.setOnClickListener {
             pickContact()
         }
@@ -100,6 +104,11 @@ class MainActivity : AppCompatActivity() {
         btnRoom.setOnClickListener {
             addTweet()
         }
+    }
+
+    private fun login() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
     }
 
     private fun sharedPreference() {

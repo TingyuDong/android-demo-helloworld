@@ -3,6 +3,11 @@ package com.thoughtworks.androidtrain.data.repository
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 
+interface SenderRepositoryInterface {
+    fun getSender(senderId: Int): Sender?
+    fun addSender(sender: Sender?): Long?
+}
+
 class SenderRepository : SenderRepositoryInterface {
     private val databaseRepository = DatabaseRepository.get()
     private val database = databaseRepository.getDatabase()

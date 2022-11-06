@@ -27,10 +27,11 @@
                 android:backgroundTint="@color/gray" />
 
             <Button
+                android:id="@+id/pick_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/button_2"
+                android:text="@string/login"
                 android:backgroundTint="@color/gray" />
 
             <Button
