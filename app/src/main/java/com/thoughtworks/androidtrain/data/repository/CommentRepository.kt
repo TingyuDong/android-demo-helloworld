@@ -12,7 +12,8 @@ interface CommentRepositoryInterface {
     fun addComments(comments: List<Comment>, tweetId: Int)
 }
 
-class CommentRepository(private val commentDao: CommentDao, private val senderDao: SenderDao) : CommentRepositoryInterface {
+class CommentRepository(private val commentDao: CommentDao, private val senderDao: SenderDao) :
+    CommentRepositoryInterface {
 
     private val senderRepository = SenderRepository(senderDao)
 
@@ -21,12 +22,13 @@ class CommentRepository(private val commentDao: CommentDao, private val senderDa
         if (commentsPO != null) {
             return commentsPO.stream().map {
                 val sender = senderDao.getSender(it.senderName)
-                Comment(it.content,
-                    sender?.let { it1 ->
+                Comment(
+                    content = it.content,
+                    sender = sender?.let { it1 ->
                         Sender(
-                            it1.userName,
-                            sender.nick,
-                            sender.avatar
+                            username = it1.userName,
+                            nick = sender.nick,
+                            avatar = sender.avatar
                         )
                     })
             }.collect(Collectors.toList())
@@ -38,7 +40,12 @@ class CommentRepository(private val commentDao: CommentDao, private val senderDa
         val commentsCollect = comments.stream().map {
             it.sender?.let { it1 ->
                 senderRepository.addSender(it1)
-                CommentPO(0, tweetId, it.content, it.sender.username)
+                CommentPO(
+                    id = 0,
+                    tweetId = tweetId,
+                    content = it.content,
+                    senderName = it.sender.username
+                )
             }
         }?.collect(Collectors.toList())
         if (commentsCollect != null) {

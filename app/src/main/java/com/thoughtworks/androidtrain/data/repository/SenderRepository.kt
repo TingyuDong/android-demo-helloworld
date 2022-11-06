@@ -14,13 +14,18 @@ class SenderRepository(private val senderDao: SenderDao) : SenderRepositoryInter
     override fun getSender(userName: String): Sender? {
         val senderPO = senderDao.getSender(userName)
         if (senderPO != null) {
-            return Sender(senderPO.userName, senderPO.nick, senderPO.avatar)
+            return Sender(
+                username = senderPO.userName,
+                nick = senderPO.nick,
+                avatar = senderPO.avatar
+            )
         }
         return null
     }
 
     override fun addSender(sender: Sender): Long {
-        val senderPO = SenderPO(sender.username, sender.nick, sender.avatar)
+        val senderPO =
+            SenderPO(userName = sender.username, nick = sender.nick, avatar = sender.avatar)
         return senderDao.insertSender(senderPO)
     }
 
