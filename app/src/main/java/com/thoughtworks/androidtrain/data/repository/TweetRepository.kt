@@ -13,15 +13,16 @@ interface TweetRepositoryInterface {
 }
 
 class TweetRepository : TweetRepositoryInterface {
-    private val databaseRepository = DatabaseRepository.get()
-
-    private val database: AppDatabase = databaseRepository.getDatabase()
+    private val database: AppDatabase = DatabaseRepository.get().getDatabase()
 
     private val tweetDao = database.tweetDao()
+    private val senderDao = database.senderDao()
+    private val commentDao = database.commentDao()
+    private val imageDao = database.imageDao()
 
-    private val senderRepository = SenderRepository()
-    private val commentRepository = CommentRepository()
-    private val imageRepository = ImageRepository()
+    private val senderRepository = SenderRepository(senderDao)
+    private val commentRepository = CommentRepository(commentDao,senderDao)
+    private val imageRepository = ImageRepository(imageDao)
 
     override fun fetchTweets(): ArrayList<Tweet> {
         val tweets = tweetDao.getAll()

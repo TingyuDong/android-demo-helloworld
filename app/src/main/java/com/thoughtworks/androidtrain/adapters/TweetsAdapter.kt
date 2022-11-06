@@ -1,8 +1,10 @@
 package com.thoughtworks.androidtrain.adapters
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -40,6 +42,9 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (tweets.lastIndex != position) {
             val tweetViewHolder = holder as TweetViewHolder
+            tweets[position].sender?.let {
+                tweetViewHolder.tweetAvatar.setImageURI(Uri.parse(it.avatar))
+            }
             tweetViewHolder.tweetName.text = tweets[position].sender?.username
             tweetViewHolder.tweetContent.text = tweets[position].content
         }
@@ -54,6 +59,7 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
     }
 
     class TweetViewHolder(itemView: View) : ViewHolder(itemView) {
+        var tweetAvatar: ImageView = itemView.findViewById(R.id.tweet_avatar)
         var tweetName: TextView = itemView.findViewById(R.id.tweet_name)
         var tweetContent: TextView = itemView.findViewById(R.id.tweet_content)
     }

@@ -16,15 +16,20 @@ import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import com.thoughtworks.androidtrain.data.repository.SenderRepository
+import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 
 class MainActivity : AppCompatActivity() {
     object List {
         const val TAG: String = "MainActivity"
     }
 
-    private val senderRepository = SenderRepository()
+    private val database: AppDatabase = DatabaseRepository.get().getDatabase()
+    private val senderDao = database.senderDao()
+
+    private val senderRepository = SenderRepository(senderDao)
     private val tweetRepository = TweetRepository()
 
     private val startActivity =

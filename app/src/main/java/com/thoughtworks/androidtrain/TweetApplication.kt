@@ -7,6 +7,7 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import com.thoughtworks.androidtrain.data.repository.SenderRepository
+import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 
 class TweetApplication : Application() {
     override fun onCreate() {
@@ -16,8 +17,12 @@ class TweetApplication : Application() {
     }
 
     private fun addTweet() {
+        val database: AppDatabase = DatabaseRepository.get().getDatabase()
+        val senderDao = database.senderDao()
+
         val tweetRepository = TweetRepository()
-        val senderRepository = SenderRepository()
+        val senderRepository = SenderRepository(senderDao)
+
         val sender = Sender(
             "Aiolia",
             "Aio",

@@ -1,6 +1,7 @@
 package com.thoughtworks.androidtrain.data.repository
 
 import com.thoughtworks.androidtrain.data.model.Sender
+import com.thoughtworks.androidtrain.data.source.local.room.dao.SenderDao
 import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 
 interface SenderRepositoryInterface {
@@ -8,11 +9,7 @@ interface SenderRepositoryInterface {
     fun addSender(sender: Sender): Long?
 }
 
-class SenderRepository : SenderRepositoryInterface {
-    private val databaseRepository = DatabaseRepository.get()
-    private val database = databaseRepository.getDatabase()
-
-    private val senderDao = database.senderDao()
+class SenderRepository(private val senderDao: SenderDao) : SenderRepositoryInterface {
 
     override fun getSender(userName: String): Sender? {
         val senderPO = senderDao.getSender(userName)

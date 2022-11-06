@@ -2,7 +2,8 @@ package com.thoughtworks.androidtrain.data.repository
 
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Sender
-import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
+import com.thoughtworks.androidtrain.data.source.local.room.dao.CommentDao
+import com.thoughtworks.androidtrain.data.source.local.room.dao.SenderDao
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import java.util.stream.Collectors
 
@@ -11,14 +12,9 @@ interface CommentRepositoryInterface {
     fun addComments(comments: List<Comment>, tweetId: Int)
 }
 
-class CommentRepository : CommentRepositoryInterface {
-    private val databaseRepository = DatabaseRepository.get()
-    private val database: AppDatabase = databaseRepository.getDatabase()
+class CommentRepository(private val commentDao: CommentDao, private val senderDao: SenderDao) : CommentRepositoryInterface {
 
-    private val commentDao = database.commentDao()
-    private val senderDao = database.senderDao()
-
-    private val senderRepository = SenderRepository()
+    private val senderRepository = SenderRepository(senderDao)
 
     override fun getComments(tweetId: Int): List<Comment>? {
         val commentsPO = commentDao.getComments(tweetId)

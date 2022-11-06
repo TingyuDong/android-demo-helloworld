@@ -48,7 +48,7 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         val type = object : TypeToken<ArrayList<Tweet>>() {}.type
         val jsonString = JSONResourceUtils().jsonResourceReader(resources, R.raw.tweets)
         val tweets = Gson().fromJson<ArrayList<Tweet>?>(jsonString, type)
-//        repository.addAllTweet(tweets)
+//        tweetRepository.addAllTweet(tweets)
         tweets.addAll(tweetRepository.fetchTweets())
         addEmptyData(tweets)
         return tweets
