@@ -44,21 +44,17 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         createTweets()?.let { tweetsAdapter.setTweet(it) }
     }
 
-    private fun createTweets(): ArrayList<Tweet>? {
-        val type = object : TypeToken<ArrayList<Tweet>>() {}.type
+    private fun createTweets(): ArrayList<Tweet?>? {
+        val type = object : TypeToken<ArrayList<Tweet?>>() {}.type
         val jsonString = JSONResourceUtils().jsonResourceReader(resources, R.raw.tweets)
-        val tweets = Gson().fromJson<ArrayList<Tweet>?>(jsonString, type)
+        val tweets = Gson().fromJson<ArrayList<Tweet?>?>(jsonString, type)
 //        tweetRepository.addAllTweet(tweets)
         tweets.addAll(tweetRepository.fetchTweets())
         addEmptyData(tweets)
         return tweets
     }
 
-    private fun addEmptyData(tweets: ArrayList<Tweet>) {
-        val tweet = Tweet(
-            tweets.size + 1,
-            null, null, null, null, null, null
-        )
-        tweets.add(tweet)
+    private fun addEmptyData(tweets: ArrayList<Tweet?>) {
+        tweets.add(null)
     }
 }

@@ -17,9 +17,9 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
         const val LAST_TYPE = 1
     }
 
-    private var tweets = arrayListOf<Tweet>()
+    private var tweets = arrayListOf<Tweet?>()
 
-    fun setTweet(tweetsObj: ArrayList<Tweet>) {
+    fun setTweet(tweetsObj: ArrayList<Tweet?>) {
         tweets.clear()
         tweets = tweetsObj
         notifyDataSetChanged()
@@ -42,11 +42,11 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (tweets.lastIndex != position) {
             val tweetViewHolder = holder as TweetViewHolder
-            tweets[position].sender?.let {
+            tweets[position]?.sender?.let {
                 tweetViewHolder.tweetAvatar.setImageURI(Uri.parse(it.avatar))
             }
-            tweetViewHolder.tweetName.text = tweets[position].sender?.username
-            tweetViewHolder.tweetContent.text = tweets[position].content
+            tweetViewHolder.tweetName.text = tweets[position]?.sender?.username
+            tweetViewHolder.tweetContent.text = tweets[position]?.content
         }
     }
 
