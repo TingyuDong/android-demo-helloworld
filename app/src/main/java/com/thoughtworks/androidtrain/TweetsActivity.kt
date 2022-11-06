@@ -8,7 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.adapters.TweetsAdapter
 import com.thoughtworks.androidtrain.data.model.Tweet
-import com.thoughtworks.androidtrain.data.repository.Repository
+import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import com.thoughtworks.androidtrain.utils.JSONResourceUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -16,7 +16,7 @@ import kotlinx.coroutines.cancel
 
 class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var tweetsAdapter: TweetsAdapter
-    private val repository = Repository()
+    private val tweetRepository = TweetRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         val jsonString = JSONResourceUtils().jsonResourceReader(resources, R.raw.tweets)
         val tweets = Gson().fromJson<ArrayList<Tweet>?>(jsonString, type)
 //        repository.addAllTweet(tweets)
-        tweets.addAll(repository.fetchTweets())
+        tweets.addAll(tweetRepository.fetchTweets())
         addEmptyData(tweets)
         return tweets
     }

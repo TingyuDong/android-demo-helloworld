@@ -5,7 +5,7 @@ import android.util.Log
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
-import com.thoughtworks.androidtrain.data.repository.Repository
+import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import com.thoughtworks.androidtrain.data.repository.SenderRepository
 
 class TweetApplication : Application() {
@@ -16,7 +16,7 @@ class TweetApplication : Application() {
     }
 
     private fun addTweet() {
-        val repository = Repository()
+        val tweetRepository = TweetRepository()
         val senderRepository = SenderRepository()
         val sender = Sender(
             8,
@@ -30,7 +30,7 @@ class TweetApplication : Application() {
         if (senderId != null) {
             sender.setId(senderId.toInt())
         }
-        repository.addTweet(
+        tweetRepository.addTweet(
             Tweet(
                 7,
                 "沙发",

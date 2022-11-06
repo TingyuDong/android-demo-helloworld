@@ -12,7 +12,7 @@ interface TweetRepositoryInterface {
     fun addAllTweet(tweets: ArrayList<Tweet>)
 }
 
-class Repository : TweetRepositoryInterface {
+class TweetRepository : TweetRepositoryInterface {
     private val databaseRepository = DatabaseRepository.get()
 
     private val database: AppDatabase = databaseRepository.getDatabase()

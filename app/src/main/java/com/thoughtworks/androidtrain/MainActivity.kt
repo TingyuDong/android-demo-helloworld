@@ -16,7 +16,7 @@ import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
-import com.thoughtworks.androidtrain.data.repository.Repository
+import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import com.thoughtworks.androidtrain.data.repository.SenderRepository
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val senderRepository = SenderRepository()
-    private val repository = Repository()
+    private val tweetRepository = TweetRepository()
 
     private val startActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -209,7 +209,7 @@ class MainActivity : AppCompatActivity() {
             "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
         )
         val comment = Comment("真不错", commentSender)
-        repository.addTweet(
+        tweetRepository.addTweet(
             Tweet(
                 0,
                 "沙发",
