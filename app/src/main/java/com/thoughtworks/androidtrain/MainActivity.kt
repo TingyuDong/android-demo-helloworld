@@ -191,35 +191,30 @@ class MainActivity : AppCompatActivity() {
 
     private fun addTweet() {
         val tweetSender = Sender(
-            "Aiolia",
-            "Aio",
-            "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
+            username = "Aiolia",
+            nick = "Aio",
+            avatar = "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
         )
         val commentSender = Sender(
-            "Saga",
-            "Saga",
-            "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
+            username = "Saga",
+            nick = "Saga",
+            avatar = "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
         )
-        senderRepository.addSender(
-            tweetSender
-        )
-        senderRepository.addSender(
-            commentSender
-        )
-
+        senderRepository.addSender(tweetSender)
+        senderRepository.addSender(commentSender)
         val image = Image(
-            "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
+            url = "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
         )
-        val comment = Comment("真不错", commentSender)
+        val comment = Comment(content = "真不错", sender = commentSender)
         tweetRepository.addTweet(
             Tweet(
-                0,
-                "沙发",
-                tweetSender,
-                listOf(image),
-                listOf(comment),
-                null,
-                null
+                id = 0,
+                content = "沙发",
+                sender = tweetSender,
+                images = listOf(image),
+                comments = listOf(comment),
+                error = null,
+                unknownError = null
             )
         )
     }

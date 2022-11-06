@@ -1,7 +1,6 @@
 package com.thoughtworks.androidtrain
 
 import android.app.Application
-import android.util.Log
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
@@ -24,24 +23,21 @@ class TweetApplication : Application() {
         val senderRepository = SenderRepository(senderDao)
 
         val sender = Sender(
-            "Aiolia",
-            "Aio",
-            "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
+            username = "Aiolia",
+            nick = "Aio",
+            avatar = "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
         )
-        val senderId = senderRepository.addSender(
-            sender
-        )
+        senderRepository.addSender(sender)
         tweetRepository.addTweet(
             Tweet(
-                7,
-                "沙发",
-                sender,
-                null,
-                null,
-                null,
-                null
+                id = 7,
+                content = "沙发",
+                sender = sender,
+                images = null,
+                comments = null,
+                error = null,
+                unknownError = null
             )
         )
-        Log.i("TweetApplication:", senderId.toString())
     }
 }
