@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         val btnFragment: Button = findViewById(R.id.btn_fragment)
         val btnRecyclerview: Button = findViewById(R.id.btn_recyclerView)
         val btnSharedPreference: Button = findViewById(R.id.shared_preference)
-        val btnRoom: Button = findViewById(R.id.room)
+        val btnRoom: Button = findViewById(R.id.add_tweet)
         btnLogin.setOnClickListener {
             login()
         }

@@ -67,11 +67,11 @@
                 android:backgroundTint="@color/gray" />
 
             <Button
-                android:id="@+id/room"
+                android:id="@+id/add_tweet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/room"
+                android:text="@string/add_tweet"
                 android:backgroundTint="@color/gray" />
 
             <Button
