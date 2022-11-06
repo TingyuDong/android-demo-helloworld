@@ -19,18 +19,14 @@ class ImageRepository : ImageRepositoryInterface {
     override fun getImages(tweetId: Int): List<Image>? {
         val imagesPO = imageDao.getImages(tweetId)
         if (imagesPO != null) {
-            return imagesPO.stream().map { Image(it.id, it.url) }.collect(Collectors.toList())
+            return imagesPO.stream().map { Image(it.url) }.collect(Collectors.toList())
         }
         return null
     }
 
     override fun addImages(images: List<Image>?, tweetId: Int) {
         val imagesCollect = images?.stream()?.map {
-            if (it.id == null) {
-                ImagePO(0, tweetId, it.url)
-            } else {
-                ImagePO(it.id, tweetId, it.url)
-            }
+            ImagePO(0, tweetId, it.url)
         }?.collect(Collectors.toList())
         if (imagesCollect != null) {
             imageDao.insertAllImages(imagesCollect)

@@ -205,7 +205,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         val image = Image(
-            null,
             "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
         )
         val comment = Comment("真不错", commentSender)
