@@ -20,7 +20,7 @@
     <string name="button_9">按钮9</string>
     <string name="button_10">按钮10</string>
     <string name="hello_2">你好！</string>
-    <string name="login">登陆</string>
+    <string name="login">登录</string>
     <string name="signup">注册</string>
     <string name="reminder">提醒</string>
     <string name="done">已完成</string>
@@ -29,7 +29,7 @@
     <string name="remember_me">记住我</string>
     <string name="fogot_password">忘记密码</string>
     <string name="or_connect_with">或联系</string>
-    <string name="sign_up_with_email">用邮箱登陆</string>
+    <string name="sign_up_with_email">用邮箱登录</string>
     <string name="pick_contact">选择联系人</string>
     <string name="logo">标志</string>
     <string name="facebook_button">FaceBook按钮</string>
