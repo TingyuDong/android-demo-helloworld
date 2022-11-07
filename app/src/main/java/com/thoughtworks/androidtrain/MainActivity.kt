@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.provider.ContactsContract
 import android.util.Log
 import android.widget.Button
@@ -238,17 +239,26 @@ class MainActivity : AppCompatActivity() {
         val mainActivity = this
         MainScope().launch(Dispatchers.Main) {
             withContext(Dispatchers.IO) {
-                val url = "https://thoughtworks-mobile-2018.herokuapp.com/user/jsmith/tweets"
-                val request = Request.Builder()
-                    .url(url)
-                    .build()
-                val response = client.newCall(request).execute()
-                val obj = Objects.requireNonNull(response.body?.string())
-                val type = object : TypeToken<ArrayList<Tweet>>() {}.type
-                val tweetsFromNetwork = Gson().fromJson<ArrayList<Tweet>?>(obj, type)
-                tweetRepository.addAllTweet(tweetsFromNetwork)
+                try{
+                    val url = "https://thoughtworks-mobile-2018.herokuapp.com/user/jsmith/tweets"
+                    val request = Request.Builder()
+                        .url(url)
+                        .build()
+                    val response = client.newCall(request).execute()
+                    val obj = Objects.requireNonNull(response.body?.string())
+                    val type = object : TypeToken<ArrayList<Tweet>>() {}.type
+                    val tweetsFromNetwork = Gson().fromJson<ArrayList<Tweet>?>(obj, type)
+                    tweetRepository.addAllTweet(tweetsFromNetwork)
+                    Looper.prepare()
+                    Toast.makeText(mainActivity, "加载完毕", Toast.LENGTH_SHORT).show()
+                    Looper.loop()
+                }catch(e: Exception) {
+                    Looper.prepare()
+                    Toast.makeText(mainActivity, "加载出错，Exception ${e.message}", Toast.LENGTH_SHORT).show()
+                    Looper.loop()
+                }
             }
-            Toast.makeText(mainActivity, "加载完毕", Toast.LENGTH_SHORT).show()
+
         }
         Toast.makeText(mainActivity, "加载中", Toast.LENGTH_SHORT).show()
     }
