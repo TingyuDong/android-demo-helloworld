@@ -48,4 +48,5 @@ Click "I know" and no longer prompt</string>
     <string name="i_know">I Know</string>
     <string name="shared_preference" translatable="false">SharedPreference</string>
     <string name="add_tweet">Add Tweet</string>
+    <string name="fetch_tweet" translatable="false">Fetch Tweet</string>
 </resources>

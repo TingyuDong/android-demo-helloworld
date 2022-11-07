@@ -12,6 +12,8 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender
@@ -20,6 +22,14 @@ import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import com.thoughtworks.androidtrain.data.repository.SenderRepository
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     object List {
@@ -31,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private val senderRepository = SenderRepository(senderDao)
     private val tweetRepository = TweetRepository()
+    private val client = OkHttpClient()
 
     private val startActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -91,6 +102,7 @@ class MainActivity : AppCompatActivity() {
         val btnRecyclerview: Button = findViewById(R.id.btn_recyclerView)
         val btnSharedPreference: Button = findViewById(R.id.shared_preference)
         val btnRoom: Button = findViewById(R.id.add_tweet)
+        val btnFetchTweet: Button = findViewById(R.id.fetch_tweet)
         btnLogin.setOnClickListener {
             login()
         }
@@ -108,6 +120,9 @@ class MainActivity : AppCompatActivity() {
         }
         btnRoom.setOnClickListener {
             addTweet()
+        }
+        btnFetchTweet.setOnClickListener {
+            getTweetFromNet()
         }
     }
 
@@ -217,5 +232,24 @@ class MainActivity : AppCompatActivity() {
                 unknownError = null
             )
         )
+    }
+
+    private fun getTweetFromNet() {
+        val mainActivity = this
+        MainScope().launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO) {
+                val url = "https://thoughtworks-mobile-2018.herokuapp.com/user/jsmith/tweets"
+                val request = Request.Builder()
+                    .url(url)
+                    .build()
+                val response = client.newCall(request).execute()
+                val obj = Objects.requireNonNull(response.body?.string())
+                val type = object : TypeToken<ArrayList<Tweet>>() {}.type
+                val tweetsFromNetwork = Gson().fromJson<ArrayList<Tweet>?>(obj, type)
+                tweetRepository.addAllTweet(tweetsFromNetwork)
+            }
+            Toast.makeText(mainActivity, "加载完毕", Toast.LENGTH_SHORT).show()
+        }
+        Toast.makeText(mainActivity, "加载中", Toast.LENGTH_SHORT).show()
     }
 }

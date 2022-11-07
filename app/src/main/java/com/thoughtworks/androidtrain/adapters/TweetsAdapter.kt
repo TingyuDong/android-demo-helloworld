@@ -1,6 +1,5 @@
 package com.thoughtworks.androidtrain.adapters
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
     object ViewType {
         const val TWEET_TYPE = 0
         const val LAST_TYPE = 1
+        const val EMPTY_TYPE = 2
     }
 
     private var tweets = arrayListOf<Tweet?>()
@@ -29,7 +29,7 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
         val from: LayoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             ViewType.TWEET_TYPE -> TweetViewHolder(
-                from.inflate(R.layout.tweets_item_layout,parent,false)
+                from.inflate(R.layout.tweets_item_layout, parent, false)
             )
             else -> {
                 BottomViewHolder(
@@ -40,18 +40,20 @@ class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (tweets.lastIndex != position) {
+        if (tweets[position] != null && tweets.lastIndex != position) {
             val tweetViewHolder = holder as TweetViewHolder
-            tweets[position]?.sender?.let {
-                tweetViewHolder.tweetAvatar.setImageURI(Uri.parse(it.avatar))
-            }
+//            tweets[position]?.sender?.let {
+//                tweetViewHolder.tweetAvatar.setImageURI(Uri.parse(it.avatar))
+//            }
             tweetViewHolder.tweetName.text = tweets[position]?.sender?.username
             tweetViewHolder.tweetContent.text = tweets[position]?.content
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (tweets.lastIndex != position) return ViewType.TWEET_TYPE else ViewType.LAST_TYPE
+        return if (tweets.lastIndex != position && tweets[position] != null) ViewType.TWEET_TYPE
+        else if (tweets.lastIndex == position) ViewType.LAST_TYPE
+        else ViewType.EMPTY_TYPE
     }
 
     override fun getItemCount(): Int {

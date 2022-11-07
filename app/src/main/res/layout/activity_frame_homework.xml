@@ -75,10 +75,11 @@
                 android:backgroundTint="@color/gray" />
 
             <Button
+                android:id="@+id/fetch_tweet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/button_8"
+                android:text="@string/fetch_tweet"
                 android:backgroundTint="@color/gray" />
 
             <Button
