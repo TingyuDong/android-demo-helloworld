@@ -104,6 +104,7 @@ class MainActivity : AppCompatActivity() {
         val btnSharedPreference: Button = findViewById(R.id.shared_preference)
         val btnRoom: Button = findViewById(R.id.add_tweet)
         val btnFetchTweet: Button = findViewById(R.id.fetch_tweet)
+        val btnCompose: Button = findViewById(R.id.btn_compose)
         btnLogin.setOnClickListener {
             login()
         }
@@ -125,6 +126,14 @@ class MainActivity : AppCompatActivity() {
         btnFetchTweet.setOnClickListener {
             getTweetFromNet()
         }
+        btnCompose.setOnClickListener {
+            compose()
+        }
+    }
+
+    private fun compose() {
+        val intent = Intent(this, ComposeActivity::class.java)
+        startActivity(intent)
     }
 
     private fun login() {

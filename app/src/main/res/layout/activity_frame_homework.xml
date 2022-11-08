@@ -83,10 +83,11 @@
                 android:backgroundTint="@color/gray" />
 
             <Button
+                android:id="@+id/btn_compose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="@string/button_9"
+                android:text="@string/compose"
                 android:backgroundTint="@color/gray" />
 
             <Button
