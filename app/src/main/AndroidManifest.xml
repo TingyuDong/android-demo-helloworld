@@ -17,7 +17,7 @@
         android:theme="@style/Theme.HelloWorldKotlin"
         tools:targetApi="31">
         <activity
-            android:name=".ComposeActivity"
+            android:name=".compose.ComposeActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

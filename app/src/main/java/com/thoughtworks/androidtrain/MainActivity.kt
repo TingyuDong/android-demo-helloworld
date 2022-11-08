@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.thoughtworks.androidtrain.compose.ComposeActivity
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender

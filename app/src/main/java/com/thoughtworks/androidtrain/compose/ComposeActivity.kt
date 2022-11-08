@@ -1,4 +1,4 @@
-package com.thoughtworks.androidtrain
+package com.thoughtworks.androidtrain.compose
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -29,6 +29,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.thoughtworks.androidtrain.R
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.utils.JSONResourceUtils
@@ -45,12 +46,12 @@ class ComposeActivity : AppCompatActivity() {
             )
         )
         setContent {
-            Content()
+            TweetScreen()
         }
     }
 
     @Composable
-    private fun Content() {
+    private fun TweetScreen() {
         LazyColumn(
             verticalArrangement = Arrangement.Top,
             content = {
@@ -159,7 +160,7 @@ class ComposeActivity : AppCompatActivity() {
     fun ContentPreview() {
         tweets.add(getTweet())
         tweets.add(getTweet())
-        Content()
+        TweetScreen()
     }
 
     private fun getTweet(): Tweet {
