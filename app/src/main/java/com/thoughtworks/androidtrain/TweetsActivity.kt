@@ -2,7 +2,6 @@ package com.thoughtworks.androidtrain
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,13 +28,14 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private fun initViewModel() {
         tweetViewModel = ViewModelProvider(this)[TweetsViewModel::class.java]
         tweetViewModel.init((application as TweetApplication).getHttpClient())
-        tweetViewModel.tweetsData.observe(this) {
-            Toast.makeText(
-                this,
-                "数据改变$it",
-                Toast.LENGTH_SHORT
-            ).show()
-            createTweets()
+        tweetViewModel.tweetsDataFromNetwork.observe(this) {
+            tweets.addAll(it)
+            addEmptyData(tweets)
+            tweetsAdapter.notifyDataSetChanged()
+        }
+        tweetViewModel.tweetsDataFromDB.observe(this) {
+            tweets.addAll(it)
+            addEmptyData(tweets)
             tweetsAdapter.notifyDataSetChanged()
         }
     }
@@ -50,8 +50,8 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         tweetsAdapter = TweetsAdapter(tweets)
         recyclerView.adapter = tweetsAdapter
-        createTweets()
-        tweetsAdapter.setTweet(tweets)
+//        createTweets()
+//        tweetsAdapter.setTweet(tweets)
     }
 
     private fun createTweets(){
@@ -60,7 +60,7 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 //        val jsonString = JSONResourceUtils().jsonResourceReader(resources, R.raw.tweets)
 //        tweets.addAll(Gson().fromJson<ArrayList<Tweet?>?>(jsonString, adapterType))
 //        tweetRepository.addAllTweet(Gson().fromJson(jsonString, repositoryType))
-        tweets.clear()
+//        tweets.clear()
 
         tweets.addAll(tweetRepository.fetchTweets())
 //        getTweetFromNet()

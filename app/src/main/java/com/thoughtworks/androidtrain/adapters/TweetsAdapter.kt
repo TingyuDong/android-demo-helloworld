@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.thoughtworks.androidtrain.R
+import com.thoughtworks.androidtrain.adapters.TweetsAdapter.ViewType.LAST_TYPE
 import com.thoughtworks.androidtrain.data.model.Tweet
 
 class TweetsAdapter(//    private var tweets = arrayListOf<Tweet?>()
@@ -21,7 +22,7 @@ class TweetsAdapter(//    private var tweets = arrayListOf<Tweet?>()
 
     fun setTweet(tweetsObj: ArrayList<Tweet?>) {
         tweets.clear()
-        tweets = tweetsObj
+        tweets.addAll(tweetsObj)
         notifyDataSetChanged()
     }
 
@@ -31,11 +32,12 @@ class TweetsAdapter(//    private var tweets = arrayListOf<Tweet?>()
             ViewType.TWEET_TYPE -> TweetViewHolder(
                 from.inflate(R.layout.tweets_item_layout, parent, false)
             )
-            else -> {
+            LAST_TYPE -> {
                 BottomViewHolder(
                     from.inflate(R.layout.bottom_item_layout, parent, false)
                 )
             }
+            else -> {EmptyViewHolder(from.inflate(R.layout.empty_item_layout,parent,false))}
         }
     }
 
@@ -52,7 +54,7 @@ class TweetsAdapter(//    private var tweets = arrayListOf<Tweet?>()
 
     override fun getItemViewType(position: Int): Int {
         return if (tweets.lastIndex != position && tweets[position] != null) ViewType.TWEET_TYPE
-        else if (tweets.lastIndex == position) ViewType.LAST_TYPE
+        else if (tweets.lastIndex == position) LAST_TYPE
         else ViewType.EMPTY_TYPE
     }
 
@@ -67,4 +69,6 @@ class TweetsAdapter(//    private var tweets = arrayListOf<Tweet?>()
     }
 
     class BottomViewHolder(itemView: View) : ViewHolder(itemView)
+
+    class EmptyViewHolder(itemView: View) : ViewHolder(itemView)
 }
