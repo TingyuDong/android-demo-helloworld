@@ -126,13 +126,15 @@ class ComposeActivity : AppCompatActivity() {
             contentScale = ContentScale.Crop
         )
         if (showDialog.value) {
-            BigAvatar(painter)
+            BigAvatar(painter) {
+                showDialog.value = false
+            }
         }
     }
 
     @Composable
-    private fun BigAvatar(painter: AsyncImagePainter) {
-        Dialog(onDismissRequest = { /*TODO*/ }) {
+    private fun BigAvatar(painter: AsyncImagePainter, onDismissRequest: () -> Unit) {
+        Dialog(onDismissRequest = onDismissRequest) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
