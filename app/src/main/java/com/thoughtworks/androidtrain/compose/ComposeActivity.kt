@@ -8,6 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.R
+import com.thoughtworks.androidtrain.TweetApplication
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.utils.JSONResourceUtils
@@ -24,7 +25,7 @@ class ComposeActivity : AppCompatActivity() {
             )
         )
         setContent {
-            TweetScreen(tweets)
+            TweetScreen(application as TweetApplication)
         }
     }
 
@@ -33,7 +34,7 @@ class ComposeActivity : AppCompatActivity() {
     fun ContentPreview() {
         tweets.add(getTweet())
         tweets.add(getTweet())
-        TweetScreen(tweets)
+        TweetScreen(application as TweetApplication)
     }
 
     private fun getTweet(): Tweet {

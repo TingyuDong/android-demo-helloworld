@@ -1,5 +1,6 @@
 package com.thoughtworks.androidtrain
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
@@ -11,6 +12,7 @@ import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TweetsViewModel : ViewModel(), CoroutineScope by MainScope() {
     private val compositeDisposable = CompositeDisposable()
@@ -18,6 +20,8 @@ class TweetsViewModel : ViewModel(), CoroutineScope by MainScope() {
     private val tweetRepository = TweetRepository()
     var tweetsDataFromNetwork = MutableLiveData(ArrayList<Tweet>())
     var tweetsDataFromDB = MutableLiveData(ArrayList<Tweet>())
+    val tweets : LiveData<ArrayList<Tweet>>
+        get() = tweetsDataFromNetwork
 
     fun init(okHttpClient: OkHttpClient) {
         this.okHttpClient = okHttpClient
@@ -27,12 +31,12 @@ class TweetsViewModel : ViewModel(), CoroutineScope by MainScope() {
         launch(Dispatchers.Main) {
             withContext(Dispatchers.IO) {
                 tweetsDataFromDB.postValue(tweetRepository.fetchTweets())
-                fetchTweetFromNetwork()
+                tweetsDataFromNetwork.postValue(fetchTweetFromNetwork())        //                tweetRepository.addAllTweet(tweetsFromNetwork)
             }
         }
     }
 
-    private fun fetchTweetFromNetwork() {
+    private fun fetchTweetFromNetwork(): ArrayList<Tweet>? {
         val url = "https://thoughtworks-mobile-2018.herokuapp.com/user/jsmith/tweets"
         val request = Request.Builder()
             .url(url)
@@ -42,8 +46,7 @@ class TweetsViewModel : ViewModel(), CoroutineScope by MainScope() {
         //                var result = response.body.toString()
         val type = object : TypeToken<ArrayList<Tweet>>() {}.type
         val tweetsFromNetwork = Gson().fromJson<ArrayList<Tweet>?>(obj, type)
-        tweetsDataFromNetwork.postValue(tweetsFromNetwork)
-        //                tweetRepository.addAllTweet(tweetsFromNetwork)
+        return tweetsFromNetwork
     }
 
     override fun onCleared() {

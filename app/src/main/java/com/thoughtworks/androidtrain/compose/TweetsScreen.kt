@@ -9,6 +9,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -16,22 +18,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.thoughtworks.androidtrain.TweetApplication
+import com.thoughtworks.androidtrain.TweetsViewModel
 import com.thoughtworks.androidtrain.data.model.Tweet
 
 @Composable
-fun TweetScreen(tweets: ArrayList<Tweet>) {
+fun TweetScreen(
+    tweetApplication: TweetApplication,
+    tweetsViewModel: TweetsViewModel = viewModel(),
+    lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+) {
+    DisposableEffect(lifeCycleOwner){
+        val observer = LifecycleEventObserver { _,event ->
+            if(event== Lifecycle.Event.ON_CREATE){
+                tweetsViewModel.init(tweetApplication.getHttpClient())
+                tweetsViewModel.fetchData()
+            }
+        }
+        lifeCycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifeCycleOwner.lifecycle.addObserver(observer)
+        }
+    }
+    val tweets = tweetsViewModel.tweets.observeAsState().value
     LazyColumn(
         verticalArrangement = Arrangement.Top,
         content = {
             item {
-                tweets.forEach {
+                tweets?.forEach {
                     TweetItem(tweet = it)
                 }
             }
