@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.thoughtworks.androidtrain.R
 import com.thoughtworks.androidtrain.data.model.Tweet
 
-class TweetsAdapter : RecyclerView.Adapter<ViewHolder>() {
+class TweetsAdapter(//    private var tweets = arrayListOf<Tweet?>()
+    private var tweets: ArrayList<Tweet?>
+) : RecyclerView.Adapter<ViewHolder>() {
     object ViewType {
         const val TWEET_TYPE = 0
         const val LAST_TYPE = 1
         const val EMPTY_TYPE = 2
     }
-
-    private var tweets = arrayListOf<Tweet?>()
 
     fun setTweet(tweetsObj: ArrayList<Tweet?>) {
         tweets.clear()

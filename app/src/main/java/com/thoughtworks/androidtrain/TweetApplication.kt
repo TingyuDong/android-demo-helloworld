@@ -7,12 +7,20 @@ import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import com.thoughtworks.androidtrain.data.repository.SenderRepository
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
+import okhttp3.OkHttpClient
 
 class TweetApplication : Application() {
+    private lateinit var client: OkHttpClient
+
     override fun onCreate() {
         super.onCreate()
         DatabaseRepository.initialize(this)
+        client = OkHttpClient()
         addTweet()
+    }
+
+    fun getHttpClient() : OkHttpClient {
+        return client
     }
 
     private fun addTweet() {
