@@ -1,6 +1,5 @@
 package com.thoughtworks.androidtrain
 
-import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -8,15 +7,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountBox
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -33,34 +27,36 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.utils.JSONResourceUtils
 
 class ComposeActivity : AppCompatActivity() {
-    var tweets = ArrayList<Tweet?>()
+    var tweets = ArrayList<Tweet>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         tweets.addAll(
             Gson().fromJson(
                 JSONResourceUtils().jsonResourceReader(resources, R.raw.tweets),
-                object : TypeToken<ArrayList<Tweet?>>() {}.type
+                object : TypeToken<ArrayList<Tweet>>() {}.type
             )
         )
-        tweets.add(null)
         setContent {
             Content()
         }
     }
 
-        @Composable
+    @Composable
     private fun Content() {
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState())
-        ) {
-            tweets.forEach { it ->
-                if (it != null) {
-                    TweetItem(tweet = it)
-                } else
+        LazyColumn(
+            verticalArrangement = Arrangement.Top,
+            content = {
+                item {
+                    tweets.forEach {
+                        TweetItem(tweet = it)
+                    }
+                }
+                item {
                     ButtonItem()
+                }
             }
-        }
+        )
     }
 
     @Composable
@@ -115,7 +111,6 @@ class ComposeActivity : AppCompatActivity() {
     fun ContentPreview() {
         tweets.add(getTweet())
         tweets.add(getTweet())
-        tweets.add(null)
         Content()
     }
 
