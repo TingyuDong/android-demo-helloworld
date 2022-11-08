@@ -6,14 +6,10 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.adapters.TweetsAdapter
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import kotlinx.coroutines.*
-import okhttp3.Request
-import java.util.Objects
 
 class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var tweetsAdapter: TweetsAdapter
