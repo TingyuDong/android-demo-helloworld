@@ -114,7 +114,7 @@ private fun TweetItem(tweet: Tweet) {
             tweet.comments?.forEach {
                 CommentItem(it)
             }
-            yourComments.forEach{
+            yourComments.forEach {
                 CommentItem(it)
             }
             if (showAddCommentItem.value) {
@@ -124,9 +124,17 @@ private fun TweetItem(tweet: Tweet) {
                     onSave = {
                         addCommentValue = it
                         showAddCommentItem.value = false
-                        yourComments.add(Comment(addCommentValue, Sender("you","you","avtar.png")))
+                        yourComments.add(
+                            Comment(
+                                addCommentValue,
+                                Sender("you", "you", "avtar.png")
+                            )
+                        )
                     },
-                    onCancel = { addCommentValue = "" })
+                    onCancel = {
+                        addCommentValue = ""
+                        showAddCommentItem.value = false
+                    })
             }
         }
     }
