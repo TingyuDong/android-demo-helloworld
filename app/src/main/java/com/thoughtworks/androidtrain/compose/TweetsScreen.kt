@@ -6,8 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.thoughtworks.androidtrain.TweetsViewModel
+import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Tweet
 import okhttp3.OkHttpClient
 
@@ -40,9 +43,9 @@ fun TweetScreen(
     tweetsViewModel: TweetsViewModel = viewModel(),
     lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
-    DisposableEffect(lifeCycleOwner){
-        val observer = LifecycleEventObserver { _,event ->
-            if(event== Lifecycle.Event.ON_CREATE){
+    DisposableEffect(lifeCycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_CREATE) {
                 tweetsViewModel.init(okHttpClient)
                 tweetsViewModel.fetchData()
             }
@@ -89,27 +92,71 @@ private fun TweetItem(tweet: Tweet) {
         Avatar(avatar)
         Spacer(modifier = Modifier.width(8.dp))
         Column {
-            Text(
-                text = tweet.sender?.nick.orEmpty(),
-                color = MaterialTheme.colors.primary,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
+            val nick = tweet.sender?.nick.orEmpty()
+            Nick(nick)
             tweet.content.orEmpty().takeIf {
                 it.isNotEmpty()
             }?.let {
-                Text(
+                Content(it)
+            }
+            tweet.comments?.forEach {
+                CommentItem(it)
+            }
+            Row(modifier = Modifier.fillMaxWidth()) {
+                TextField(
+                    value = "", onValueChange = { },
                     modifier = Modifier
-                        .background(Color.LightGray.copy(alpha = 0.3f))
-                        .fillMaxWidth()
-                        .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp),
-                    text = it,
-                    color = MaterialTheme.colors.secondaryVariant,
-                    fontSize = 14.sp
+                        .weight(1f, fill = false)
+                        .align(Alignment.CenterVertically)
                 )
             }
         }
     }
+}
+
+@Composable
+private fun CommentItem(it: Comment) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        it.sender?.let { it1 ->
+            Text(
+                text = it1.nick + ":",
+                color = Color.Gray,
+                fontSize = 13.sp
+            )
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = it.content,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp),
+            color = MaterialTheme.colors.secondaryVariant,
+            fontSize = 14.sp
+        )
+    }
+}
+
+@Composable
+private fun Content(it: String) {
+    Text(
+        modifier = Modifier
+            .background(Color.LightGray.copy(alpha = 0.3f))
+            .fillMaxWidth()
+            .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp),
+        text = it,
+        color = MaterialTheme.colors.secondaryVariant,
+        fontSize = 14.sp
+    )
+}
+
+@Composable
+private fun Nick(nick: String) {
+    Text(
+        text = nick,
+        color = MaterialTheme.colors.primary,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp
+    )
 }
 
 @Composable
