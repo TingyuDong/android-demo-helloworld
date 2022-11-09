@@ -176,12 +176,14 @@ private fun AddCommentItem(
 
 @Composable
 private fun CommentItem(it: Comment) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(verticalAlignment = Alignment.Top) {
         it.sender?.let { it1 ->
             Text(
                 text = it1.nick + ":",
                 color = Color.Gray,
-                fontSize = 13.sp
+                fontSize = 13.sp,
+                modifier = Modifier
+                    .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp),
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
@@ -191,7 +193,7 @@ private fun CommentItem(it: Comment) {
                 .fillMaxWidth()
                 .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp),
             color = MaterialTheme.colors.secondaryVariant,
-            fontSize = 14.sp
+            fontSize = 13.sp
         )
     }
 }
