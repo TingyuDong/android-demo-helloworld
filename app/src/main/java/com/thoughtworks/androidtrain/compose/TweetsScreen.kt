@@ -103,18 +103,21 @@ private fun TweetItem(tweet: Tweet) {
             tweet.content.orEmpty().takeIf {
                 it.isNotEmpty()
             }?.let {
-                Content(it){
+                Content(it) {
                     showAddCommentItem.value = true
                 }
             }
             tweet.comments?.forEach {
                 CommentItem(it)
             }
-            if (showAddCommentItem.value){
+            if (showAddCommentItem.value) {
                 var addCommentValue = ""
                 AddCommentItem(
                     comment = addCommentValue,
-                    onSave = { addCommentValue = it },
+                    onSave = {
+                        addCommentValue = it
+                        showAddCommentItem.value = false
+                    },
                     onCancel = { addCommentValue = "" })
             }
         }
@@ -171,13 +174,13 @@ private fun CommentItem(it: Comment) {
 }
 
 @Composable
-private fun Content(it: String,onClickContent: ()->Unit) {
+private fun Content(it: String, onClickContent: () -> Unit) {
     Text(
         modifier = Modifier
             .background(Color.LightGray.copy(alpha = 0.3f))
             .fillMaxWidth()
             .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp)
-            .clickable { onClickContent() } ,
+            .clickable { onClickContent() },
         text = it,
         color = MaterialTheme.colors.secondaryVariant,
         fontSize = 14.sp
