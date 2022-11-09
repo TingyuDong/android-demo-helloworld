@@ -34,6 +34,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.thoughtworks.androidtrain.TweetsViewModel
 import com.thoughtworks.androidtrain.data.model.Comment
+import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
 import okhttp3.OkHttpClient
 
@@ -93,6 +94,9 @@ private fun TweetItem(tweet: Tweet) {
     val showAddCommentItem = remember {
         mutableStateOf(false)
     }
+    val yourComments = remember {
+        mutableListOf<Comment>()
+    }
     Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
         val avatar = tweet.sender?.avatar
         Avatar(avatar)
@@ -110,6 +114,9 @@ private fun TweetItem(tweet: Tweet) {
             tweet.comments?.forEach {
                 CommentItem(it)
             }
+            yourComments.forEach{
+                CommentItem(it)
+            }
             if (showAddCommentItem.value) {
                 var addCommentValue = ""
                 AddCommentItem(
@@ -117,6 +124,7 @@ private fun TweetItem(tweet: Tweet) {
                     onSave = {
                         addCommentValue = it
                         showAddCommentItem.value = false
+                        yourComments.add(Comment(addCommentValue, Sender("you","you","avtar.png")))
                     },
                     onCancel = { addCommentValue = "" })
             }
