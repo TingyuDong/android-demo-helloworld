@@ -128,7 +128,7 @@ private fun TweetItem(
                 var addCommentValue = ""
                 AddCommentItem(
                     comment = addCommentValue,
-                    onSave = { it ->
+                    onSave = {
                         addCommentValue = it
                         showAddCommentItem.value = false
                         Comment(
