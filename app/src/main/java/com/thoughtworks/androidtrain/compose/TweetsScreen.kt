@@ -153,17 +153,32 @@ private fun ImageContent(images: List<Image>) {
     LazyRow(content = {
         item {
             images.forEach { it1 ->
-                val painter = rememberAsyncImagePainter(it1.url)
-                Image(
-                    painter = painter, contentDescription = "tweet image",
-                    modifier = Modifier
-                        .size(80.dp)
-                        .padding(4.dp),
-                    contentScale = ContentScale.Crop
-                )
+                TweetImage(it1)
             }
         }
     })
+
+}
+
+@Composable
+private fun TweetImage(it1: Image) {
+    val showDialog = remember {
+        mutableStateOf(false)
+    }
+    val painter = rememberAsyncImagePainter(it1.url)
+    Image(
+        painter = painter, contentDescription = "tweet image",
+        modifier = Modifier
+            .size(80.dp)
+            .padding(4.dp)
+            .clickable { showDialog.value = true },
+        contentScale = ContentScale.Crop
+    )
+    if (showDialog.value) {
+        BigImage(painter) {
+            showDialog.value = false
+        }
+    }
 }
 
 @Composable
@@ -257,14 +272,14 @@ private fun Avatar(avatar: String?) {
         contentScale = ContentScale.Crop
     )
     if (showDialog.value) {
-        BigAvatar(painter) {
+        BigImage(painter) {
             showDialog.value = false
         }
     }
 }
 
 @Composable
-private fun BigAvatar(painter: AsyncImagePainter, onDismissRequest: () -> Unit) {
+private fun BigImage(painter: AsyncImagePainter, onDismissRequest: () -> Unit) {
     Dialog(onDismissRequest = onDismissRequest) {
         Box(
             modifier = Modifier
@@ -276,8 +291,7 @@ private fun BigAvatar(painter: AsyncImagePainter, onDismissRequest: () -> Unit) 
             Image(
                 painter = painter, contentDescription = "BigAvatar",
                 modifier = Modifier
-                    .size(200.dp)
-                    .clip(CircleShape)
+                    .size(220.dp)
                     .align(Alignment.Center),
                 contentScale = ContentScale.Crop
             )
