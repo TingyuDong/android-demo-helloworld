@@ -109,6 +109,14 @@ private fun TweetItem(tweet: Tweet) {
                         .weight(1f, fill = false)
                         .align(Alignment.CenterVertically)
                 )
+                Spacer(modifier = Modifier.width(20.dp))
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "save")
+                }
+                Spacer(modifier = Modifier.width(20.dp))
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "cancel")
+                }
             }
         }
     }
