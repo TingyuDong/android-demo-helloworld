@@ -102,22 +102,38 @@ private fun TweetItem(tweet: Tweet) {
             tweet.comments?.forEach {
                 CommentItem(it)
             }
-            Row(modifier = Modifier.fillMaxWidth()) {
-                TextField(
-                    value = "", onValueChange = { },
-                    modifier = Modifier
-                        .weight(1f, fill = false)
-                        .align(Alignment.CenterVertically)
-                )
-                Spacer(modifier = Modifier.width(20.dp))
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "save")
-                }
-                Spacer(modifier = Modifier.width(20.dp))
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "cancel")
-                }
-            }
+            var addCommentValue = ""
+            AddCommentItem(
+                comment = addCommentValue,
+                onSave = { addCommentValue = it },
+                onCancel = { addCommentValue = "" })
+        }
+    }
+}
+
+@Composable
+private fun AddCommentItem(
+    comment: String,
+    onSave: (comment: String) -> Unit,
+    onCancel: () -> Unit
+) {
+    val textValue = remember(comment) {
+        mutableStateOf(comment)
+    }
+    Row(modifier = Modifier.fillMaxWidth()) {
+        TextField(
+            value = textValue.value, onValueChange = { textValue.value = it },
+            modifier = Modifier
+                .weight(1f, fill = false)
+                .align(Alignment.CenterVertically)
+        )
+        Spacer(modifier = Modifier.width(20.dp))
+        Button(onClick = { onSave.invoke(textValue.value) }) {
+            Text(text = "save")
+        }
+        Spacer(modifier = Modifier.width(20.dp))
+        Button(onClick = onCancel) {
+            Text(text = "cancel")
         }
     }
 }
