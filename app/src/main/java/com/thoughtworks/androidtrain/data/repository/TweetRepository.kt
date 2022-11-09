@@ -26,7 +26,7 @@ class TweetRepository : TweetRepositoryInterface {
 
     override fun fetchTweets(): ArrayList<Tweet> {
         val tweets = tweetDao.getAll()
-        val tweetData: List<Tweet> = tweets.stream().map {
+        val tweetData: List<Tweet> = tweets.filter { it.error==null&&it.unknownError==null }.stream().map {
             val sender = it.senderName?.let { it1 -> senderRepository.getSender(it1) }
             val images = imageRepository.getImages(it.id)
             val comments = commentRepository.getComments(it.id)
