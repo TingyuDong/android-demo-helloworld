@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -34,6 +35,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.thoughtworks.androidtrain.TweetsViewModel
 import com.thoughtworks.androidtrain.data.model.Comment
+import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
 import okhttp3.OkHttpClient
@@ -92,9 +94,6 @@ fun ButtonItem() {
 private fun TweetItem(
     tweet: Tweet, saveComment: (comment: Comment, tweetId: Int) -> Unit
 ) {
-//    val addCommentValue = remember {
-//        mutableStateOf("")
-//    }
     val showAddCommentItem = remember {
         mutableStateOf(false)
     }
@@ -112,9 +111,12 @@ private fun TweetItem(
             tweet.content.orEmpty().takeIf {
                 it.isNotEmpty()
             }?.let {
-                Content(it) {
+                TextContent(it) {
                     showAddCommentItem.value = true
                 }
+            }
+            tweet.images?.let {
+                ImageContent(it)
             }
             tweet.comments?.forEach {
                 CommentItem(it)
@@ -126,17 +128,16 @@ private fun TweetItem(
                 var addCommentValue = ""
                 AddCommentItem(
                     comment = addCommentValue,
-                    onSave = {
+                    onSave = { it ->
                         addCommentValue = it
                         showAddCommentItem.value = false
-                        val yourNewComment = Comment(
+                        Comment(
                             addCommentValue,
                             Sender("you", "you", "avtar.png")
-                        )
-                        yourComments.add(
-                            yourNewComment
-                        )
-                        saveComment(yourNewComment, tweetId)
+                        ).let { it1 ->
+                            yourComments.add(it1)
+                            saveComment(it1, tweetId)
+                        }
                     },
                     onCancel = {
                         addCommentValue = ""
@@ -145,6 +146,24 @@ private fun TweetItem(
             }
         }
     }
+}
+
+@Composable
+private fun ImageContent(images: List<Image>) {
+    LazyRow(content = {
+        item {
+            images.forEach { it1 ->
+                val painter = rememberAsyncImagePainter(it1.url)
+                Image(
+                    painter = painter, contentDescription = "tweet image",
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(4.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
+    })
 }
 
 @Composable
@@ -175,9 +194,9 @@ private fun AddCommentItem(
 }
 
 @Composable
-private fun CommentItem(it: Comment) {
+private fun CommentItem(comment: Comment) {
     Row(verticalAlignment = Alignment.Top) {
-        it.sender?.let { it1 ->
+        comment.sender?.let { it1 ->
             Text(
                 text = it1.nick + ":",
                 color = Color.Gray,
@@ -188,7 +207,7 @@ private fun CommentItem(it: Comment) {
         }
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = it.content,
+            text = comment.content,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp),
@@ -199,7 +218,7 @@ private fun CommentItem(it: Comment) {
 }
 
 @Composable
-private fun Content(it: String, onClickContent: () -> Unit) {
+private fun TextContent(it: String, onClickContent: () -> Unit) {
     Text(
         modifier = Modifier
             .background(Color.LightGray.copy(alpha = 0.3f))
