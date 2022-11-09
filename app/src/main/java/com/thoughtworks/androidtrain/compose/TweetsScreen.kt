@@ -30,20 +30,20 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import com.thoughtworks.androidtrain.TweetApplication
 import com.thoughtworks.androidtrain.TweetsViewModel
 import com.thoughtworks.androidtrain.data.model.Tweet
+import okhttp3.OkHttpClient
 
 @Composable
 fun TweetScreen(
-    tweetApplication: TweetApplication,
+    okHttpClient: OkHttpClient,
     tweetsViewModel: TweetsViewModel = viewModel(),
     lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
     DisposableEffect(lifeCycleOwner){
         val observer = LifecycleEventObserver { _,event ->
             if(event== Lifecycle.Event.ON_CREATE){
-                tweetsViewModel.init(tweetApplication.getHttpClient())
+                tweetsViewModel.init(okHttpClient)
                 tweetsViewModel.fetchData()
             }
         }

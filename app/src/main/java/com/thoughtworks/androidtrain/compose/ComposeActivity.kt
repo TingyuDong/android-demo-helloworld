@@ -25,7 +25,7 @@ class ComposeActivity : AppCompatActivity() {
             )
         )
         setContent {
-            TweetScreen(application as TweetApplication)
+            TweetScreen((application as TweetApplication).getHttpClient())
         }
     }
 
@@ -34,7 +34,7 @@ class ComposeActivity : AppCompatActivity() {
     fun ContentPreview() {
         tweets.add(getTweet())
         tweets.add(getTweet())
-        TweetScreen(application as TweetApplication)
+        TweetScreen((application as TweetApplication).getHttpClient())
     }
 
     private fun getTweet(): Tweet {
