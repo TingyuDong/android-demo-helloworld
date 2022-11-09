@@ -98,8 +98,7 @@ private fun TweetItem(
         mutableListOf<Comment>()
     }
     Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-        val avatar = tweet.sender?.avatar
-        Avatar(avatar)
+        Avatar(tweet.sender?.avatar)
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Nick(tweet.sender?.nick.orEmpty())
