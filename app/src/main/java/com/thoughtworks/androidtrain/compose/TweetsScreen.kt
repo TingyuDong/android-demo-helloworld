@@ -11,11 +11,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -108,15 +105,10 @@ private fun TweetItem(
             val tweetId = tweet.id
             val nick = tweet.sender?.nick.orEmpty()
             Nick(nick)
-            tweet.content.orEmpty().takeIf {
-                it.isNotEmpty()
-            }?.let {
-                TextContent(it) {
-                    showAddCommentItem.value = true
-                }
-            }
-            tweet.images?.let {
-                ImageContent(it)
+            val textContent = tweet.content
+            val imageContent = tweet.images
+            TweetContent(textContent,imageContent){
+                showAddCommentItem.value = true
             }
             tweet.comments?.forEach {
                 CommentItem(it)
@@ -145,6 +137,24 @@ private fun TweetItem(
                     })
             }
         }
+    }
+}
+
+@Composable
+private fun TweetContent(
+    textContent: String?,
+    imageContent: List<Image>?,
+    showAddCommentItem: ()->Unit
+) {
+    textContent.orEmpty().takeIf {
+        it.isNotEmpty()
+    }?.let {
+        TextContent(it) {
+            showAddCommentItem()
+        }
+    }
+    imageContent?.let {
+        ImageContent(it)
     }
 }
 
