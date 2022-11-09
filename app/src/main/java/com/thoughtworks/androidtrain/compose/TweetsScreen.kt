@@ -102,16 +102,11 @@ private fun TweetItem(
         Avatar(avatar)
         Spacer(modifier = Modifier.width(8.dp))
         Column {
-            val tweetId = tweet.id
-            val nick = tweet.sender?.nick.orEmpty()
-            Nick(nick)
-            val textContent = tweet.content
-            val imageContent = tweet.images
-            TweetContent(textContent,imageContent){
+            Nick(tweet.sender?.nick.orEmpty())
+            TweetContent(tweet.content, tweet.images) {
                 showAddCommentItem.value = true
             }
-            val comments = tweet.comments
-            TweetComments(comments, yourComments)
+            TweetComments(tweet.comments, yourComments)
             if (showAddCommentItem.value) {
                 var addCommentValue = ""
                 AddCommentItem(
@@ -124,7 +119,7 @@ private fun TweetItem(
                             Sender("you", "you", "avtar.png")
                         ).let { it1 ->
                             yourComments.add(it1)
-                            saveComment(it1, tweetId)
+                            saveComment(it1, tweet.id)
                         }
                     },
                     onCancel = {
