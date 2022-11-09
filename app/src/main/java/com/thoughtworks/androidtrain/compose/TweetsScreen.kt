@@ -147,7 +147,7 @@ private fun TweetComments(
 private fun TweetContent(
     textContent: String?,
     imageContent: List<Image>?,
-    showAddCommentItem: ()->Unit
+    showAddCommentItem: () -> Unit
 ) {
     textContent.orEmpty().takeIf {
         it.isNotEmpty()
