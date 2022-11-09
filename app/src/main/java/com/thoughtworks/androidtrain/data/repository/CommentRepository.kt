@@ -10,6 +10,7 @@ import java.util.stream.Collectors
 interface CommentRepositoryInterface {
     fun getComments(tweetId: Int): List<Comment>?
     fun addComments(comments: List<Comment>, tweetId: Int)
+    fun addComment(comment: Comment, tweetId: Int)
 }
 
 class CommentRepository(private val commentDao: CommentDao, private val senderDao: SenderDao) :
@@ -52,4 +53,18 @@ class CommentRepository(private val commentDao: CommentDao, private val senderDa
             commentDao.insertAllComments(commentsCollect)
         }
     }
+
+    override fun addComment(comment: Comment, tweetId: Int) {
+        val commentPO = comment.sender!!.let { it1 ->
+            senderRepository.addSender(it1)
+            CommentPO(
+                id = 0,
+                tweetId = tweetId,
+                content = comment.content,
+                senderName = comment.sender.username
+            )
+        }
+        commentDao.insertComment(commentPO)
+    }
+
 }

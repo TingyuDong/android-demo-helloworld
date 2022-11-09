@@ -62,7 +62,9 @@ fun TweetScreen(
         content = {
             item {
                 tweets?.forEach {
-                    TweetItem(tweet = it)
+                    TweetItem(tweet = it) { comment, tweetId ->
+                        tweetsViewModel.saveComment(comment, tweetId)
+                    }
                 }
             }
             item {
@@ -87,7 +89,9 @@ fun ButtonItem() {
 }
 
 @Composable
-private fun TweetItem(tweet: Tweet) {
+private fun TweetItem(
+    tweet: Tweet, saveComment: (comment: Comment, tweetId: Int) -> Unit
+) {
 //    val addCommentValue = remember {
 //        mutableStateOf("")
 //    }
@@ -102,6 +106,7 @@ private fun TweetItem(tweet: Tweet) {
         Avatar(avatar)
         Spacer(modifier = Modifier.width(8.dp))
         Column {
+            val tweetId = tweet.id
             val nick = tweet.sender?.nick.orEmpty()
             Nick(nick)
             tweet.content.orEmpty().takeIf {
@@ -124,12 +129,14 @@ private fun TweetItem(tweet: Tweet) {
                     onSave = {
                         addCommentValue = it
                         showAddCommentItem.value = false
-                        yourComments.add(
-                            Comment(
-                                addCommentValue,
-                                Sender("you", "you", "avtar.png")
-                            )
+                        val yourNewComment = Comment(
+                            addCommentValue,
+                            Sender("you", "you", "avtar.png")
                         )
+                        yourComments.add(
+                            yourNewComment
+                        )
+                        saveComment(yourNewComment, tweetId)
                     },
                     onCancel = {
                         addCommentValue = ""

@@ -16,4 +16,7 @@ interface CommentDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllComments(commentsPO: List<CommentPO>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertComment(commentPO: CommentPO): Long
 }

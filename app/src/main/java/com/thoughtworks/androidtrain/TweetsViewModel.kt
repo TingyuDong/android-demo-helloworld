@@ -5,8 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.data.repository.CommentRepository
+import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
+import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -17,11 +21,18 @@ import kotlin.collections.ArrayList
 class TweetsViewModel : ViewModel(), CoroutineScope by MainScope() {
     private val compositeDisposable = CompositeDisposable()
     private lateinit var okHttpClient: OkHttpClient
+
+    private val database: AppDatabase = DatabaseRepository.get().getDatabase()
+    private val senderDao = database.senderDao()
+    private val commentDao = database.commentDao()
+
     private val tweetRepository = TweetRepository()
+    private val commentRepository = CommentRepository(commentDao, senderDao)
+
     var tweetsDataFromNetwork = MutableLiveData(ArrayList<Tweet>())
     var tweetsDataFromDB = MutableLiveData(ArrayList<Tweet>())
-    val tweets : LiveData<ArrayList<Tweet>>
-        get() = tweetsDataFromNetwork
+    val tweets: LiveData<ArrayList<Tweet>>
+        get() = tweetsDataFromDB
 
     fun init(okHttpClient: OkHttpClient) {
         this.okHttpClient = okHttpClient
@@ -45,8 +56,11 @@ class TweetsViewModel : ViewModel(), CoroutineScope by MainScope() {
         val obj = Objects.requireNonNull(response.body?.string())
         //                var result = response.body.toString()
         val type = object : TypeToken<ArrayList<Tweet>>() {}.type
-        val tweetsFromNetwork = Gson().fromJson<ArrayList<Tweet>?>(obj, type)
-        return tweetsFromNetwork
+        return Gson().fromJson(obj, type)
+    }
+
+    fun saveComment(comment: Comment, tweetId: Int) {
+        commentRepository.addComment(comment, tweetId)
     }
 
     override fun onCleared() {
