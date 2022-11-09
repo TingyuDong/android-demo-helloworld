@@ -102,11 +102,16 @@ private fun TweetItem(
         Avatar(avatar)
         Spacer(modifier = Modifier.width(8.dp))
         Column {
-            Nick(tweet.sender?.nick.orEmpty())
-            TweetContent(tweet.content, tweet.images) {
+            val tweetId = tweet.id
+            val nick = tweet.sender?.nick.orEmpty()
+            Nick(nick)
+            val textContent = tweet.content
+            val imageContent = tweet.images
+            TweetContent(textContent,imageContent){
                 showAddCommentItem.value = true
             }
-            TweetComments(tweet, yourComments)
+            val comments = tweet.comments
+            TweetComments(comments, yourComments)
             if (showAddCommentItem.value) {
                 var addCommentValue = ""
                 AddCommentItem(
@@ -119,7 +124,7 @@ private fun TweetItem(
                             Sender("you", "you", "avtar.png")
                         ).let { it1 ->
                             yourComments.add(it1)
-                            saveComment(it1, tweet.id)
+                            saveComment(it1, tweetId)
                         }
                     },
                     onCancel = {
@@ -133,10 +138,10 @@ private fun TweetItem(
 
 @Composable
 private fun TweetComments(
-    tweet: Tweet,
+    comments: List<Comment>?,
     yourComments: MutableList<Comment>
 ) {
-    tweet.comments?.forEach {
+    comments?.forEach {
         CommentItem(it)
     }
     yourComments.forEach {
