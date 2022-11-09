@@ -87,6 +87,12 @@ fun ButtonItem() {
 
 @Composable
 private fun TweetItem(tweet: Tweet) {
+//    val addCommentValue = remember {
+//        mutableStateOf("")
+//    }
+    val showAddCommentItem = remember {
+        mutableStateOf(false)
+    }
     Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
         val avatar = tweet.sender?.avatar
         Avatar(avatar)
@@ -97,16 +103,20 @@ private fun TweetItem(tweet: Tweet) {
             tweet.content.orEmpty().takeIf {
                 it.isNotEmpty()
             }?.let {
-                Content(it)
+                Content(it){
+                    showAddCommentItem.value = true
+                }
             }
             tweet.comments?.forEach {
                 CommentItem(it)
             }
-            var addCommentValue = ""
-            AddCommentItem(
-                comment = addCommentValue,
-                onSave = { addCommentValue = it },
-                onCancel = { addCommentValue = "" })
+            if (showAddCommentItem.value){
+                var addCommentValue = ""
+                AddCommentItem(
+                    comment = addCommentValue,
+                    onSave = { addCommentValue = it },
+                    onCancel = { addCommentValue = "" })
+            }
         }
     }
 }
@@ -161,12 +171,13 @@ private fun CommentItem(it: Comment) {
 }
 
 @Composable
-private fun Content(it: String) {
+private fun Content(it: String,onClickContent: ()->Unit) {
     Text(
         modifier = Modifier
             .background(Color.LightGray.copy(alpha = 0.3f))
             .fillMaxWidth()
-            .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp),
+            .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp)
+            .clickable { onClickContent() } ,
         text = it,
         color = MaterialTheme.colors.secondaryVariant,
         fontSize = 14.sp
