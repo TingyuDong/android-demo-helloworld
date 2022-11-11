@@ -3,6 +3,7 @@ package com.thoughtworks.androidtrain
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.data.model.Comment
@@ -11,15 +12,13 @@ import com.thoughtworks.androidtrain.data.repository.CommentRepository
 import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TweetsViewModel : ViewModel(), CoroutineScope by MainScope() {
-    private val compositeDisposable = CompositeDisposable()
+class TweetsViewModel : ViewModel() {
     private lateinit var okHttpClient: OkHttpClient
 
     private val database: AppDatabase = DatabaseRepository.get().getDatabase()
@@ -39,7 +38,7 @@ class TweetsViewModel : ViewModel(), CoroutineScope by MainScope() {
     }
 
     fun fetchData() {
-        launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO) {
                 tweetsDataFromDB.postValue(tweetRepository.fetchTweets())
                 tweetsDataFromNetwork.postValue(fetchTweetFromNetwork())        //                tweetRepository.addAllTweet(tweetsFromNetwork)
@@ -61,10 +60,5 @@ class TweetsViewModel : ViewModel(), CoroutineScope by MainScope() {
 
     fun saveComment(comment: Comment, tweetId: Int) {
         commentRepository.addComment(comment, tweetId)
-    }
-
-    override fun onCleared() {
-        compositeDisposable.clear()
-        super.onCleared()
     }
 }
