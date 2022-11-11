@@ -41,21 +41,22 @@ class TweetsViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO) {
                 tweetsDataFromDB.postValue(tweetRepository.fetchTweets())
-                tweetsDataFromNetwork.postValue(fetchTweetFromNetwork())        //                tweetRepository.addAllTweet(tweetsFromNetwork)
+                tweetsDataFromNetwork.postValue(fetchTweetFromNetwork())
             }
         }
     }
 
     private fun fetchTweetFromNetwork(): ArrayList<Tweet>? {
         val url = "https://thoughtworks-mobile-2018.herokuapp.com/user/jsmith/tweets"
-        val request = Request.Builder()
-            .url(url)
-            .build()
-        val response = okHttpClient.newCall(request).execute()
-        val obj = Objects.requireNonNull(response.body?.string())
-        //                var result = response.body.toString()
-        val type = object : TypeToken<ArrayList<Tweet>>() {}.type
-        return Gson().fromJson(obj, type)
+        val response = okHttpClient.newCall(
+            Request.Builder()
+                .url(url)
+                .build()
+        ).execute()
+        return Gson().fromJson(
+            Objects.requireNonNull(response.body?.string()),
+            object : TypeToken<ArrayList<Tweet>>() {}.type
+        )
     }
 
     fun saveComment(comment: Comment, tweetId: Int) {
