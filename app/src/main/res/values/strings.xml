@@ -26,7 +26,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="remember_me">Remember me</string>
-    <string name="fogot_password">Fogot password?</string>
+    <string name="fogot_password">Forgot password?</string>
     <string name="or_connect_with">or connect with</string>
     <string name="sign_up_with_email">Sign Up with E-mail</string>
     <string name="pick_contact">pick_contact</string>
@@ -50,4 +50,5 @@ Click "I know" and no longer prompt</string>
     <string name="add_tweet">Add Tweet</string>
     <string name="fetch_tweet" translatable="false">Fetch Tweet</string>
     <string name="compose" translatable="false">Compose</string>
+    <string name="dwukropek" translatable="false">&#160;:</string>
 </resources>

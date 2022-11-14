@@ -155,7 +155,7 @@ private fun addComment(
     Comment(
         content = content,
         sender = Sender("you", "you", "avtar.png")
-    ).let { comment ->
+    ).also { comment ->
         yourComments.add(comment)
         saveComment(comment, tweetId)
     }
@@ -180,12 +180,12 @@ private fun TweetContents(
     imageContent: List<Image>?,
     showAddCommentItem: () -> Unit
 ) {
-    textContent?.let { content ->
+    textContent?.also { content ->
         TextContent(content) {
             showAddCommentItem()
         }
     }
-    imageContent?.let { images ->
+    imageContent?.also { images ->
         ImageContent(images)
     }
 }
@@ -264,9 +264,9 @@ private fun CommentItem(comment: Comment) {
         modifier = Modifier
             .padding(vertical = dimensionResource(id = R.dimen.comment_padding_vertical))
     ) {
-        comment.sender?.let { sender ->
+        comment.sender?.apply {
             Text(
-                text = sender.nick + ":",
+                text = nick + stringResource(id = R.string.dwukropek),
                 color = Color.Gray,
                 fontSize = 13.sp,
                 modifier = Modifier
