@@ -62,17 +62,25 @@ fun TweetScreen(
         verticalArrangement = Arrangement.Top,
         content = {
             item {
-                tweets?.forEach { tweet ->
-                    TweetItem(tweet = tweet) { comment, tweetId ->
-                        tweetsViewModel.saveComment(comment, tweetId)
-                    }
-                }
+                TweetItems(tweets, tweetsViewModel)
             }
             item {
                 ButtonItem()
             }
         }
     )
+}
+
+@Composable
+private fun TweetItems(
+    tweets: ArrayList<Tweet>?,
+    tweetsViewModel: TweetsViewModel
+) {
+    tweets?.forEach { tweet ->
+        TweetItem(tweet = tweet) { comment, tweetId ->
+            tweetsViewModel.saveComment(comment, tweetId)
+        }
+    }
 }
 
 @Composable
