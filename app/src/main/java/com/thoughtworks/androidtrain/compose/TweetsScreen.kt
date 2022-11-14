@@ -84,7 +84,7 @@ private fun TweetItems(
 }
 
 @Composable
-fun ButtonItem() {
+private fun ButtonItem() {
     Text(
         modifier = Modifier
             .background(Color.LightGray)
