@@ -28,10 +28,10 @@ class TweetsViewModel : ViewModel() {
     private val tweetRepository = TweetRepository()
     private val commentRepository = CommentRepository(commentDao, senderDao)
 
-    var tweetsDataFromNetwork = MutableLiveData(ArrayList<Tweet>())
-    var tweetsDataFromDB = MutableLiveData(ArrayList<Tweet>())
+    var localTweetsData = MutableLiveData(ArrayList<Tweet>())
+    var remoteTweetsData = MutableLiveData(ArrayList<Tweet>())
     val tweets: LiveData<ArrayList<Tweet>>
-        get() = tweetsDataFromDB
+        get() = remoteTweetsData
 
     fun init(okHttpClient: OkHttpClient) {
         this.okHttpClient = okHttpClient
@@ -40,8 +40,8 @@ class TweetsViewModel : ViewModel() {
     fun fetchData() {
         viewModelScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO) {
-                tweetsDataFromDB.postValue(tweetRepository.fetchTweets())
-                tweetsDataFromNetwork.postValue(fetchTweetFromNetwork())
+                remoteTweetsData.postValue(tweetRepository.fetchTweets())
+                localTweetsData.postValue(fetchTweetFromNetwork())
             }
         }
     }
