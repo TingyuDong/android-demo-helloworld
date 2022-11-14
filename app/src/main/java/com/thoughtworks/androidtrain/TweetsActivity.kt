@@ -10,7 +10,7 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import kotlinx.coroutines.*
 
-class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class TweetsActivity : AppCompatActivity() {
     private lateinit var tweetsAdapter: TweetsAdapter
     private val tweetRepository = TweetRepository()
     private val tweets = ArrayList<Tweet?>()
@@ -38,11 +38,6 @@ class TweetsActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             addEmptyData(tweets)
             tweetsAdapter.notifyDataSetChanged()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        cancel()
     }
 
     private fun initUI() {
