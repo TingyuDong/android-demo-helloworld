@@ -62,8 +62,8 @@ fun TweetScreen(
         verticalArrangement = Arrangement.Top,
         content = {
             item {
-                tweets?.forEach {
-                    TweetItem(tweet = it) { comment, tweetId ->
+                tweets?.forEach { tweet ->
+                    TweetItem(tweet = tweet) { comment, tweetId ->
                         tweetsViewModel.saveComment(comment, tweetId)
                     }
                 }
@@ -116,15 +116,15 @@ private fun TweetItem(
                 var addCommentValue = ""
                 AddCommentItem(
                     comment = addCommentValue,
-                    onSave = {
-                        addCommentValue = it
+                    onSave = { content ->
+                        addCommentValue = content
                         showAddCommentItem.value = false
                         Comment(
-                            addCommentValue,
-                            Sender("you", "you", "avtar.png")
-                        ).let { it1 ->
-                            yourComments.add(it1)
-                            saveComment(it1, tweet.id)
+                            content = addCommentValue,
+                            sender = Sender("you", "you", "avtar.png")
+                        ).let { comment ->
+                            yourComments.add(comment)
+                            saveComment(comment, tweet.id)
                         }
                     },
                     onCancel = {
@@ -141,11 +141,11 @@ private fun TweetComments(
     comments: List<Comment>?,
     yourComments: MutableList<Comment>
 ) {
-    comments?.forEach {
-        CommentItem(it)
+    comments?.forEach { comment ->
+        CommentItem(comment)
     }
-    yourComments.forEach {
-        CommentItem(it)
+    yourComments.forEach { yourComment ->
+        CommentItem(yourComment)
     }
 }
 
@@ -155,38 +155,38 @@ private fun TweetContent(
     imageContent: List<Image>?,
     showAddCommentItem: () -> Unit
 ) {
-    textContent.orEmpty().takeIf {
-        it.isNotEmpty()
-    }?.let {
-        TextContent(it) {
+    textContent?.let { content ->
+        TextContent(content) {
             showAddCommentItem()
         }
     }
-    imageContent?.let {
-        ImageContent(it)
+    imageContent?.let { images ->
+        ImageContent(images)
     }
 }
 
 @Composable
 private fun ImageContent(images: List<Image>) {
-    LazyRow(content = {
-        item {
-            images.forEach { it1 ->
-                TweetImage(it1)
+    LazyRow(
+        content = {
+            item {
+                images.forEach { image ->
+                    TweetImage(image)
+                }
             }
-        }
-    })
+        })
 
 }
 
 @Composable
-private fun TweetImage(it1: Image) {
+private fun TweetImage(image: Image) {
     val showDialog = remember {
         mutableStateOf(false)
     }
-    val painter = rememberAsyncImagePainter(it1.url)
+    val painter = rememberAsyncImagePainter(image.url)
     Image(
-        painter = painter, contentDescription = "tweet image",
+        painter = painter,
+        contentDescription = "tweet image",
         modifier = Modifier
             .size(dimensionResource(id = R.dimen.tweet_image_size))
             .padding(dimensionResource(id = R.dimen.tweet_image_padding))
@@ -211,7 +211,8 @@ private fun AddCommentItem(
     }
     Row(modifier = Modifier.fillMaxWidth()) {
         TextField(
-            value = textValue.value, onValueChange = { textValue.value = it },
+            value = textValue.value,
+            onValueChange = { content -> textValue.value = content },
             modifier = Modifier
                 .weight(1f, fill = false)
                 .align(Alignment.CenterVertically)
@@ -239,9 +240,9 @@ private fun CommentItem(comment: Comment) {
         modifier = Modifier
             .padding(vertical = dimensionResource(id = R.dimen.comment_padding_vertical))
     ) {
-        comment.sender?.let { it1 ->
+        comment.sender?.let { sender ->
             Text(
-                text = it1.nick + ":",
+                text = sender.nick + ":",
                 color = Color.Gray,
                 fontSize = 13.sp,
                 modifier = Modifier
@@ -265,14 +266,14 @@ private fun CommentItem(comment: Comment) {
 }
 
 @Composable
-private fun TextContent(it: String, onClickContent: () -> Unit) {
+private fun TextContent(textContent: String, onClickContent: () -> Unit) {
     Text(
         modifier = Modifier
             .background(Color.LightGray.copy(alpha = 0.3f))
             .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.text_content_padding))
             .clickable { onClickContent() },
-        text = it,
+        text = textContent,
         color = MaterialTheme.colors.secondaryVariant,
         fontSize = 14.sp
     )
