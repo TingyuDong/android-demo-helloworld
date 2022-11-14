@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thoughtworks.androidtrain.adapters.TweetsAdapter
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
-import kotlinx.coroutines.*
 
 class TweetsActivity : AppCompatActivity() {
     private lateinit var tweetsAdapter: TweetsAdapter
@@ -30,12 +29,12 @@ class TweetsActivity : AppCompatActivity() {
         tweetViewModel.init((application as TweetApplication).getHttpClient())
         tweetViewModel.tweetsDataFromNetwork.observe(this) {
             tweets.addAll(it)
-            addEmptyData(tweets)
+            addEmptyData()
             tweetsAdapter.notifyDataSetChanged()
         }
         tweetViewModel.tweetsDataFromDB.observe(this) {
             tweets.addAll(it)
-            addEmptyData(tweets)
+            addEmptyData()
             tweetsAdapter.notifyDataSetChanged()
         }
     }
@@ -59,7 +58,7 @@ class TweetsActivity : AppCompatActivity() {
 
         tweets.addAll(tweetRepository.fetchTweets())
 //        getTweetFromNet()
-        addEmptyData(tweets)
+        addEmptyData()
     }
 
 //    private fun getTweetFromNet() {
@@ -83,7 +82,7 @@ class TweetsActivity : AppCompatActivity() {
 //        Toast.makeText(tweetsActivity, "加载中", Toast.LENGTH_SHORT).show()
 //    }
 
-    private fun addEmptyData(tweets: ArrayList<Tweet?>) {
+    private fun addEmptyData() {
         tweets.add(null)
     }
 }
