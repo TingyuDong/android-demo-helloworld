@@ -108,12 +108,6 @@ private fun ButtonItem() {
 private fun TweetItem(
     tweet: Tweet, saveComment: (comment: Comment, tweetId: Int) -> Unit
 ) {
-    val showAddCommentItem = remember {
-        mutableStateOf(false)
-    }
-    val yourComments = remember {
-        mutableListOf<Comment>()
-    }
     Row(
         modifier = Modifier.padding(
             horizontal = dimensionResource(id = R.dimen.tweet_item_padding_horizontal),
@@ -122,32 +116,42 @@ private fun TweetItem(
     ) {
         Avatar(tweet.sender?.avatar)
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_between_avatar_and_content)))
-        Column {
-            Nick(tweet.sender?.nick.orEmpty())
-            TweetContent(tweet.content, tweet.images) {
-                showAddCommentItem.value = true
-            }
-            TweetComments(tweet.comments, yourComments)
-            if (showAddCommentItem.value) {
-                var addCommentValue = ""
-                AddCommentItem(
-                    comment = addCommentValue,
-                    onSave = { content ->
-                        addCommentValue = content
-                        showAddCommentItem.value = false
-                        Comment(
-                            content = addCommentValue,
-                            sender = Sender("you", "you", "avtar.png")
-                        ).let { comment ->
-                            yourComments.add(comment)
-                            saveComment(comment, tweet.id)
-                        }
-                    },
-                    onCancel = {
-                        addCommentValue = ""
-                        showAddCommentItem.value = false
-                    })
-            }
+        TweetSenderNickAndContentsAndComments(tweet, saveComment)
+    }
+}
+
+@Composable
+private fun TweetSenderNickAndContentsAndComments(
+    tweet: Tweet,
+    saveComment: (comment: Comment, tweetId: Int) -> Unit
+) {
+    val showAddCommentItem = remember { mutableStateOf(false) }
+    val yourComments = remember { mutableListOf<Comment>() }
+    Column {
+        Nick(tweet.sender?.nick.orEmpty())
+        TweetContents(tweet.content, tweet.images) {
+            showAddCommentItem.value = true
+        }
+        TweetComments(tweet.comments, yourComments)
+        if (showAddCommentItem.value) {
+            var addCommentValue = ""
+            AddCommentItem(
+                comment = addCommentValue,
+                onSave = { content ->
+                    addCommentValue = content
+                    showAddCommentItem.value = false
+                    Comment(
+                        content = addCommentValue,
+                        sender = Sender("you", "you", "avtar.png")
+                    ).let { comment ->
+                        yourComments.add(comment)
+                        saveComment(comment, tweet.id)
+                    }
+                },
+                onCancel = {
+                    addCommentValue = ""
+                    showAddCommentItem.value = false
+                })
         }
     }
 }
@@ -166,7 +170,7 @@ private fun TweetComments(
 }
 
 @Composable
-private fun TweetContent(
+private fun TweetContents(
     textContent: String?,
     imageContent: List<Image>?,
     showAddCommentItem: () -> Unit
