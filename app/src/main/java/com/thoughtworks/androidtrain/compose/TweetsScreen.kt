@@ -134,16 +134,12 @@ private fun TweetSenderNickAndContentsAndComments(
         }
         TweetComments(tweet.comments, yourComments)
         if (showAddCommentItem.value) {
-            var addCommentValue = ""
             AddCommentItem(
-                comment = addCommentValue,
                 onSave = { content ->
-                    addCommentValue = content
                     showAddCommentItem.value = false
                     addComment(tweet.id, content, yourComments, saveComment)
                 },
                 onCancel = {
-                    addCommentValue = ""
                     showAddCommentItem.value = false
                 })
         }
@@ -231,12 +227,11 @@ private fun TweetImage(image: Image) {
 
 @Composable
 private fun AddCommentItem(
-    comment: String,
     onSave: (comment: String) -> Unit,
     onCancel: () -> Unit
 ) {
-    val textValue = remember(comment) {
-        mutableStateOf(comment)
+    val textValue = remember {
+        mutableStateOf("")
     }
     Row(modifier = Modifier.fillMaxWidth()) {
         TextField(
