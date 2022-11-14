@@ -20,12 +20,6 @@ class TweetsAdapter(//    private var tweets = arrayListOf<Tweet?>()
         const val EMPTY_TYPE = 2
     }
 
-    fun setTweet(tweetsObj: ArrayList<Tweet?>) {
-        tweets.clear()
-        tweets.addAll(tweetsObj)
-        notifyDataSetChanged()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val from: LayoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
