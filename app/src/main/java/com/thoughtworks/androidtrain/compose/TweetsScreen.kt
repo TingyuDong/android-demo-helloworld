@@ -245,7 +245,7 @@ private fun AddCommentItem(
             modifier = Modifier
                 .width(dimensionResource(id = R.dimen.space_in_add_comment_item))
         )
-        Button(onClick = { onSave.invoke(textValue.value) }) {
+        Button(onClick = { onSave(textValue.value) }) {
             Text(text = "save")
         }
         Spacer(
