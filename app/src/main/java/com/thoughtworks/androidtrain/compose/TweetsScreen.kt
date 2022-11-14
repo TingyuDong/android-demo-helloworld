@@ -19,10 +19,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.Lifecycle
@@ -98,9 +98,14 @@ private fun TweetItem(
     val yourComments = remember {
         mutableListOf<Comment>()
     }
-    Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+    Row(
+        modifier = Modifier.padding(
+            horizontal = dimensionResource(id = R.dimen.tweet_item_padding_horizontal),
+            vertical = dimensionResource(id = R.dimen.tweet_item_padding_vertical)
+        )
+    ) {
         Avatar(tweet.sender?.avatar)
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_between_avatar_and_content)))
         Column {
             Nick(tweet.sender?.nick.orEmpty())
             TweetContent(tweet.content, tweet.images) {
@@ -183,8 +188,8 @@ private fun TweetImage(it1: Image) {
     Image(
         painter = painter, contentDescription = "tweet image",
         modifier = Modifier
-            .size(80.dp)
-            .padding(4.dp)
+            .size(dimensionResource(id = R.dimen.tweet_image_size))
+            .padding(dimensionResource(id = R.dimen.tweet_image_padding))
             .clickable { showDialog.value = true },
         contentScale = ContentScale.Crop
     )
@@ -211,11 +216,16 @@ private fun AddCommentItem(
                 .weight(1f, fill = false)
                 .align(Alignment.CenterVertically)
         )
-        Spacer(modifier = Modifier.width(20.dp))
+        Spacer(
+            modifier = Modifier
+                .width(dimensionResource(id = R.dimen.space_in_add_comment_item))
+        )
         Button(onClick = { onSave.invoke(textValue.value) }) {
             Text(text = "save")
         }
-        Spacer(modifier = Modifier.width(20.dp))
+        Spacer(
+            modifier = Modifier.width(dimensionResource(id = R.dimen.space_in_add_comment_item))
+        )
         Button(onClick = onCancel) {
             Text(text = "cancel")
         }
@@ -224,22 +234,30 @@ private fun AddCommentItem(
 
 @Composable
 private fun CommentItem(comment: Comment) {
-    Row(verticalAlignment = Alignment.Top) {
+    Row(
+        verticalAlignment = Alignment.Top,
+        modifier = Modifier
+            .padding(vertical = dimensionResource(id = R.dimen.comment_padding_vertical))
+    ) {
         comment.sender?.let { it1 ->
             Text(
                 text = it1.nick + ":",
                 color = Color.Gray,
                 fontSize = 13.sp,
                 modifier = Modifier
-                    .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp),
             )
         }
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(
+            modifier = Modifier
+                .width(dimensionResource(id = R.dimen.space_between_nick_and_content))
+        )
         Text(
             text = comment.content,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp),
+                .padding(
+                    horizontal = dimensionResource(id = R.dimen.comment_content_padding_horizontal)
+                ),
             color = MaterialTheme.colors.secondaryVariant,
             fontSize = 13.sp
         )
@@ -252,7 +270,7 @@ private fun TextContent(it: String, onClickContent: () -> Unit) {
         modifier = Modifier
             .background(Color.LightGray.copy(alpha = 0.3f))
             .fillMaxWidth()
-            .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp)
+            .padding(dimensionResource(id = R.dimen.text_content_padding))
             .clickable { onClickContent() },
         text = it,
         color = MaterialTheme.colors.secondaryVariant,
@@ -278,7 +296,7 @@ private fun Avatar(avatar: String?) {
     }
     Image(
         modifier = Modifier
-            .size(40.dp)
+            .size(dimensionResource(id = R.dimen.avatar_size))
             .clip(CircleShape)
             .clickable { showDialog.value = true },
         painter = painter,
@@ -298,14 +316,15 @@ private fun BigImage(painter: AsyncImagePainter, onDismissRequest: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
-                .padding(20.dp)
+                .height(dimensionResource(id = R.dimen.big_image_box_height))
+                .padding(dimensionResource(id = R.dimen.big_image_box_margin))
                 .background(Color.White)
         ) {
             Image(
-                painter = painter, contentDescription = "BigAvatar",
+                painter = painter,
+                contentDescription = "BigAvatar",
                 modifier = Modifier
-                    .size(220.dp)
+                    .size(dimensionResource(id = R.dimen.big_image_size))
                     .align(Alignment.Center),
                 contentScale = ContentScale.Crop
             )
