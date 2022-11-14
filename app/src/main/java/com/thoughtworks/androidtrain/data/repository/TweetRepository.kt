@@ -26,20 +26,21 @@ class TweetRepository : TweetRepositoryInterface {
 
     override fun fetchTweets(): ArrayList<Tweet> {
         val tweets = tweetDao.getAll()
-        val tweetData: List<Tweet> = tweets.filter { it.error==null&&it.unknownError==null }.stream().map {
-            val sender = it.senderName?.let { it1 -> senderRepository.getSender(it1) }
-            val images = imageRepository.getImages(it.id)
-            val comments = commentRepository.getComments(it.id)
-            Tweet(
-                id = it.id,
-                content = it.content,
-                sender = sender,
-                images = images,
-                comments = comments,
-                error = it.error,
-                unknownError = it.unknownError
-            )
-        }.collect(Collectors.toList())
+        val tweetData: List<Tweet> =
+            tweets.filter { it.error == null && it.unknownError == null }.stream().map {
+                val sender = it.senderName?.let { it1 -> senderRepository.getSender(it1) }
+                val images = imageRepository.getImages(it.id)
+                val comments = commentRepository.getComments(it.id)
+                Tweet(
+                    id = it.id,
+                    content = it.content,
+                    sender = sender,
+                    images = images,
+                    comments = comments,
+                    error = it.error,
+                    unknownError = it.unknownError
+                )
+            }.collect(Collectors.toList())
         return ArrayList(tweetData)
     }
 
