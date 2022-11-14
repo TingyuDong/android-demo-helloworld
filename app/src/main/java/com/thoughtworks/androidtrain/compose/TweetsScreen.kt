@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.thoughtworks.androidtrain.R
 import com.thoughtworks.androidtrain.TweetsViewModel
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
@@ -79,8 +81,7 @@ fun ButtonItem() {
         modifier = Modifier
             .background(Color.LightGray)
             .fillMaxWidth(),
-//            text = resources.getString(R.string.have_been_to_the_bottom),
-        text = "到底了",
+        text = stringResource(id = R.string.have_been_to_the_bottom),
         color = Color.White,
         fontSize = 30.sp,
         textAlign = TextAlign.Center
