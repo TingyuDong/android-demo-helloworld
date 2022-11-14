@@ -58,6 +58,14 @@ fun TweetScreen(
         }
     }
     val tweets = tweetsViewModel.tweets.observeAsState().value
+    TweetScreenContent(tweets, tweetsViewModel)
+}
+
+@Composable
+private fun TweetScreenContent(
+    tweets: ArrayList<Tweet>?,
+    tweetsViewModel: TweetsViewModel
+) {
     LazyColumn(
         verticalArrangement = Arrangement.Top,
         content = {
