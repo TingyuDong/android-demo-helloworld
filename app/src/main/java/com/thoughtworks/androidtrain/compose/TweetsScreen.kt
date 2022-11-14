@@ -52,7 +52,7 @@ fun TweetScreen(
         }
         lifeCycleOwner.lifecycle.addObserver(observer)
         onDispose {
-            lifeCycleOwner.lifecycle.addObserver(observer)
+            lifeCycleOwner.lifecycle.removeObserver(observer)
         }
     }
     val tweets = tweetsViewModel.tweets.observeAsState().value
