@@ -140,19 +140,28 @@ private fun TweetSenderNickAndContentsAndComments(
                 onSave = { content ->
                     addCommentValue = content
                     showAddCommentItem.value = false
-                    Comment(
-                        content = addCommentValue,
-                        sender = Sender("you", "you", "avtar.png")
-                    ).let { comment ->
-                        yourComments.add(comment)
-                        saveComment(comment, tweet.id)
-                    }
+                    addComment(tweet.id, content, yourComments, saveComment)
                 },
                 onCancel = {
                     addCommentValue = ""
                     showAddCommentItem.value = false
                 })
         }
+    }
+}
+
+private fun addComment(
+    tweetId: Int,
+    content: String,
+    yourComments: MutableList<Comment>,
+    saveComment: (comment: Comment, tweetId: Int) -> Unit
+) {
+    Comment(
+        content = content,
+        sender = Sender("you", "you", "avtar.png")
+    ).let { comment ->
+        yourComments.add(comment)
+        saveComment(comment, tweetId)
     }
 }
 
