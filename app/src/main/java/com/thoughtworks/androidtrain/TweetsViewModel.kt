@@ -1,8 +1,6 @@
 package com.thoughtworks.androidtrain
 
 import androidx.lifecycle.*
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
@@ -10,8 +8,6 @@ import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.util.*
 import kotlin.collections.ArrayList
 
 class TweetsViewModel : ViewModel() {
@@ -21,10 +17,9 @@ class TweetsViewModel : ViewModel() {
     private lateinit var addCommentUseCase: AddCommentUseCase
     private lateinit var addTweetUseCase: AddTweetUseCase
 
-    var localTweetsData = MutableLiveData(ArrayList<Tweet>())
-    var remoteTweetsData = MutableLiveData(ArrayList<Tweet>())
+    var tweetsData = MutableLiveData(ArrayList<Tweet>())
     val tweets: LiveData<ArrayList<Tweet>>
-        get() = remoteTweetsData
+        get() = tweetsData
 
     fun init(okHttpClient: OkHttpClient) {
         this.okHttpClient = okHttpClient
@@ -36,23 +31,9 @@ class TweetsViewModel : ViewModel() {
     fun fetchData() {
         viewModelScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO) {
-                remoteTweetsData.postValue(fetchTweetsUseCase.invoke())
-                localTweetsData.postValue(fetchTweetFromNetwork())
+                tweetsData.postValue(fetchTweetsUseCase.invoke())
             }
         }
-    }
-
-    private fun fetchTweetFromNetwork(): ArrayList<Tweet>? {
-        val url = "https://thoughtworks-mobile-2018.herokuapp.com/user/jsmith/tweets"
-        val response = okHttpClient.newCall(
-            Request.Builder()
-                .url(url)
-                .build()
-        ).execute()
-        return Gson().fromJson(
-            Objects.requireNonNull(response.body?.string()),
-            object : TypeToken<ArrayList<Tweet>>() {}.type
-        )
     }
 
     fun saveComment(comment: Comment, tweetId: Int) {

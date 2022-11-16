@@ -25,12 +25,7 @@ class TweetsActivity : AppCompatActivity() {
     private fun initViewModel() {
         tweetViewModel = ViewModelProvider(this)[TweetsViewModel::class.java]
         tweetViewModel.init((application as TweetApplication).getHttpClient())
-        tweetViewModel.localTweetsData.observe(this) {
-            tweets.addAll(it)
-            addEmptyData()
-            tweetsAdapter.notifyDataSetChanged()
-        }
-        tweetViewModel.remoteTweetsData.observe(this) {
+        tweetViewModel.tweetsData.observe(this) {
             tweets.addAll(it)
             addEmptyData()
             tweetsAdapter.notifyDataSetChanged()
