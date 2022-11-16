@@ -39,13 +39,13 @@ class CommentRepository(private val commentDao: CommentDao, private val senderDa
 
     override fun addComments(comments: List<Comment>, tweetId: Int) {
         val commentsCollect = comments.stream().map {
-            it.sender?.let { it1 ->
-                senderRepository.addSender(it1)
+            it.sender?.let { sender ->
+                senderRepository.addSender(sender)
                 CommentPO(
                     id = 0,
                     tweetId = tweetId,
                     content = it.content,
-                    senderName = it.sender.username
+                    senderName = sender.username
                 )
             }
         }?.collect(Collectors.toList())

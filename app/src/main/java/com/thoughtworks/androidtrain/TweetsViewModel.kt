@@ -1,12 +1,12 @@
 package com.thoughtworks.androidtrain
 
-import android.app.Application
 import androidx.lifecycle.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
+import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -14,11 +14,12 @@ import okhttp3.Request
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TweetsViewModel(application: Application) : AndroidViewModel(application) {
+class TweetsViewModel : ViewModel() {
     private lateinit var okHttpClient: OkHttpClient
 
     private val fetchTweetsUseCase = FetchTweetsUseCase()
     private val addCommentUseCase = AddCommentUseCase()
+    private val addTweetUseCase = AddTweetUseCase()
 
     var localTweetsData = MutableLiveData(ArrayList<Tweet>())
     var remoteTweetsData = MutableLiveData(ArrayList<Tweet>())
@@ -54,6 +55,12 @@ class TweetsViewModel(application: Application) : AndroidViewModel(application) 
     fun saveComment(comment: Comment, tweetId: Int) {
         viewModelScope.launch (Dispatchers.Main) {
             addCommentUseCase.invoke(comment, tweetId)
+        }
+    }
+
+    fun saveTweet(tweet: Tweet) {
+        viewModelScope.launch (Dispatchers.Main) {
+            addTweetUseCase.invoke(tweet)
         }
     }
 
