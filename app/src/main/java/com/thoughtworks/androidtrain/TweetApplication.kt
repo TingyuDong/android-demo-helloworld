@@ -26,8 +26,9 @@ class TweetApplication : Application() {
     private fun addTweet() {
         val database: AppDatabase = DatabaseRepository.get().getDatabase()
         val senderDao = database.senderDao()
+        val tweetDao = database.tweetDao()
 
-        val tweetRepository = TweetRepository()
+        val tweetRepository = TweetRepository(tweetDao)
         val senderRepository = SenderRepository(senderDao)
 
         val sender = Sender(

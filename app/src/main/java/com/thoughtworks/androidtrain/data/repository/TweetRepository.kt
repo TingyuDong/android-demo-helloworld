@@ -2,20 +2,21 @@ package com.thoughtworks.androidtrain.data.repository
 
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
+import com.thoughtworks.androidtrain.data.source.local.room.dao.TweetDao
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
 interface TweetRepositoryInterface {
     fun fetchTweets(): List<Tweet>
+    fun getAllTweets(): List<TweetPO>
     fun addTweet(tweet: Tweet)
-    fun addAllTweet(tweets: ArrayList<Tweet>)
+    fun addAllTweets(tweets: ArrayList<Tweet>)
 }
 
-class TweetRepository : TweetRepositoryInterface {
+class TweetRepository(private val tweetDao: TweetDao) : TweetRepositoryInterface {
     private val database: AppDatabase = DatabaseRepository.get().getDatabase()
 
-    private val tweetDao = database.tweetDao()
     private val senderDao = database.senderDao()
     private val commentDao = database.commentDao()
     private val imageDao = database.imageDao()
@@ -44,6 +45,10 @@ class TweetRepository : TweetRepositoryInterface {
         return ArrayList(tweetData)
     }
 
+    override fun getAllTweets(): List<TweetPO> {
+        return tweetDao.getAll()
+    }
+
     override fun addTweet(tweet: Tweet) {
         tweet.sender?.let { senderRepository.addSender(it) }
         val tweetId = tweetDao.insertTweet(
@@ -59,7 +64,7 @@ class TweetRepository : TweetRepositoryInterface {
         tweet.images?.let { imageRepository.addImages(it, tweetId.toInt()) }
     }
 
-    override fun addAllTweet(tweets: ArrayList<Tweet>) {
+    override fun addAllTweets(tweets: ArrayList<Tweet>) {
         tweets.forEach { tweet -> addTweet(tweet) }
     }
 

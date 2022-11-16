@@ -7,11 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thoughtworks.androidtrain.adapters.TweetsAdapter
 import com.thoughtworks.androidtrain.data.model.Tweet
-import com.thoughtworks.androidtrain.data.repository.TweetRepository
 
 class TweetsActivity : AppCompatActivity() {
     private lateinit var tweetsAdapter: TweetsAdapter
-    private val tweetRepository = TweetRepository()
     private val tweets = ArrayList<Tweet?>()
     private lateinit var tweetViewModel: TweetsViewModel
     private lateinit var recyclerView: RecyclerView
@@ -48,7 +46,7 @@ class TweetsActivity : AppCompatActivity() {
 //        tweetsAdapter.setTweet(tweets)
     }
 
-    private fun createTweets(){
+//    private fun createTweets(){
 //        val adapterType = object : TypeToken<ArrayList<Tweet?>>() {}.type
 //        val repositoryType = object : TypeToken<ArrayList<Tweet>>() {}.type
 //        val jsonString = JSONResourceUtils().jsonResourceReader(resources, R.raw.tweets)
@@ -56,10 +54,10 @@ class TweetsActivity : AppCompatActivity() {
 //        tweetRepository.addAllTweet(Gson().fromJson(jsonString, repositoryType))
 //        tweets.clear()
 
-        tweets.addAll(tweetRepository.fetchTweets())
+//        tweets.addAll(tweetRepository.fetchTweets())
 //        getTweetFromNet()
-        addEmptyData()
-    }
+//        addEmptyData()
+//    }
 
 //    private fun getTweetFromNet() {
 //        val tweetsActivity = this

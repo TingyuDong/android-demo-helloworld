@@ -40,9 +40,10 @@ class MainActivity : AppCompatActivity() {
 
     private val database: AppDatabase = DatabaseRepository.get().getDatabase()
     private val senderDao = database.senderDao()
+    private val tweetDao = database.tweetDao()
 
     private val senderRepository = SenderRepository(senderDao)
-    private val tweetRepository = TweetRepository()
+    private val tweetRepository = TweetRepository(tweetDao)
     private val client = OkHttpClient()
 
     private val startActivity =
@@ -258,7 +259,7 @@ class MainActivity : AppCompatActivity() {
                     val obj = Objects.requireNonNull(response.body?.string())
                     val type = object : TypeToken<ArrayList<Tweet>>() {}.type
                     val tweetsFromNetwork = Gson().fromJson<ArrayList<Tweet>?>(obj, type)
-                    tweetRepository.addAllTweet(tweetsFromNetwork)
+                    tweetRepository.addAllTweets(tweetsFromNetwork)
                     Looper.prepare()
                     Toast.makeText(mainActivity, "加载完毕", Toast.LENGTH_SHORT).show()
                     Looper.loop()

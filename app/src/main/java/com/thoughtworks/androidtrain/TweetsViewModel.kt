@@ -1,32 +1,24 @@
 package com.thoughtworks.androidtrain
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.lifecycle.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Tweet
-import com.thoughtworks.androidtrain.data.repository.CommentRepository
-import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
-import com.thoughtworks.androidtrain.data.repository.TweetRepository
-import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
+import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
+import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TweetsViewModel : ViewModel() {
+class TweetsViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var okHttpClient: OkHttpClient
 
-    private val database: AppDatabase = DatabaseRepository.get().getDatabase()
-    private val senderDao = database.senderDao()
-    private val commentDao = database.commentDao()
-
-    private val tweetRepository = TweetRepository()
-    private val commentRepository = CommentRepository(commentDao, senderDao)
+    private val fetchTweetsUseCase = FetchTweetsUseCase()
+    private val addCommentUseCase = AddCommentUseCase()
 
     var localTweetsData = MutableLiveData(ArrayList<Tweet>())
     var remoteTweetsData = MutableLiveData(ArrayList<Tweet>())
@@ -40,7 +32,7 @@ class TweetsViewModel : ViewModel() {
     fun fetchData() {
         viewModelScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO) {
-                remoteTweetsData.postValue(tweetRepository.fetchTweets())
+                remoteTweetsData.postValue(fetchTweetsUseCase.invoke())
                 localTweetsData.postValue(fetchTweetFromNetwork())
             }
         }
@@ -60,6 +52,14 @@ class TweetsViewModel : ViewModel() {
     }
 
     fun saveComment(comment: Comment, tweetId: Int) {
-        commentRepository.addComment(comment, tweetId)
+        viewModelScope.launch (Dispatchers.Main) {
+            addCommentUseCase.invoke(comment, tweetId)
+        }
     }
+
+//    fun getUserInfo(): Sender{
+//        getApplication<>()
+//        val settings: SharedPreferences = getApplication().getSharedPreferences("UserInfo", 0);
+//        return Sender()
+//    }
 }
