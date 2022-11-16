@@ -3,12 +3,14 @@ package com.thoughtworks.androidtrain.usecase
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.repository.*
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
+import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import java.util.stream.Collectors
 
-class FetchTweetsUseCase {
+class FetchTweetsUseCase(okHttpClient: OkHttpClient) {
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 
     private val database: AppDatabase = DatabaseRepository.get().getDatabase()
@@ -17,13 +19,15 @@ class FetchTweetsUseCase {
     private val commentDao = database.commentDao()
     private val imageDao = database.imageDao()
 
+    private val tweetsRemoteDataSource = TweetsRemoteDataSource(defaultDispatcher,okHttpClient)
+
     private val senderRepository = SenderRepository(senderDao)
     private val commentRepository = CommentRepository(commentDao, senderDao)
     private val imageRepository = ImageRepository(imageDao)
-    private val tweetRepository = TweetRepository(tweetDao)
+    private val tweetRepository = TweetRepository(tweetDao,tweetsRemoteDataSource)
 
     suspend operator fun invoke(): ArrayList<Tweet> = withContext(defaultDispatcher) {
-        val tweets = tweetRepository.getAllTweets()
+        val tweets = tweetRepository.getAllLocalTweets()
         val tweetData: List<Tweet> =
             tweets.filter { it.error == null && it.unknownError == null }.stream().map {
                 val sender = it.senderName?.let { senderName -> senderRepository.getSender(senderName) }
@@ -39,6 +43,6 @@ class FetchTweetsUseCase {
                     unknownError = it.unknownError
                 )
             }.collect(Collectors.toList())
-        ArrayList(tweetData)
+        ArrayList(tweetData).apply { addAll(tweetRepository.getAllRemoteTweets()) }
     }
 }

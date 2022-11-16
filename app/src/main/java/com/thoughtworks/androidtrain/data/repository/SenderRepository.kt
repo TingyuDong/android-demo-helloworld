@@ -10,7 +10,6 @@ interface SenderRepositoryInterface {
 }
 
 class SenderRepository(private val senderDao: SenderDao) : SenderRepositoryInterface {
-
     override fun getSender(userName: String): Sender? {
         val senderPO = senderDao.getSender(userName)
         if (senderPO != null) {

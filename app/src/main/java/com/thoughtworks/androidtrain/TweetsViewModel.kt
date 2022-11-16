@@ -17,9 +17,9 @@ import kotlin.collections.ArrayList
 class TweetsViewModel : ViewModel() {
     private lateinit var okHttpClient: OkHttpClient
 
-    private val fetchTweetsUseCase = FetchTweetsUseCase()
-    private val addCommentUseCase = AddCommentUseCase()
-    private val addTweetUseCase = AddTweetUseCase()
+    private lateinit var fetchTweetsUseCase: FetchTweetsUseCase
+    private lateinit var addCommentUseCase: AddCommentUseCase
+    private lateinit var addTweetUseCase: AddTweetUseCase
 
     var localTweetsData = MutableLiveData(ArrayList<Tweet>())
     var remoteTweetsData = MutableLiveData(ArrayList<Tweet>())
@@ -28,6 +28,9 @@ class TweetsViewModel : ViewModel() {
 
     fun init(okHttpClient: OkHttpClient) {
         this.okHttpClient = okHttpClient
+        this.fetchTweetsUseCase = FetchTweetsUseCase(okHttpClient)
+        this.addCommentUseCase = AddCommentUseCase()
+        this.addTweetUseCase = AddTweetUseCase(okHttpClient)
     }
 
     fun fetchData() {
