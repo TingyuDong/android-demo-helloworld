@@ -17,7 +17,7 @@ class TweetsViewModel(
     private var addCommentUseCase: AddCommentUseCase,
     private var addTweetUseCase: AddTweetUseCase,
     private var application: Application
-    ) : ViewModel() {
+) : ViewModel() {
     var tweetsData = MutableLiveData(ArrayList<Tweet>())
     val tweets: LiveData<ArrayList<Tweet>>
         get() = tweetsData
