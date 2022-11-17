@@ -2,21 +2,16 @@ package com.thoughtworks.androidtrain.usecase
 
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.repository.*
-import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class AddCommentUseCase {
+class AddCommentUseCase(
+    private val senderRepository: SenderRepository,
+    private val commentRepository: CommentRepository
+) {
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
-
-    private val database: AppDatabase = DatabaseRepository.get().getDatabase()
-    private val senderDao = database.senderDao()
-    private val commentDao = database.commentDao()
-
-    private val senderRepository = SenderRepository(senderDao)
-    private val commentRepository = CommentRepository(commentDao, senderDao)
 
     suspend operator fun invoke(comment: Comment, tweetId: Int) =
         withContext(defaultDispatcher) {

@@ -28,7 +28,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.thoughtworks.androidtrain.R
@@ -37,18 +36,15 @@ import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
-import okhttp3.OkHttpClient
 
 @Composable
 fun TweetScreen(
-    okHttpClient: OkHttpClient,
-    tweetsViewModel: TweetsViewModel = viewModel(),
+    tweetsViewModel: TweetsViewModel,
     lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
     DisposableEffect(lifeCycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_CREATE) {
-                tweetsViewModel.init(okHttpClient)
                 tweetsViewModel.fetchData()
             }
         }
@@ -73,7 +69,7 @@ private fun TweetScreenContent(
                 TweetItems(tweets, tweetsViewModel)
             }
             item {
-                ButtonItem()
+                BottomItem()
             }
         }
     )
@@ -92,7 +88,7 @@ private fun TweetItems(
 }
 
 @Composable
-private fun ButtonItem() {
+private fun BottomItem() {
     Text(
         modifier = Modifier
             .background(Color.LightGray)

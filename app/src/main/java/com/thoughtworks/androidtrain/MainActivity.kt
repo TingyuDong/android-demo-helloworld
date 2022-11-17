@@ -7,35 +7,29 @@ import android.database.Cursor
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Looper
 import android.provider.ContactsContract
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.compose.ComposeActivity
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.util.*
-import kotlin.collections.ArrayList
+import com.thoughtworks.androidtrain.data.repository.*
+import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
+import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
+import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
+import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
     object List {
         const val TAG: String = "MainActivity"
     }
 
-    private val tweetsViewModel = TweetsViewModel()
-    private val client = OkHttpClient()
+    private lateinit var tweetsViewModel: TweetsViewModel
 
     private val startActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -117,7 +111,7 @@ class MainActivity : AppCompatActivity() {
             addTweet()
         }
         btnFetchTweet.setOnClickListener {
-            getTweetFromNet()
+            tweetsViewModel.fetchData()
         }
         btnCompose.setOnClickListener {
             compose()
@@ -159,9 +153,38 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initViewModel()
         setContentView(R.layout.activity_frame_homework)
         Log.i(List.TAG, "onCreate")
         addBtnEvent()
+    }
+
+    private fun initViewModel() {
+        val database = DatabaseRepository.get().getDatabase()
+        val client = (application as TweetApplication).getHttpClient()
+        val tweetsRemoteDataSource = TweetsRemoteDataSource(Dispatchers.Default, client)
+        val senderRepository = SenderRepository(database.senderDao())
+        val commentRepository = CommentRepository(database.commentDao(), database.senderDao())
+        val tweetRepository = TweetRepository(database.tweetDao(), tweetsRemoteDataSource)
+        val imageRepository = ImageRepository(database.imageDao())
+        tweetsViewModel = TweetsViewModel(
+            fetchTweetsUseCase = FetchTweetsUseCase(
+                senderRepository = senderRepository,
+                commentRepository = commentRepository,
+                tweetRepository = tweetRepository,
+                imageRepository = imageRepository
+            ),
+            addTweetUseCase = AddTweetUseCase(
+                senderRepository = senderRepository,
+                commentRepository = commentRepository,
+                imageRepository = imageRepository,
+                tweetRepository = tweetRepository
+            ),
+            addCommentUseCase = AddCommentUseCase(
+                senderRepository = senderRepository,
+                commentRepository = commentRepository
+            )
+        )
     }
 
 
@@ -233,32 +256,5 @@ class MainActivity : AppCompatActivity() {
                 unknownError = null
             )
         )
-    }
-
-    private fun getTweetFromNet() {
-        val mainActivity = this
-        MainScope().launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO) {
-                try{
-                    val url = "https://thoughtworks-mobile-2018.herokuapp.com/user/jsmith/tweets"
-                    val request = Request.Builder()
-                        .url(url)
-                        .build()
-                    val response = client.newCall(request).execute()
-                    val obj = Objects.requireNonNull(response.body?.string())
-                    val type = object : TypeToken<ArrayList<Tweet>>() {}.type
-                    val tweetsFromNetwork = Gson().fromJson<ArrayList<Tweet>?>(obj, type)
-                    Looper.prepare()
-                    Toast.makeText(mainActivity, "加载完毕", Toast.LENGTH_SHORT).show()
-                    Looper.loop()
-                }catch(e: Exception) {
-                    Looper.prepare()
-                    Toast.makeText(mainActivity, "加载出错，Exception ${e.message}", Toast.LENGTH_SHORT).show()
-                    Looper.loop()
-                }
-            }
-
-        }
-        Toast.makeText(mainActivity, "加载中", Toast.LENGTH_SHORT).show()
     }
 }

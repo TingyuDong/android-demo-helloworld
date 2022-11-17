@@ -7,6 +7,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thoughtworks.androidtrain.adapters.TweetsAdapter
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.data.repository.*
+import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
+import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
+import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
+import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
+import kotlinx.coroutines.Dispatchers
 
 class TweetsActivity : AppCompatActivity() {
     private lateinit var tweetsAdapter: TweetsAdapter
@@ -24,7 +30,33 @@ class TweetsActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         tweetViewModel = ViewModelProvider(this)[TweetsViewModel::class.java]
-        tweetViewModel.init((application as TweetApplication).getHttpClient())
+        val database = DatabaseRepository.get().getDatabase()
+        val tweetsRemoteDataSource = TweetsRemoteDataSource(
+            Dispatchers.Default,
+            (application as TweetApplication).getHttpClient()
+        )
+        val senderRepository = SenderRepository(database.senderDao())
+        val commentRepository = CommentRepository(database.commentDao(), database.senderDao())
+        val tweetRepository = TweetRepository(database.tweetDao(), tweetsRemoteDataSource)
+        val imageRepository = ImageRepository(database.imageDao())
+        tweetViewModel = TweetsViewModel(
+            fetchTweetsUseCase = FetchTweetsUseCase(
+                senderRepository = senderRepository,
+                commentRepository = commentRepository,
+                tweetRepository = tweetRepository,
+                imageRepository = imageRepository
+            ),
+            addTweetUseCase = AddTweetUseCase(
+                senderRepository = senderRepository,
+                commentRepository = commentRepository,
+                imageRepository = imageRepository,
+                tweetRepository = tweetRepository
+            ),
+            addCommentUseCase = AddCommentUseCase(
+                senderRepository = senderRepository,
+                commentRepository = commentRepository
+            )
+        )
         tweetViewModel.tweetsData.observe(this) {
             tweets.addAll(it)
             addEmptyData()

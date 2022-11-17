@@ -10,10 +10,11 @@ class TweetApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         DatabaseRepository.initialize(this)
+        DatabaseRepository.get().getDatabase()
         client = OkHttpClient()
     }
 
-    fun getHttpClient() : OkHttpClient {
+    fun getHttpClient(): OkHttpClient {
         return client
     }
 }

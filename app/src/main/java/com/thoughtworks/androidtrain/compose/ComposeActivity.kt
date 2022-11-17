@@ -9,15 +9,32 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.thoughtworks.androidtrain.R
 import com.thoughtworks.androidtrain.TweetApplication
+import com.thoughtworks.androidtrain.TweetsViewModel
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.data.repository.*
+import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
+import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
+import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
+import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import com.thoughtworks.androidtrain.utils.JSONResourceUtils
+import kotlinx.coroutines.Dispatchers
+
+//// Inject Library
+//fun provideUseCase(useCase: UserCase) {
+//    //
+//}
+//fun getUserCase(): UseCase {
+//    //
+//}
 
 class ComposeActivity : AppCompatActivity() {
-    var tweets = ArrayList<Tweet>()
+    private var tweets = ArrayList<Tweet>()
+    private lateinit var tweetsViewModel: TweetsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initViewModel()
         tweets.addAll(
             Gson().fromJson(
                 JSONResourceUtils().jsonResourceReader(resources, R.raw.tweets),
@@ -25,7 +42,10 @@ class ComposeActivity : AppCompatActivity() {
             )
         )
         setContent {
-            TweetScreen((application as TweetApplication).getHttpClient())
+//            TweetScreen((application as TweetApplication).getHttpClient())
+            TweetScreen(
+                tweetsViewModel = tweetsViewModel
+            )
         }
     }
 
@@ -34,7 +54,6 @@ class ComposeActivity : AppCompatActivity() {
     fun ContentPreview() {
         tweets.add(getTweet())
         tweets.add(getTweet())
-        TweetScreen((application as TweetApplication).getHttpClient())
     }
 
     private fun getTweet(): Tweet {
@@ -51,6 +70,34 @@ class ComposeActivity : AppCompatActivity() {
             comments = null,
             error = null,
             unknownError = null
+        )
+    }
+
+    private fun initViewModel() {
+        val database = DatabaseRepository.get().getDatabase()
+        val client = (application as TweetApplication).getHttpClient()
+        val tweetsRemoteDataSource = TweetsRemoteDataSource(Dispatchers.Default, client)
+        val senderRepository = SenderRepository(database.senderDao())
+        val commentRepository = CommentRepository(database.commentDao(), database.senderDao())
+        val tweetRepository = TweetRepository(database.tweetDao(), tweetsRemoteDataSource)
+        val imageRepository = ImageRepository(database.imageDao())
+        tweetsViewModel = TweetsViewModel(
+            fetchTweetsUseCase = FetchTweetsUseCase(
+                senderRepository = senderRepository,
+                commentRepository = commentRepository,
+                tweetRepository = tweetRepository,
+                imageRepository = imageRepository
+            ),
+            addTweetUseCase = AddTweetUseCase(
+                senderRepository = senderRepository,
+                commentRepository = commentRepository,
+                imageRepository = imageRepository,
+                tweetRepository = tweetRepository
+            ),
+            addCommentUseCase = AddCommentUseCase(
+                senderRepository = senderRepository,
+                commentRepository = commentRepository
+            )
         )
     }
 }
