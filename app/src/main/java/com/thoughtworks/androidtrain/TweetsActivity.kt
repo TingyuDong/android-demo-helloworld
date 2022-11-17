@@ -55,7 +55,8 @@ class TweetsActivity : AppCompatActivity() {
             addCommentUseCase = AddCommentUseCase(
                 senderRepository = senderRepository,
                 commentRepository = commentRepository
-            )
+            ),
+            application = application
         )
         tweetViewModel.tweetsData.observe(this) {
             tweets.addAll(it)
