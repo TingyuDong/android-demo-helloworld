@@ -83,6 +83,7 @@ private fun TweetItems(
     tweets?.forEach { tweet ->
         TweetItem(tweet = tweet) { comment, tweetId ->
             tweetsViewModel.saveComment(comment, tweetId)
+            tweetsViewModel.fetchData()
         }
     }
 }
@@ -122,18 +123,17 @@ private fun TweetSenderNickAndContentsAndComments(
     saveComment: (comment: Comment, tweetId: Int) -> Unit
 ) {
     val showAddCommentItem = remember { mutableStateOf(false) }
-    val yourComments = remember { mutableListOf<Comment>() }
     Column {
         Nick(tweet.sender?.nick.orEmpty())
         TweetContents(tweet.content, tweet.images) {
             showAddCommentItem.value = true
         }
-        TweetComments(tweet.comments, yourComments)
+        TweetComments(tweet.comments)
         if (showAddCommentItem.value) {
             AddCommentItem(
                 onSave = { content ->
                     showAddCommentItem.value = false
-                    addComment(tweet.id, content, yourComments, saveComment)
+                    addComment(tweet.id, content, saveComment)
                 },
                 onCancel = {
                     showAddCommentItem.value = false
@@ -145,28 +145,22 @@ private fun TweetSenderNickAndContentsAndComments(
 private fun addComment(
     tweetId: Int,
     content: String,
-    yourComments: MutableList<Comment>,
     saveComment: (comment: Comment, tweetId: Int) -> Unit
 ) {
     Comment(
         content = content,
         sender = Sender("you", "you", "avtar.png")
     ).also { comment ->
-        yourComments.add(comment)
         saveComment(comment, tweetId)
     }
 }
 
 @Composable
 private fun TweetComments(
-    comments: List<Comment>?,
-    yourComments: MutableList<Comment>
+    comments: List<Comment>?
 ) {
     comments?.forEach { comment ->
         CommentItem(comment)
-    }
-    yourComments.forEach { yourComment ->
-        CommentItem(yourComment)
     }
 }
 
