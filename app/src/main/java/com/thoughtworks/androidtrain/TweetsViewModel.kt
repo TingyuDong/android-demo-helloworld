@@ -1,7 +1,10 @@
 package com.thoughtworks.androidtrain
 
+import android.app.Application
+import android.content.SharedPreferences
 import androidx.lifecycle.*
 import com.thoughtworks.androidtrain.data.model.Comment
+import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
@@ -12,7 +15,8 @@ import kotlin.collections.ArrayList
 class TweetsViewModel(
     private var fetchTweetsUseCase: FetchTweetsUseCase,
     private var addCommentUseCase: AddCommentUseCase,
-    private var addTweetUseCase: AddTweetUseCase
+    private var addTweetUseCase: AddTweetUseCase,
+    private var application: Application
     ) : ViewModel() {
     var tweetsData = MutableLiveData(ArrayList<Tweet>())
     val tweets: LiveData<ArrayList<Tweet>>
@@ -38,9 +42,15 @@ class TweetsViewModel(
         }
     }
 
-//    fun getUserInfo(): Sender{
-//        getApplication<>()
-//        val settings: SharedPreferences = getApplication().getSharedPreferences("UserInfo", 0);
-//        return Sender()
-//    }
+    fun getUserInfo(): Sender {
+        val settings: SharedPreferences = application.getSharedPreferences("UserInfo", 0)
+        val userName = settings.getString("UserName", "you")
+        val nick = settings.getString("Nick", "you")
+        val avatar = settings.getString("Avatar", "Avatar.png")
+        return Sender(
+            username = userName!!,
+            nick = nick!!,
+            avatar = avatar!!
+        )
+    }
 }

@@ -81,10 +81,16 @@ private fun TweetItems(
     tweetsViewModel: TweetsViewModel
 ) {
     tweets?.forEach { tweet ->
-        TweetItem(tweet = tweet) { comment, tweetId ->
-            tweetsViewModel.saveComment(comment, tweetId)
-            tweetsViewModel.fetchData()
-        }
+        TweetItem(
+            tweet = tweet,
+            saveComment = { comment, tweetId ->
+                tweetsViewModel.saveComment(comment, tweetId)
+                tweetsViewModel.fetchData()
+            },
+            getUserInfo = {
+                tweetsViewModel.getUserInfo()
+            }
+        )
     }
 }
 
@@ -103,7 +109,9 @@ private fun BottomItem() {
 
 @Composable
 private fun TweetItem(
-    tweet: Tweet, saveComment: (comment: Comment, tweetId: Int) -> Unit
+    tweet: Tweet,
+    saveComment: (comment: Comment, tweetId: Int) -> Unit,
+    getUserInfo: () -> Sender
 ) {
     Row(
         modifier = Modifier.padding(
@@ -113,14 +121,15 @@ private fun TweetItem(
     ) {
         Avatar(tweet.sender?.avatar)
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_between_avatar_and_content)))
-        TweetSenderNickAndContentsAndComments(tweet, saveComment)
+        TweetSenderNickAndContentsAndComments(tweet, saveComment, getUserInfo)
     }
 }
 
 @Composable
 private fun TweetSenderNickAndContentsAndComments(
     tweet: Tweet,
-    saveComment: (comment: Comment, tweetId: Int) -> Unit
+    saveComment: (comment: Comment, tweetId: Int) -> Unit,
+    getUserInfo: () -> Sender
 ) {
     val showAddCommentItem = remember { mutableStateOf(false) }
     Column {
@@ -133,7 +142,7 @@ private fun TweetSenderNickAndContentsAndComments(
             AddCommentItem(
                 onSave = { content ->
                     showAddCommentItem.value = false
-                    addComment(tweet.id, content, saveComment)
+                    addComment(tweet.id, content, saveComment, getUserInfo)
                 },
                 onCancel = {
                     showAddCommentItem.value = false
@@ -145,11 +154,12 @@ private fun TweetSenderNickAndContentsAndComments(
 private fun addComment(
     tweetId: Int,
     content: String,
-    saveComment: (comment: Comment, tweetId: Int) -> Unit
+    saveComment: (comment: Comment, tweetId: Int) -> Unit,
+    getUserInfo: () -> Sender
 ) {
     Comment(
         content = content,
-        sender = Sender("you", "you", "avtar.png")
+        sender = getUserInfo()
     ).also { comment ->
         saveComment(comment, tweetId)
     }

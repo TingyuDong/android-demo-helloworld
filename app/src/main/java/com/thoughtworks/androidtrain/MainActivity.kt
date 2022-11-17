@@ -183,7 +183,8 @@ class MainActivity : AppCompatActivity() {
             addCommentUseCase = AddCommentUseCase(
                 senderRepository = senderRepository,
                 commentRepository = commentRepository
-            )
+            ),
+            application = application
         )
     }
 
