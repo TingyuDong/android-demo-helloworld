@@ -17,7 +17,11 @@ import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
-import com.thoughtworks.androidtrain.data.repository.*
+import com.thoughtworks.androidtrain.data.repository.CommentRepository
+import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
+import com.thoughtworks.androidtrain.data.repository.SenderRepository
+import com.thoughtworks.androidtrain.data.repository.TweetRepository
+import com.thoughtworks.androidtrain.data.repository.ImageRepository
 import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
