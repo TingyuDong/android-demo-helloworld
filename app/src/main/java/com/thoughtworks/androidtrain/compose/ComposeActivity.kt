@@ -42,7 +42,6 @@ class ComposeActivity : AppCompatActivity() {
             )
         )
         setContent {
-//            TweetScreen((application as TweetApplication).getHttpClient())
             TweetScreen(
                 tweetsViewModel = tweetsViewModel
             )
