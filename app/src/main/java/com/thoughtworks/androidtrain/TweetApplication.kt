@@ -4,6 +4,7 @@ import android.app.Application
 import com.thoughtworks.androidtrain.data.repository.*
 import com.thoughtworks.androidtrain.modules.appModules
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 class TweetApplication : Application() {
@@ -15,6 +16,7 @@ class TweetApplication : Application() {
         DatabaseRepository.get().getDatabase()
         client = OkHttpClient()
         startKoin {
+            androidContext(this@TweetApplication)
             modules(appModules)
         }
     }
