@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class AddCommentUseCase(
+open class AddCommentUseCase(
     private val senderRepository: SenderRepository,
     private val commentRepository: CommentRepository
 ) {

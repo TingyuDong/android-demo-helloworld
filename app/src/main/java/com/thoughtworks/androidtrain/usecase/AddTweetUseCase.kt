@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class AddTweetUseCase(
+open class AddTweetUseCase(
     private val senderRepository: SenderRepository,
     private val commentRepository: CommentRepository,
     private val imageRepository: ImageRepository,
