@@ -62,7 +62,7 @@ class TweetsActivity : AppCompatActivity() {
             ),
             application = application
         )
-        tweetViewModel.tweetsData.observe(this) {
+        tweetViewModel.tweets.observe(this) {
             tweets.addAll(it)
             addEmptyData()
             tweetsAdapter.notifyDataSetChanged()
