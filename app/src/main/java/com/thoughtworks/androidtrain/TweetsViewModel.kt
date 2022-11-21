@@ -15,16 +15,15 @@ import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.collections.ArrayList
 
 class TweetsViewModel(
-    private var fetchTweetsUseCase: FetchTweetsUseCase,
-    private var addCommentUseCase: AddCommentUseCase,
-    private var addTweetUseCase: AddTweetUseCase,
-    private var application: Application
+    private val fetchTweetsUseCase: FetchTweetsUseCase,
+    private val addCommentUseCase: AddCommentUseCase,
+    private val addTweetUseCase: AddTweetUseCase,
+    private val application: Application
 ) : ViewModel() {
-    var tweetsData = MutableLiveData(ArrayList<Tweet>())
-    val tweets: LiveData<ArrayList<Tweet>>
+    private val tweetsData = MutableLiveData(listOf<Tweet>())
+    val tweets: LiveData<List<Tweet>>
         get() = tweetsData
 
     fun fetchData() {
