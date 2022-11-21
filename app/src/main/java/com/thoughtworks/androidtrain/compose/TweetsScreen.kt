@@ -62,7 +62,7 @@ fun TweetScreen(
 
 @Composable
 private fun TweetScreenContent(
-    tweets: ArrayList<Tweet>?,
+    tweets: List<Tweet>?,
     tweetsViewModel: TweetsViewModel
 ) {
     LazyColumn(
@@ -80,7 +80,7 @@ private fun TweetScreenContent(
 
 @Composable
 private fun TweetItems(
-    tweets: ArrayList<Tweet>?,
+    tweets: List<Tweet>?,
     tweetsViewModel: TweetsViewModel
 ) {
     tweets?.forEach { tweet ->
