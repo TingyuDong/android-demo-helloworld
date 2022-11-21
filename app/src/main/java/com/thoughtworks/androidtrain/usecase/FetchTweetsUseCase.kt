@@ -1,36 +1,21 @@
 package com.thoughtworks.androidtrain.usecase
 
 import com.thoughtworks.androidtrain.data.model.Tweet
-import com.thoughtworks.androidtrain.data.repository.*
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.util.stream.Collectors
+import com.thoughtworks.androidtrain.data.repository.CommentRepository
+import com.thoughtworks.androidtrain.data.repository.ImageRepository
+import com.thoughtworks.androidtrain.data.repository.SenderRepository
+import com.thoughtworks.androidtrain.data.repository.TweetRepository
 
-class FetchTweetsUseCase(
+open class FetchTweetsUseCase(
     private val senderRepository: SenderRepository,
     private val commentRepository: CommentRepository,
     private val imageRepository: ImageRepository,
     private val tweetRepository: TweetRepository,
 ) {
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
-//    private val database: AppDatabase = DatabaseRepository.get().getDatabase()
-//    private val tweetDao = database.tweetDao()
-//    private val senderDao = database.senderDao()
-//    private val commentDao = database.commentDao()
-//    private val imageDao = database.imageDao()
-//
-//    private val tweetsRemoteDataSource = TweetsRemoteDataSource(defaultDispatcher,okHttpClient)
-//
-//    private val senderRepository = SenderRepository(senderDao)
-//    private val commentRepository = CommentRepository(commentDao, senderDao)
-//    private val imageRepository = ImageRepository(imageDao)
-//    private val tweetRepository = TweetRepository(tweetDao,tweetsRemoteDataSource)
-
-    suspend operator fun invoke(): ArrayList<Tweet> = withContext(defaultDispatcher) {
-        val tweets = tweetRepository.getAllLocalTweets()
+    open suspend operator fun invoke(): List<Tweet> {
         val tweetData: List<Tweet> =
-            tweets.filter { it.error == null && it.unknownError == null }.stream().map {
+            tweetRepository.getAllLocalTweets()
+                .filter { it.error == null && it.unknownError == null }.map {
                 val sender =
                     it.senderName?.let { senderName -> senderRepository.getSender(senderName) }
                 val images = imageRepository.getImages(it.id)
@@ -44,7 +29,7 @@ class FetchTweetsUseCase(
                     error = it.error,
                     unknownError = it.unknownError
                 )
-            }.collect(Collectors.toList())
-        ArrayList(tweetData).apply { addAll(tweetRepository.getAllRemoteTweets()) }
+            }
+        return tweetData.plus(tweetRepository.getAllRemoteTweets())
     }
 }
