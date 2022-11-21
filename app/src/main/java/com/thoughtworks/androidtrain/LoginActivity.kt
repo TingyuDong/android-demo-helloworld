@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.widget.Button
 
 class LoginActivity : AppCompatActivity() {
-    private val editor: SharedPreferences.Editor =
-        getSharedPreferences("UserInfo", 0).edit()
+    private lateinit var editor: SharedPreferences.Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        editor = getSharedPreferences("UserInfo", 0).edit()
         setContentView(R.layout.login_layout)
         addBtnEvent()
         // Hide the status bar.
