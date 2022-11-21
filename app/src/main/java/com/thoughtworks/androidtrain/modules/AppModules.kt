@@ -14,6 +14,7 @@ import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 private const val DATABASE_NAME = "tweet"
@@ -25,7 +26,7 @@ val appModules = module {
             get(),
             AppDatabase::class.java,
             DATABASE_NAME
-        )
+        ).build()
     }
     single {
         TweetsRemoteDataSource(Dispatchers.Default, OkHttpClient())
@@ -66,7 +67,7 @@ val appModules = module {
     single {
         Application()
     }
-    single {
+    viewModel {
         TweetsViewModel(get(), get(), get(), get())
     }
 }
