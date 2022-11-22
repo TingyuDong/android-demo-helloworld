@@ -14,7 +14,6 @@ import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class TweetsViewModel(
     private val fetchTweetsUseCase: FetchTweetsUseCase,
