@@ -17,23 +17,14 @@ import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
-import com.thoughtworks.androidtrain.data.repository.CommentRepository
-import com.thoughtworks.androidtrain.data.repository.DatabaseRepository
-import com.thoughtworks.androidtrain.data.repository.SenderRepository
-import com.thoughtworks.androidtrain.data.repository.TweetRepository
-import com.thoughtworks.androidtrain.data.repository.ImageRepository
-import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
-import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
-import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
-import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
-import kotlinx.coroutines.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     object List {
         const val TAG: String = "MainActivity"
     }
 
-    private lateinit var tweetsViewModel: TweetsViewModel
+    private val tweetsViewModel: TweetsViewModel by viewModel()
 
     private val startActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -157,41 +148,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
         setContentView(R.layout.activity_frame_homework)
         Log.i(List.TAG, "onCreate")
         addBtnEvent()
     }
-
-    private fun initViewModel() {
-        val database = DatabaseRepository.get().getDatabase()
-        val client = (application as TweetApplication).getHttpClient()
-        val tweetsRemoteDataSource = TweetsRemoteDataSource(Dispatchers.Default, client)
-        val senderRepository = SenderRepository(database.senderDao())
-        val commentRepository = CommentRepository(database.commentDao(), database.senderDao())
-        val tweetRepository = TweetRepository(database.tweetDao(), tweetsRemoteDataSource)
-        val imageRepository = ImageRepository(database.imageDao())
-        tweetsViewModel = TweetsViewModel(
-            fetchTweetsUseCase = FetchTweetsUseCase(
-                senderRepository = senderRepository,
-                commentRepository = commentRepository,
-                tweetRepository = tweetRepository,
-                imageRepository = imageRepository
-            ),
-            addTweetUseCase = AddTweetUseCase(
-                senderRepository = senderRepository,
-                commentRepository = commentRepository,
-                imageRepository = imageRepository,
-                tweetRepository = tweetRepository
-            ),
-            addCommentUseCase = AddCommentUseCase(
-                senderRepository = senderRepository,
-                commentRepository = commentRepository
-            ),
-            application = application
-        )
-    }
-
 
     override fun onStart() {
         super.onStart()
@@ -219,19 +179,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun sendMessage() {
-//        val editText = findViewById<EditText>(R.id.reminder)
-//        val message = editText.text.toString()
-//        val intent = Intent(this, ConstraintAtivity::class.java).apply {
-//            this.putExtra(EXTRA_MESSAGE, message)
-//            this.putExtra(EXTRA_MESSAGE, message)
-//            this.putExtra(EXTRA_MESSAGE, message)
-//            this.putExtra(EXTRA_MESSAGE, message)
-//        }
         val intent = Intent(this, ConstraintActivity::class.java)
-//        intent.putExtra(EXTRA_MESSAGE, message)
-//        intent.putExtra(EXTRA_MESSAGE, message)
-//        intent.putExtra(EXTRA_MESSAGE, message)
-//        intent.putExtra(EXTRA_MESSAGE, message)
         startActivity(intent)
     }
 
