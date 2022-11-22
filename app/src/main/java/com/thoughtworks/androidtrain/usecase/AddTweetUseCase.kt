@@ -4,18 +4,16 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.repository.*
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 open class AddTweetUseCase(
     private val senderRepository: SenderRepository,
     private val commentRepository: CommentRepository,
     private val imageRepository: ImageRepository,
-    private val tweetRepository: TweetRepository
+    private val tweetRepository: TweetRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) {
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
-
-    suspend operator fun invoke(tweet: Tweet) = withContext(defaultDispatcher) {
+    suspend operator fun invoke(tweet: Tweet) = withContext(ioDispatcher) {
         tweet.sender?.also { senderRepository.addSender(it) }
         val tweetId = tweetRepository.addTweet(
             TweetPO(

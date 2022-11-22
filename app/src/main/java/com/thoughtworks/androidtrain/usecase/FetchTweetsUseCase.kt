@@ -5,14 +5,17 @@ import com.thoughtworks.androidtrain.data.repository.CommentRepository
 import com.thoughtworks.androidtrain.data.repository.ImageRepository
 import com.thoughtworks.androidtrain.data.repository.SenderRepository
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 open class FetchTweetsUseCase(
     private val senderRepository: SenderRepository,
     private val commentRepository: CommentRepository,
     private val imageRepository: ImageRepository,
     private val tweetRepository: TweetRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) {
-    open suspend operator fun invoke(): List<Tweet> {
+    open suspend operator fun invoke(): List<Tweet> = withContext(ioDispatcher) {
         val tweetData: List<Tweet> =
             tweetRepository.getAllLocalTweets()
                 .filter { it.error == null && it.unknownError == null }.map {
@@ -30,6 +33,6 @@ open class FetchTweetsUseCase(
                     unknownError = it.unknownError
                 )
             }
-        return tweetData.plus(tweetRepository.getAllRemoteTweets())
+        tweetData.plus(tweetRepository.getAllRemoteTweets())
     }
 }
