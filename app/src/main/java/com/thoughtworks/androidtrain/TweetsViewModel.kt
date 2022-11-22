@@ -28,9 +28,7 @@ class TweetsViewModel(
 
     fun fetchData() {
         viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO) {
                 tweetsData.postValue(fetchTweetsUseCase.invoke())
-            }
         }
     }
 
