@@ -56,20 +56,18 @@ fun TweetScreen(
             lifeCycleOwner.lifecycle.removeObserver(observer)
         }
     }
-    val tweets = tweetsViewModel.tweets.observeAsState().value
-    TweetScreenContent(tweets, tweetsViewModel)
+    TweetScreenContent(tweetsViewModel)
 }
 
 @Composable
 private fun TweetScreenContent(
-    tweets: List<Tweet>?,
     tweetsViewModel: TweetsViewModel
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.Top,
         content = {
             item {
-                TweetItems(tweets, tweetsViewModel)
+                TweetItems(tweetsViewModel)
             }
             item {
                 BottomItem()
@@ -80,15 +78,13 @@ private fun TweetScreenContent(
 
 @Composable
 private fun TweetItems(
-    tweets: List<Tweet>?,
     tweetsViewModel: TweetsViewModel
 ) {
-    tweets?.forEach { tweet ->
+    tweetsViewModel.tweets.observeAsState().value?.forEach { tweet ->
         TweetItem(
             tweet = tweet,
             saveComment = { comment, tweetId ->
                 tweetsViewModel.saveComment(comment, tweetId)
-                tweetsViewModel.fetchData()
             },
             getUserInfo = {
                 tweetsViewModel.getUserInfo()

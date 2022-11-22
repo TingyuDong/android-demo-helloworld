@@ -55,7 +55,7 @@ val appModules = module {
     single {
         ImageRepository(get())
     }
-    factory {
+    single {
         Dispatchers.IO
     }
     single {

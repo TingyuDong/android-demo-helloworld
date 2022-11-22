@@ -27,19 +27,21 @@ class TweetsViewModel(
 
     fun fetchData() {
         viewModelScope.launch(Dispatchers.Main) {
-                tweetsData.postValue(fetchTweetsUseCase.invoke())
+            tweetsData.postValue(fetchTweetsUseCase.invoke())
         }
     }
 
     fun saveComment(comment: Comment, tweetId: Int) {
         viewModelScope.launch(Dispatchers.Main) {
             addCommentUseCase.invoke(comment, tweetId)
+            tweetsData.postValue(fetchTweetsUseCase.invoke())
         }
     }
 
     fun saveTweet(tweet: Tweet) {
         viewModelScope.launch(Dispatchers.Main) {
             addTweetUseCase.invoke(tweet)
+            tweetsData.postValue(fetchTweetsUseCase.invoke())
         }
     }
 
