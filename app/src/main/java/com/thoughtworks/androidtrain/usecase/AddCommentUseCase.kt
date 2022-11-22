@@ -12,7 +12,7 @@ open class AddCommentUseCase(
     private val ioDispatcher: CoroutineDispatcher
 ) {
     suspend operator fun invoke(comment: Comment, tweetId: Int) = withContext(ioDispatcher) {
-        val commentPO = comment.sender!!.let { sender ->
+        val commentPO = comment.sender.let { sender ->
             senderRepository.addSender(sender)
             CommentPO(
                 id = 0,

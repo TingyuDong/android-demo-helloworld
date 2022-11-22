@@ -25,13 +25,12 @@ class CommentRepository(private val commentDao: CommentDao, private val senderDa
                 val sender = senderDao.getSender(it.senderName)
                 Comment(
                     content = it.content,
-                    sender = sender?.let { it1 ->
-                        Sender(
-                            username = it1.userName,
-                            nick = sender.nick,
-                            avatar = sender.avatar
-                        )
-                    })
+                    sender = Sender(
+                        username = sender.userName,
+                        nick = sender.nick,
+                        avatar = sender.avatar
+                    )
+                )
             }.collect(Collectors.toList())
         }
         return null
@@ -39,7 +38,7 @@ class CommentRepository(private val commentDao: CommentDao, private val senderDa
 
     override fun addComments(comments: List<Comment>, tweetId: Int) {
         val commentsCollect = comments.stream().map {
-            it.sender?.let { sender ->
+            it.sender.let { sender ->
                 senderRepository.addSender(sender)
                 CommentPO(
                     id = 0,
