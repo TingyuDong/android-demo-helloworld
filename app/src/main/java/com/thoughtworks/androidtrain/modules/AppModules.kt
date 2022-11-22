@@ -1,7 +1,7 @@
 package com.thoughtworks.androidtrain.modules
 
-import android.app.Application
 import androidx.room.Room
+import com.thoughtworks.androidtrain.TweetApplication
 import com.thoughtworks.androidtrain.TweetsViewModel
 import com.thoughtworks.androidtrain.data.repository.CommentRepository
 import com.thoughtworks.androidtrain.data.repository.ImageRepository
@@ -55,17 +55,20 @@ val appModules = module {
     single {
         ImageRepository(get())
     }
-    single {
-        AddCommentUseCase(get(), get())
+    factory {
+        Dispatchers.IO
     }
     single {
-        AddTweetUseCase(get(), get(), get(), get())
+        AddCommentUseCase(get(), get(), get())
     }
     single {
-        FetchTweetsUseCase(get(), get(), get(), get())
+        AddTweetUseCase(get(), get(), get(), get(), get())
     }
     single {
-        Application()
+        FetchTweetsUseCase(get(), get(), get(), get(), get())
+    }
+    single {
+        TweetApplication()
     }
     viewModel {
         TweetsViewModel(get(), get(), get(), get())
