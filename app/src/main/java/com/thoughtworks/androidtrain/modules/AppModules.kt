@@ -29,7 +29,7 @@ val appModules = module {
         ).build()
     }
     single {
-        TweetsRemoteDataSource(Dispatchers.Default, OkHttpClient())
+        TweetsRemoteDataSource(get(), OkHttpClient())
     }
     single {
         get<AppDatabase>().tweetDao()
