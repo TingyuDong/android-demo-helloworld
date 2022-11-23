@@ -160,7 +160,6 @@ open class OkHttpUtils(context: Context) {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
         return null
     }
 
