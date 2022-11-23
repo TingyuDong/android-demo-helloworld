@@ -12,7 +12,7 @@ class SharedPreferenceUtils {
         editor.apply()
     }
 
-    fun readBoolean(activity: Activity, key: String, defaultValue: Boolean) : Boolean {
+    fun readBoolean(activity: Activity, key: String, defaultValue: Boolean): Boolean {
         val sharedPref: SharedPreferences = activity.getPreferences(Context.MODE_PRIVATE)
         return sharedPref.getBoolean(key, defaultValue)
     }
