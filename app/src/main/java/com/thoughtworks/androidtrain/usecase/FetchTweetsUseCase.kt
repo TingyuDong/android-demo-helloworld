@@ -19,20 +19,20 @@ open class FetchTweetsUseCase(
         val tweetData: List<Tweet> =
             tweetRepository.getAllLocalTweets()
                 .filter { it.error == null && it.unknownError == null }.map {
-                val sender =
-                    it.senderName?.let { senderName -> senderRepository.getSender(senderName) }
-                val images = imageRepository.getImages(it.id)
-                val comments = commentRepository.getComments(it.id)
-                Tweet(
-                    id = it.id,
-                    content = it.content,
-                    sender = sender,
-                    images = images,
-                    comments = comments,
-                    error = it.error,
-                    unknownError = it.unknownError
-                )
-            }
+                    val sender =
+                        it.senderName?.let { senderName -> senderRepository.getSender(senderName) }
+                    val images = imageRepository.getImages(it.id)
+                    val comments = commentRepository.getComments(it.id)
+                    Tweet(
+                        id = it.id,
+                        content = it.content,
+                        sender = sender,
+                        images = images,
+                        comments = comments,
+                        error = it.error,
+                        unknownError = it.unknownError
+                    )
+                }
         tweetData.plus(tweetRepository.getAllRemoteTweets())
     }
 }

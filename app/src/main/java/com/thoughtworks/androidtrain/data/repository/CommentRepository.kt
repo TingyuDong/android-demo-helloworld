@@ -22,15 +22,19 @@ class CommentRepository(private val commentDao: CommentDao, private val senderDa
         val commentsPO = commentDao.getComments(tweetId)
         if (commentsPO != null) {
             return commentsPO.stream().map {
-                val sender = senderDao.getSender(it.senderName)
-                Comment(
-                    content = it.content,
-                    sender = Sender(
-                        username = sender.userName,
-                        nick = sender.nick,
-                        avatar = sender.avatar
+                val senderPO = senderDao.getSender(it.senderName)
+                senderPO?.let { senderPo ->
+                    Sender(
+                        username = senderPo.userName,
+                        nick = senderPo.nick,
+                        avatar = senderPo.avatar
                     )
-                )
+                }?.let { sender ->
+                    Comment(
+                        content = it.content,
+                        sender = sender
+                    )
+                }
             }.collect(Collectors.toList())
         }
         return null
