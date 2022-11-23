@@ -12,8 +12,8 @@ import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
+import com.thoughtworks.androidtrain.utils.OkHttpUtils
 import kotlinx.coroutines.Dispatchers
-import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -29,7 +29,10 @@ val appModules = module {
         ).build()
     }
     single {
-        TweetsRemoteDataSource(get(), OkHttpClient())
+        OkHttpUtils(get())
+    }
+    single {
+        TweetsRemoteDataSource(get(), get())
     }
     single {
         get<AppDatabase>().tweetDao()
