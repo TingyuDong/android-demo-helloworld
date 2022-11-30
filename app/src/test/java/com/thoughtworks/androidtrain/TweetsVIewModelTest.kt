@@ -2,6 +2,7 @@ package com.thoughtworks.androidtrain
 
 import android.app.Application
 import android.support.test.runner.AndroidJUnit4
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -10,6 +11,7 @@ import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import com.thoughtworks.androidtrain.utils.JSONResourceUtils
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,8 +21,9 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 
-import org.junit.Assert.*
+import org.junit.Assert.assertSame
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -57,6 +60,8 @@ class TweetsVIewModelTest {
 
 //    @Rule
 //    val testRule: TestRule = InstantTaskExecutorRule()
+    @get:Rule
+    val executorRule = InstantTaskExecutorRule()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
@@ -114,9 +119,12 @@ class TweetsVIewModelTest {
             addTweetUseCase = addTweetUseCase,
             application = application
         )
+        // This works but can be improved.
         //when
-        tweetsViewModel.fetchData()
+        runBlocking {
+            tweetsViewModel.fetchTweet()
+        }
+        assertSame(fakeTweets, tweetsViewModel.tweets)
         //then
-        assertSame(fakeTweets, tweetsViewModel.tweets.value)
     }
 }
