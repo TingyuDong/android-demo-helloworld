@@ -1,23 +1,29 @@
 package com.thoughtworks.androidtrain
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class TestViewModel : ViewModel() {
+class TestViewModel(
+    private val fetchTweetsUseCase: FetchTweetsUseCase,
+) : ViewModel() {
 
     private val _tweets = MutableLiveData<List<Tweet>>()
     val tweets: LiveData<List<Tweet>>
         get() = _tweets
 
     val tweets2: LiveData<List<Tweet>>
-        get() = Transformations.map(_tweets){
+        get() = Transformations.map(_tweets) {
             it
         }
 
     fun setNewTweet(tweetList: List<Tweet>) {
         _tweets.value = tweetList
+    }
+
+    fun setTweetFromLocal() {
+        _tweets.value = fetchTweetsUseCase.fetchTweets()
     }
 }
