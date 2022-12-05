@@ -3,7 +3,7 @@ package com.thoughtworks.androidtrain
 import androidx.lifecycle.*
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
 class TestViewModel(
@@ -24,6 +24,8 @@ class TestViewModel(
     }
 
     fun setTweetFromLocal() {
-        _tweets.value = fetchTweetsUseCase.fetchTweets()
+        viewModelScope.launch {
+            _tweets.value = fetchTweetsUseCase.invoke()
+        }
     }
 }

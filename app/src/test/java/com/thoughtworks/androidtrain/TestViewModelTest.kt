@@ -12,15 +12,15 @@ import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.bouncycastle.util.test.SimpleTest.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.stub
 
 @RunWith(MockitoJUnitRunner::class)
 class TestViewModelTest {
@@ -39,8 +39,9 @@ class TestViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
-    fun initViewModel() {
-        testViewModel = TestViewModel(fetchTweetsUseCase = fetchTweetsUseCase)
+    fun initViewModel()  = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        testViewModel = TestViewModel(fetchTweetsUseCase = fetchTweetsUseCase, dispatcher)
         Dispatchers.setMain(mainThreadSurrogate)
     }
 
@@ -72,11 +73,15 @@ class TestViewModelTest {
             Tweet(2, null, null, null, null, null, null),
             Tweet(3, null, null, null, null, null, null),
         )
-        Mockito.`when`(fetchTweetsUseCase.fetchTweets()).thenReturn(tweetList)
+        fetchTweetsUseCase.stub {
+            onBlocking { invoke() }.doReturn(tweetList)
+        }
+//        Mockito.`when`(fetchTweetsUseCase.fetchTweets()).thenReturn(tweetList)
         //when
         testViewModel.setTweetFromLocal()
         //then
-        assertEquals(testViewModel.tweets.value, tweetList)
-        assertEquals(testViewModel.tweets2.getOrAwaitValue(), tweetList)
+        delay(5000)
+        assertEquals(tweetList, testViewModel.tweets.value)
+        assertEquals(tweetList, testViewModel.tweets2.getOrAwaitValue())
     }
 }
