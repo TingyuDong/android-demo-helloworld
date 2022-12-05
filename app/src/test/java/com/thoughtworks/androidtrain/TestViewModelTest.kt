@@ -2,18 +2,13 @@ package com.thoughtworks.androidtrain
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.rule.DispatchersRule
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import com.thoughtworks.androidtrain.utils.getOrAwaitValue
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -36,22 +31,15 @@ class TestViewModelTest {
     @JvmField
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    @OptIn(DelicateCoroutinesApi::class)
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
+    @Rule
+    @JvmField
+    val dispatchersRule = DispatchersRule()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun initViewModel() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         testViewModel = TestViewModel(fetchTweetsUseCase = fetchTweetsUseCase, dispatcher)
-        Dispatchers.setMain(mainThreadSurrogate)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
-        mainThreadSurrogate.close()
     }
 
     @Test
