@@ -7,17 +7,14 @@ import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import com.thoughtworks.androidtrain.utils.getOrAwaitValue
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.stub
-import org.mockito.kotlin.verifyBlocking
 
 @RunWith(MockitoJUnitRunner::class)
 class TestViewModelTest {
@@ -38,8 +35,7 @@ class TestViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun initViewModel() = runTest {
-        val dispatcher = StandardTestDispatcher(testScheduler)
-        testViewModel = TestViewModel(fetchTweetsUseCase = fetchTweetsUseCase, dispatcher)
+        testViewModel = TestViewModel(fetchTweetsUseCase = fetchTweetsUseCase)
     }
 
     @Test
@@ -63,15 +59,10 @@ class TestViewModelTest {
             Tweet(2, null, null, null, null, null, null),
             Tweet(3, null, null, null, null, null, null),
         )
-        fetchTweetsUseCase.stub {
-            onBlocking { invoke() }.doReturn(tweetList)
-        }
+        Mockito.`when`(fetchTweetsUseCase.invoke()).thenReturn(tweetList)
         //when
         testViewModel.setTweetFromLocal()
         //then
-        verifyBlocking(fetchTweetsUseCase) {
-            invoke()
-        }
         assertEquals(tweetList, testViewModel.tweets.value)
         assertEquals(tweetList, testViewModel.tweets2.getOrAwaitValue())
     }
