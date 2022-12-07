@@ -1,4 +1,4 @@
-package com.thoughtworks.androidtrain
+package com.thoughtworks.androidtrain.tweets
 
 import android.app.Application
 import android.content.SharedPreferences
@@ -21,33 +21,33 @@ class TweetsViewModel(
     private val addTweetUseCase: AddTweetUseCase,
     private val application: Application
 ) : ViewModel() {
-    private val tweetsData = MutableLiveData(listOf<Tweet>())
-    val tweets: LiveData<List<Tweet>>
-        get() = tweetsData
+
+    private val _tweets = MutableLiveData(emptyList<Tweet>())
+    val tweets: LiveData<List<Tweet>> = _tweets
 
     fun fetchData() {
         viewModelScope.launch(Dispatchers.Main) {
-            tweetsData.postValue(fetchTweetsUseCase.invoke())
+            _tweets.postValue(fetchTweetsUseCase.invoke())
         }
     }
 
     suspend fun fetchTweet() {
         viewModelScope.launch(Dispatchers.Main) {
-            tweetsData.postValue(fetchTweetsUseCase.invoke())
-        }.join()
+            _tweets.postValue(fetchTweetsUseCase.invoke())
+        }
     }
 
     fun saveComment(comment: Comment, tweetId: Int) {
         viewModelScope.launch(Dispatchers.Main) {
             addCommentUseCase.invoke(comment, tweetId)
-            tweetsData.postValue(fetchTweetsUseCase.invoke())
+            _tweets.postValue(fetchTweetsUseCase.invoke())
         }
     }
 
     fun saveTweet(tweet: Tweet) {
         viewModelScope.launch(Dispatchers.Main) {
             addTweetUseCase.invoke(tweet)
-            tweetsData.postValue(fetchTweetsUseCase.invoke())
+            _tweets.postValue(fetchTweetsUseCase.invoke())
         }
     }
 
