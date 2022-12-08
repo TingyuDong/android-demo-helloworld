@@ -3,8 +3,8 @@ package com.thoughtworks.androidtrain
 import androidx.lifecycle.*
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class TestViewModel(
     private val fetchTweetsUseCase: FetchTweetsUseCase,
@@ -24,8 +24,12 @@ class TestViewModel(
     }
 
     fun setTweetFromLocal() {
-        viewModelScope.launch {
-            _tweets.value = fetchTweetsUseCase.invoke()
+        runBlocking {
+            println("[当前viewModel外线程为：${Thread.currentThread().name} ${Thread.currentThread().id}]")
+            viewModelScope.launch {
+                println("[当前viewModel内launch线程为：${Thread.currentThread().name} ${Thread.currentThread().id}]")
+                _tweets.value = fetchTweetsUseCase.invoke()
+            }.join()
         }
     }
 }
