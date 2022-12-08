@@ -1,26 +1,37 @@
 package com.thoughtworks.androidtrain.usecase
 
-import com.thoughtworks.androidtrain.data.model.Comment
+import android.app.Application
+import android.content.SharedPreferences
+import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.repository.*
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 open class AddCommentUseCase(
-    private val senderRepository: SenderRepository,
     private val commentRepository: CommentRepository,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    private val application: Application
 ) {
-    suspend operator fun invoke(comment: Comment, tweetId: Int) = withContext(ioDispatcher) {
-        val commentPO = comment.sender.let { sender ->
-            senderRepository.addSender(sender)
-            CommentPO(
+    suspend operator fun invoke(tweetId: Int, commentContent: String) = withContext(ioDispatcher) {
+        val commentPO = CommentPO(
                 id = 0,
                 tweetId = tweetId,
-                content = comment.content,
-                senderName = sender.username
+                content = commentContent,
+                senderName = getUserInfo().username
             )
-        }
         commentRepository.addComment(commentPO)
+    }
+
+    private fun getUserInfo(): Sender {
+        val settings: SharedPreferences = application.getSharedPreferences("UserInfo", 0)
+        val userName = settings.getString("UserName", "you")
+        val nick = settings.getString("Nick", "you")
+        val avatar = settings.getString("Avatar", "Avatar.png")
+        return Sender(
+            username = userName!!,
+            nick = nick!!,
+            avatar = avatar!!
+        )
     }
 }

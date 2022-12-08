@@ -3,7 +3,16 @@ package com.thoughtworks.androidtrain.compose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -12,7 +21,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,53 +30,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.thoughtworks.androidtrain.R
-import com.thoughtworks.androidtrain.TweetsViewModel
+import com.thoughtworks.androidtrain.tweets.TweetsViewModel
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
-import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.tweets.TweetsState
+import com.thoughtworks.androidtrain.tweets.rememberTweetsState
 
 @Composable
 fun TweetScreen(
-    tweetsViewModel: TweetsViewModel,
-    lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+    viewModel: TweetsViewModel,
+    state: TweetsState = rememberTweetsState(viewModel = viewModel)
 ) {
-    DisposableEffect(lifeCycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_CREATE) {
-                tweetsViewModel.fetchData()
-            }
-        }
-        lifeCycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifeCycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-    TweetScreenContent(tweetsViewModel)
-}
-
-@Composable
-private fun TweetScreenContent(
-    tweetsViewModel: TweetsViewModel
-) {
+    val tweets by viewModel.tweets.observeAsState(initial = emptyList())
     LazyColumn(
         verticalArrangement = Arrangement.Top,
         content = {
             item {
-                TweetItems(tweetsViewModel)
+                TweetItems(
+                    tweets = tweets,
+                    saveComment = { tweetId, commentContent ->
+                        state.saveComment(tweetId, commentContent)
+                    },
+                    showAddCommentItem = state.showAddCommentItem,
+                    setShowAddCommentItem = { shouldShow: Boolean ->
+                        state.showAddCommentItem = shouldShow
+                    }
+                )
             }
             item {
                 BottomItem()
@@ -78,17 +76,17 @@ private fun TweetScreenContent(
 
 @Composable
 private fun TweetItems(
-    tweetsViewModel: TweetsViewModel
+    tweets: List<Tweet>,
+    saveComment: (Int, String) -> Unit,
+    showAddCommentItem: Boolean,
+    setShowAddCommentItem: (Boolean) -> Unit
 ) {
-    tweetsViewModel.tweets.observeAsState().value?.forEach { tweet ->
+    tweets.forEach { tweet ->
         TweetItem(
             tweet = tweet,
-            saveComment = { comment, tweetId ->
-                tweetsViewModel.saveComment(comment, tweetId)
-            },
-            getUserInfo = {
-                tweetsViewModel.getUserInfo()
-            }
+            saveComment = saveComment,
+            showAddCommentItem = showAddCommentItem,
+            setShowAddCommentItem = setShowAddCommentItem
         )
     }
 }
@@ -109,8 +107,9 @@ private fun BottomItem() {
 @Composable
 private fun TweetItem(
     tweet: Tweet,
-    saveComment: (comment: Comment, tweetId: Int) -> Unit,
-    getUserInfo: () -> Sender
+    saveComment: (Int, String) -> Unit,
+    showAddCommentItem: Boolean,
+    setShowAddCommentItem: (Boolean) -> Unit
 ) {
     Row(
         modifier = Modifier.padding(
@@ -120,47 +119,37 @@ private fun TweetItem(
     ) {
         Avatar(tweet.sender?.avatar)
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_between_avatar_and_content)))
-        TweetSenderNickAndContentsAndComments(tweet, saveComment, getUserInfo)
+        TweetSenderNickAndContentsAndComments(
+            tweet = tweet,
+            saveComment = saveComment,
+            showAddCommentItem = showAddCommentItem,
+            setShowAddCommentItem = setShowAddCommentItem
+        )
     }
 }
 
 @Composable
 private fun TweetSenderNickAndContentsAndComments(
     tweet: Tweet,
-    saveComment: (comment: Comment, tweetId: Int) -> Unit,
-    getUserInfo: () -> Sender
+    saveComment: (Int, String) -> Unit,
+    showAddCommentItem: Boolean,
+    setShowAddCommentItem: (Boolean) -> Unit
 ) {
-    val showAddCommentItem = remember { mutableStateOf(false) }
     Column {
         Nick(tweet.sender?.nick.orEmpty())
         TweetContents(tweet.content, tweet.images) {
-            showAddCommentItem.value = true
+            setShowAddCommentItem(true)
         }
         TweetComments(tweet.comments)
-        if (showAddCommentItem.value) {
+        if (showAddCommentItem) {
             AddCommentItem(
-                onSave = { content ->
-                    showAddCommentItem.value = false
-                    addComment(tweet.id, content, saveComment, getUserInfo)
+                onSave = { commentContent ->
+                    saveComment(tweet.id, commentContent)
                 },
                 onCancel = {
-                    showAddCommentItem.value = false
+                    setShowAddCommentItem(false)
                 })
         }
-    }
-}
-
-private fun addComment(
-    tweetId: Int,
-    content: String,
-    saveComment: (comment: Comment, tweetId: Int) -> Unit,
-    getUserInfo: () -> Sender
-) {
-    Comment(
-        content = content,
-        sender = getUserInfo()
-    ).also { comment ->
-        saveComment(comment, tweetId)
     }
 }
 
@@ -263,7 +252,7 @@ private fun CommentItem(comment: Comment) {
         modifier = Modifier
             .padding(vertical = dimensionResource(id = R.dimen.comment_padding_vertical))
     ) {
-        comment.sender?.apply {
+        comment.sender.apply {
             Text(
                 text = nick + stringResource(id = R.string.dwukropek),
                 color = Color.Gray,
