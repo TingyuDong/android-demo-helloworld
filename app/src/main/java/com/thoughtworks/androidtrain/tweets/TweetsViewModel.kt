@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class TweetsViewModel(
     private val fetchTweetsUseCase: FetchTweetsUseCase,
     private val addCommentUseCase: AddCommentUseCase,
-    private val addTweetUseCase: AddTweetUseCase,
+    private val addTweetUseCase: AddTweetUseCase
 ) : ViewModel() {
 
     private val _tweets = MutableLiveData(emptyList<Tweet>())

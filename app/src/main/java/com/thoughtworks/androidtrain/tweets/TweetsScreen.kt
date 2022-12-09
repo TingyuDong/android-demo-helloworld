@@ -71,10 +71,7 @@ private fun TweetItems(
     saveComment: (Int, String, MutableState<Boolean>) -> Unit,
 ) {
     tweets.forEach { tweet ->
-        TweetItem(
-            tweet = tweet,
-            saveComment = saveComment,
-        )
+        TweetItem(tweet = tweet, saveComment = saveComment)
     }
 }
 
@@ -131,7 +128,8 @@ private fun TweetSenderNickAndContentsAndComments(
                 },
                 onCancel = {
                     showAddCommentItem.value = false
-                })
+                }
+            )
         }
     }
 }
