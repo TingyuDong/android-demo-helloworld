@@ -20,6 +20,10 @@ class TweetsViewModel(
     private val _tweets = MutableLiveData(emptyList<Tweet>())
     val tweets: LiveData<List<Tweet>> = _tweets
 
+    init {
+        fetchData()
+    }
+
     fun fetchData() {
         viewModelScope.launch(Dispatchers.Main) {
             _tweets.postValue(fetchTweetsUseCase.invoke())
