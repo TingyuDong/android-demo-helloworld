@@ -29,7 +29,6 @@ fun rememberTweetsState(
 
 @Stable
 class TweetsState(private val viewModel: TweetsViewModel) {
-
     fun saveComment(): (Int, String, MutableState<Boolean>) -> Unit =
         { tweetId: Int,
           commentContent: String,
