@@ -29,10 +29,13 @@ fun rememberTweetsState(
 
 @Stable
 class TweetsState(private val viewModel: TweetsViewModel) {
-    var showAddCommentItem by mutableStateOf(false)
 
-    fun saveComment(tweetId: Int, commentContent: String){
-        viewModel.saveComment(tweetId, commentContent)
-        showAddCommentItem = false
-    }
+    fun saveComment(): (Int, String, MutableState<Boolean>) -> Unit =
+        { tweetId: Int,
+          commentContent: String,
+          showAddCommentItem: MutableState<Boolean>
+            ->
+            viewModel.saveComment(tweetId, commentContent)
+            showAddCommentItem.value = false
+        }
 }

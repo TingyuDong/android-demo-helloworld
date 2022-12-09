@@ -33,6 +33,6 @@ open class FetchTweetsUseCase(
                         unknownError = it.unknownError
                     )
                 }
-        tweetData.plus(tweetRepository.getAllRemoteTweets())
+        return@withContext tweetData
     }
 }

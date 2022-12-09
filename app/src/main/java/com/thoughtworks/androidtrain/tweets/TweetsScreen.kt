@@ -20,11 +20,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,13 +55,7 @@ fun TweetScreen(
             item {
                 TweetItems(
                     tweets = tweets,
-                    saveComment = { tweetId, commentContent ->
-                        state.saveComment(tweetId, commentContent)
-                    },
-                    showAddCommentItem = state.showAddCommentItem,
-                    setShowAddCommentItem = { shouldShow: Boolean ->
-                        state.showAddCommentItem = shouldShow
-                    }
+                    saveComment = state.saveComment(),
                 )
             }
             item {
@@ -77,16 +68,12 @@ fun TweetScreen(
 @Composable
 private fun TweetItems(
     tweets: List<Tweet>,
-    saveComment: (Int, String) -> Unit,
-    showAddCommentItem: Boolean,
-    setShowAddCommentItem: (Boolean) -> Unit
+    saveComment: (Int, String, MutableState<Boolean>) -> Unit,
 ) {
     tweets.forEach { tweet ->
         TweetItem(
             tweet = tweet,
             saveComment = saveComment,
-            showAddCommentItem = showAddCommentItem,
-            setShowAddCommentItem = setShowAddCommentItem
         )
     }
 }
@@ -107,9 +94,7 @@ private fun BottomItem() {
 @Composable
 private fun TweetItem(
     tweet: Tweet,
-    saveComment: (Int, String) -> Unit,
-    showAddCommentItem: Boolean,
-    setShowAddCommentItem: (Boolean) -> Unit
+    saveComment: (Int, String, MutableState<Boolean>) -> Unit,
 ) {
     Row(
         modifier = Modifier.padding(
@@ -122,8 +107,6 @@ private fun TweetItem(
         TweetSenderNickAndContentsAndComments(
             tweet = tweet,
             saveComment = saveComment,
-            showAddCommentItem = showAddCommentItem,
-            setShowAddCommentItem = setShowAddCommentItem
         )
     }
 }
@@ -131,23 +114,23 @@ private fun TweetItem(
 @Composable
 private fun TweetSenderNickAndContentsAndComments(
     tweet: Tweet,
-    saveComment: (Int, String) -> Unit,
-    showAddCommentItem: Boolean,
-    setShowAddCommentItem: (Boolean) -> Unit
+    saveComment: (Int, String, MutableState<Boolean>) -> Unit,
 ) {
+    val showAddCommentItem = remember { mutableStateOf(false) }
     Column {
         Nick(tweet.sender?.nick.orEmpty())
-        TweetContents(tweet.content, tweet.images) {
-            setShowAddCommentItem(true)
-        }
+        TweetContents(
+            textContent = tweet.content,
+            imageContent = tweet.images
+        ) { showAddCommentItem.value = true }
         TweetComments(tweet.comments)
-        if (showAddCommentItem) {
+        if (showAddCommentItem.value) {
             AddCommentItem(
                 onSave = { commentContent ->
-                    saveComment(tweet.id, commentContent)
+                    saveComment(tweet.id, commentContent, showAddCommentItem)
                 },
                 onCancel = {
-                    setShowAddCommentItem(false)
+                    showAddCommentItem.value = false
                 })
         }
     }
@@ -215,7 +198,7 @@ private fun TweetImage(image: Image) {
 
 @Composable
 private fun AddCommentItem(
-    onSave: (comment: String) -> Unit,
+    onSave: (String) -> Unit,
     onCancel: () -> Unit
 ) {
     val textValue = remember {
