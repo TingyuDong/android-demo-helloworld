@@ -44,11 +44,10 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 fun TweetScreen(
     viewModel: TweetsViewModel,
     state: TweetsState = rememberTweetsState(viewModel = viewModel),
-    showMessage: (String) -> Unit
 ) {
     val tweets by viewModel.tweets.observeAsState(initial = emptyList())
     val message by viewModel.message.observeAsState(initial = "")
-    showMessage(message)
+    state.showMessage(message)
     LazyColumn(
         verticalArrangement = Arrangement.Top,
         content = {

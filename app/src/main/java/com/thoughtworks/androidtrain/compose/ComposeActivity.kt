@@ -2,7 +2,6 @@ package com.thoughtworks.androidtrain.compose
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import com.thoughtworks.androidtrain.tweets.TweetScreen
 import com.thoughtworks.androidtrain.tweets.TweetsViewModel
@@ -23,13 +22,8 @@ class ComposeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TweetScreen(
-                viewModel = tweetsViewModel,
-                showMessage = showMessage()
+                viewModel = tweetsViewModel
             )
         }
-    }
-
-    private fun showMessage() = { message: String ->
-        if (message.isNotEmpty()) Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }
