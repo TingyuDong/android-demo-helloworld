@@ -25,8 +25,8 @@ open class AddCommentUseCase(
 
     private fun getUserInfo(): Sender {
         val settings: SharedPreferences = application.getSharedPreferences("UserInfo", 0)
-        val userName = settings.getString("UserName", "you")
-        val nick = settings.getString("Nick", "you")
+        val userName = settings.getString("UserName", "Aiolia")
+        val nick = settings.getString("Nick", "Aio")
         val avatar = settings.getString("Avatar", "Avatar.png")
         return Sender(
             username = userName!!,
