@@ -29,14 +29,14 @@ class TweetsViewModel(
 
     fun fetchData() {
         viewModelScope.launch(Dispatchers.Main) {
-            fetchTweetsUseCase.invoke()
-                .onSuccess {
-                    _tweets.setValue(it)
-                }
-                .onFailure {
-                    _message.setValue(it.message)
-                }
-
+            fetchTweetsUseCase.fetchLocalTweets().also { allLocalTweets ->
+                fetchTweetsUseCase.fetchRemoteTweets()
+                    .onSuccess { _tweets.value = allLocalTweets.plus(it) }
+                    .onFailure {
+                        _tweets.value = allLocalTweets
+                        _message.setValue(it.message)
+                    }
+            }
         }
     }
 
