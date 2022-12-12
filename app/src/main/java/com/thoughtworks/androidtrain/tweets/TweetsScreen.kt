@@ -1,4 +1,4 @@
-package com.thoughtworks.androidtrain.compose
+package com.thoughtworks.androidtrain.tweets
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,19 +36,19 @@ import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.thoughtworks.androidtrain.R
-import com.thoughtworks.androidtrain.tweets.TweetsViewModel
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Tweet
-import com.thoughtworks.androidtrain.tweets.TweetsState
-import com.thoughtworks.androidtrain.tweets.rememberTweetsState
 
 @Composable
 fun TweetScreen(
     viewModel: TweetsViewModel,
-    state: TweetsState = rememberTweetsState(viewModel = viewModel)
+    state: TweetsState = rememberTweetsState(viewModel = viewModel),
+    showMessage: (String) -> Unit
 ) {
     val tweets by viewModel.tweets.observeAsState(initial = emptyList())
+    val message by viewModel.message.observeAsState(initial = "")
+    showMessage(message)
     LazyColumn(
         verticalArrangement = Arrangement.Top,
         content = {
@@ -63,6 +63,7 @@ fun TweetScreen(
             }
         }
     )
+
 }
 
 @Composable

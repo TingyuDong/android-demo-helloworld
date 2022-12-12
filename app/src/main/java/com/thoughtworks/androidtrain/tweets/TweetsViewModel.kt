@@ -20,33 +20,37 @@ class TweetsViewModel(
     private val _tweets = MutableLiveData(emptyList<Tweet>())
     val tweets: LiveData<List<Tweet>> = _tweets
 
+    private val _message = MutableLiveData("")
+    val message: LiveData<String> = _message
+
     init {
         fetchData()
     }
 
     fun fetchData() {
         viewModelScope.launch(Dispatchers.Main) {
-            _tweets.postValue(fetchTweetsUseCase.invoke())
-        }
-    }
+            fetchTweetsUseCase.invoke()
+                .onSuccess {
+                    _tweets.setValue(it)
+                }
+                .onFailure {
+                    _message.setValue(it.message)
+                }
 
-    suspend fun fetchTweet() {
-        viewModelScope.launch(Dispatchers.Main) {
-            _tweets.postValue(fetchTweetsUseCase.invoke())
         }
     }
 
     fun saveComment(tweetId: Int, commentContent: String) {
         viewModelScope.launch(Dispatchers.Main) {
             addCommentUseCase.invoke(tweetId, commentContent)
-            _tweets.postValue(fetchTweetsUseCase.invoke())
+            fetchData()
         }
     }
 
     fun saveTweet(tweet: Tweet) {
         viewModelScope.launch(Dispatchers.Main) {
             addTweetUseCase.invoke(tweet)
-            _tweets.postValue(fetchTweetsUseCase.invoke())
+            fetchData()
         }
     }
 }

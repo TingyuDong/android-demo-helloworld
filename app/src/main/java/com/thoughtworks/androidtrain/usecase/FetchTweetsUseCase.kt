@@ -15,8 +15,8 @@ open class FetchTweetsUseCase(
     private val tweetRepository: TweetRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) {
-    open suspend operator fun invoke(): List<Tweet> = withContext(ioDispatcher) {
-        val tweetData: List<Tweet> =
+    open suspend operator fun invoke(): Result<List<Tweet>> = withContext(ioDispatcher) {
+        val allLocalTweets: List<Tweet> =
             tweetRepository.getAllLocalTweets()
                 .filter { it.error == null && it.unknownError == null }.map {
                     val sender =
@@ -33,6 +33,6 @@ open class FetchTweetsUseCase(
                         unknownError = it.unknownError
                     )
                 }
-        return@withContext tweetData
+        return@withContext tweetRepository.getAllRemoteTweets()
     }
 }

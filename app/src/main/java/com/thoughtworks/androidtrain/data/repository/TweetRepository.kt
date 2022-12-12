@@ -7,7 +7,7 @@ import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 
 interface TweetRepositoryInterface {
     fun getAllLocalTweets(): List<TweetPO>
-    suspend fun getAllRemoteTweets(): List<Tweet>
+    suspend fun getAllRemoteTweets(): Result<List<Tweet>>
     fun addTweet(tweetPO: TweetPO): Long
 }
 
@@ -19,7 +19,7 @@ class TweetRepository(
         return tweetDao.getAll()
     }
 
-    override suspend fun getAllRemoteTweets(): List<Tweet> {
+    override suspend fun getAllRemoteTweets(): Result<List<Tweet>> {
         return tweetsRemoteDataSource.fetchRemoteTweets()
     }
 
