@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thoughtworks.androidtrain.adapters.TweetsAdapter
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.tweets.TweetsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TweetsActivity : AppCompatActivity() {
@@ -19,7 +20,6 @@ class TweetsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tweet)
         initViewModel()
         initUI()
-        tweetViewModel.fetchData()
     }
 
     private fun initViewModel() {

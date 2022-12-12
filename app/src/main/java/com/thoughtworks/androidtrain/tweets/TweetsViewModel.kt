@@ -8,7 +8,6 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TweetsViewModel(
@@ -23,34 +22,45 @@ class TweetsViewModel(
     private val _message = MutableLiveData("")
     val message: LiveData<String> = _message
 
-    init {
-        fetchData()
-    }
+    private val _isRefreshing: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    fun fetchData() {
-        viewModelScope.launch(Dispatchers.Main) {
-            fetchTweetsUseCase.fetchLocalTweets().also { allLocalTweets ->
-                fetchTweetsUseCase.fetchRemoteTweets()
-                    .onSuccess { _tweets.value = allLocalTweets.plus(it) }
-                    .onFailure {
-                        _tweets.value = allLocalTweets
-                        _message.setValue(it.message)
-                    }
-            }
+    init {
+        viewModelScope.launch {
+            fetchTweets()
         }
     }
 
     fun saveComment(tweetId: Int, commentContent: String) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch {
             addCommentUseCase.invoke(tweetId, commentContent)
-            fetchData()
+            fetchTweets()
         }
     }
 
     fun saveTweet(tweet: Tweet) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch {
             addTweetUseCase.invoke(tweet)
-            fetchData()
+            fetchTweets()
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            fetchTweets()
+            _isRefreshing.value = false
+        }
+    }
+
+    private suspend fun fetchTweets() {
+        fetchTweetsUseCase.fetchLocalTweets().also { allLocalTweets ->
+            fetchTweetsUseCase.fetchRemoteTweets()
+                .onSuccess { _tweets.value = allLocalTweets.plus(it) }
+                .onFailure {
+                    _tweets.value = allLocalTweets
+                    _message.setValue(it.message)
+                }
         }
     }
 }

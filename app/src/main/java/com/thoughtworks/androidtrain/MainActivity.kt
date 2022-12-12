@@ -17,6 +17,7 @@ import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.tweets.TweetsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -85,7 +86,6 @@ class MainActivity : AppCompatActivity() {
         val btnRecyclerview: Button = findViewById(R.id.btn_recyclerView)
         val btnSharedPreference: Button = findViewById(R.id.shared_preference)
         val btnRoom: Button = findViewById(R.id.add_tweet)
-        val btnFetchTweet: Button = findViewById(R.id.fetch_tweet)
         val btnCompose: Button = findViewById(R.id.btn_compose)
         btnLogin.setOnClickListener {
             login()
@@ -104,9 +104,6 @@ class MainActivity : AppCompatActivity() {
         }
         btnRoom.setOnClickListener {
             addTweet()
-        }
-        btnFetchTweet.setOnClickListener {
-            tweetsViewModel.fetchData()
         }
         btnCompose.setOnClickListener {
             compose()

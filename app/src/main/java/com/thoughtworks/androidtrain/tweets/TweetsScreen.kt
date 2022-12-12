@@ -20,8 +20,16 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +48,7 @@ import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.model.Tweet
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TweetScreen(
     viewModel: TweetsViewModel,
@@ -47,22 +56,30 @@ fun TweetScreen(
 ) {
     val tweets by viewModel.tweets.observeAsState(initial = emptyList())
     val message by viewModel.message.observeAsState(initial = "")
-    state.showMessage(message)
-    LazyColumn(
-        verticalArrangement = Arrangement.Top,
-        content = {
-            item {
-                TweetItems(
-                    tweets = tweets,
-                    saveComment = state.saveComment(),
-                )
-            }
-            item {
-                BottomItem()
-            }
-        }
-    )
+    val isRefreshing by viewModel.isRefreshing.observeAsState(initial = false)
 
+    state.showMessage(message)
+
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refresh() })
+
+
+    Box(Modifier.pullRefresh(pullRefreshState)){
+        LazyColumn(
+            verticalArrangement = Arrangement.Top,
+            content = {
+                item {
+                    TweetItems(
+                        tweets = tweets,
+                        saveComment = state.saveComment(),
+                    )
+                }
+                item {
+                    BottomItem()
+                }
+            }
+        )
+        PullRefreshIndicator(isRefreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
+    }
 }
 
 @Composable
