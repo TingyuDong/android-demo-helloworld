@@ -53,6 +53,10 @@ class TweetsViewModel(
         }
     }
 
+    fun cleanMessage(){
+        _message.value = ""
+    }
+
     private suspend fun fetchTweets() {
         fetchTweetsUseCase.fetchLocalTweets().also { allLocalTweets ->
             fetchTweetsUseCase.fetchRemoteTweets()

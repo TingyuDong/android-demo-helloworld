@@ -30,6 +30,9 @@ class TweetsState(
         }
 
     fun showMessage(message: String) {
-        if (message.isNotEmpty()) Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        if (message.isNotEmpty()) {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.cleanMessage()
+        }
     }
 }
