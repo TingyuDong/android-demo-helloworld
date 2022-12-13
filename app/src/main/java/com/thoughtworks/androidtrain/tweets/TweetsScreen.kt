@@ -57,11 +57,9 @@ fun TweetScreen(
     val tweets by viewModel.tweets.observeAsState(initial = emptyList())
     val message by viewModel.message.observeAsState(initial = "")
     val isRefreshing by viewModel.isRefreshing.observeAsState(initial = false)
-
-    state.showMessage(message)
-
     val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refresh() })
 
+    state.showMessage(message)
 
     Box(Modifier.pullRefresh(pullRefreshState)){
         LazyColumn(
