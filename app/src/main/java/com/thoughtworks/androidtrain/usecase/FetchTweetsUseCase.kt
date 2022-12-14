@@ -6,6 +6,7 @@ import com.thoughtworks.androidtrain.data.repository.ImageRepository
 import com.thoughtworks.androidtrain.data.repository.SenderRepository
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 open class FetchTweetsUseCase(
@@ -15,11 +16,11 @@ open class FetchTweetsUseCase(
     private val tweetRepository: TweetRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) {
-    open suspend fun fetchRemoteTweets(): Result<List<Tweet>> = withContext(ioDispatcher) {
-        return@withContext tweetRepository.getAllRemoteTweets()
+    open fun fetchRemoteTweets(): Flow<Result<List<Tweet>>> {
+        return tweetRepository.getRemoteTweetsStream()
     }
 
-    open suspend fun fetchLocalTweets(): List<Tweet> = withContext(ioDispatcher) {
+    suspend fun fetchLocalTweets(): List<Tweet> = withContext(ioDispatcher) {
         val allLocalTweets: List<Tweet> =
             tweetRepository.getAllLocalTweets()
                 .filter { it.error == null && it.unknownError == null }.map {

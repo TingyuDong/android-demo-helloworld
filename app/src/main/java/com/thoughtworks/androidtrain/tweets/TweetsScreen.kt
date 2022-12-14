@@ -25,7 +25,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,12 +51,10 @@ fun TweetScreen(
     viewModel: TweetsViewModel,
     state: TweetsState = rememberTweetsState(viewModel = viewModel),
 ) {
-    val tweets by viewModel.tweets.collectAsStateWithLifecycle()
-    val message by viewModel.message.observeAsState(initial = "")
-    val isRefreshing by viewModel.isRefreshing.observeAsState(initial = false)
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.refresh() })
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val pullRefreshState = rememberPullRefreshState(uiState.isRefreshing, { viewModel.refresh() })
 
-    state.showMessage(message)
+    state.showMessage(uiState.message)
 
     Box(Modifier.pullRefresh(pullRefreshState)){
         LazyColumn(
@@ -65,7 +62,7 @@ fun TweetScreen(
             content = {
                 item {
                     TweetItems(
-                        tweets = tweets,
+                        tweets = uiState.tweets,
                         saveComment = state.saveComment(),
                     )
                 }
@@ -74,7 +71,7 @@ fun TweetScreen(
                 }
             }
         )
-        PullRefreshIndicator(isRefreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
+        PullRefreshIndicator(uiState.isRefreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
     }
 }
 

@@ -29,8 +29,8 @@ class TweetsState(
             showAddCommentItem.value = false
         }
 
-    fun showMessage(message: String) {
-        if (message.isNotEmpty()) {
+    fun showMessage(message: String?) {
+        if (!message.isNullOrEmpty()) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             viewModel.cleanMessage()
         }
