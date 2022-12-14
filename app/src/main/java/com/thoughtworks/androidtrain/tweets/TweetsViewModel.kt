@@ -7,11 +7,8 @@ import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class TweetsUiState(
@@ -29,12 +26,15 @@ class TweetsViewModel(
 
     private val _isRefreshing = MutableStateFlow(false)
 
+    private val _tweets = fetchTweetsUseCase.fetchRemoteTweets()
+        .map { handleResult(it) }
+
     val uiState: StateFlow<TweetsUiState> = combine(
-        fetchTweetsUseCase.fetchRemoteTweets(), _message, _isRefreshing
-    ) { tasksResult, _, isRefreshing ->
+        _tweets, _message, _isRefreshing
+    ) { tweets, message, isRefreshing ->
         TweetsUiState(
-            tweets = tasksResult.getOrNull() ?: emptyList(),
-            message = tasksResult.exceptionOrNull()?.message,
+            tweets = tweets,
+            message = message,
             isRefreshing = isRefreshing
         )
             .apply {
@@ -66,19 +66,24 @@ class TweetsViewModel(
         }
     }
 
+    private fun fetchTweets() {
+        TODO("Not yet implemented")
+    }
+
     fun refresh() {
+        _isRefreshing.value = true
         viewModelScope.launch {
-            _isRefreshing.value = true
-            delay(3000)
+            delay(5000)
             _isRefreshing.value = false
         }
     }
 
     fun cleanMessage() {
-        _message.value = ""
+        _message.value = null
     }
 
-    private suspend fun fetchTweets() {
-//        fetchTweetsUseCase.fetchRemoteTweets()
+    private fun handleResult(tweetResult: Result<List<Tweet>>): List<Tweet> {
+        _message.value = tweetResult.exceptionOrNull()?.message
+        return tweetResult.getOrNull() ?: emptyList()
     }
 }
