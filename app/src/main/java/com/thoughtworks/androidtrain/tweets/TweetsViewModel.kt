@@ -6,7 +6,6 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
 import kotlinx.coroutines.launch
@@ -73,7 +72,7 @@ class TweetsViewModel(
     fun refresh() {
         _isRefreshing.value = true
         viewModelScope.launch {
-            delay(5000)
+            fetchTweetsUseCase.refreshTweets()
             _isRefreshing.value = false
         }
     }

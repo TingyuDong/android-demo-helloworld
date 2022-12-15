@@ -20,6 +20,10 @@ open class FetchTweetsUseCase(
         return tweetRepository.getRemoteTweetsStream()
     }
 
+    suspend fun refreshTweets(){
+        tweetRepository.refreshTweets()
+    }
+
     suspend fun fetchLocalTweets(): List<Tweet> = withContext(ioDispatcher) {
         val allLocalTweets: List<Tweet> =
             tweetRepository.getAllLocalTweets()

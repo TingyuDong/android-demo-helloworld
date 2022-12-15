@@ -10,8 +10,8 @@ interface TweetRepositoryInterface {
     fun getAllLocalTweets(): List<TweetPO>
     suspend fun getAllRemoteTweets(): Result<List<Tweet>>
     fun getRemoteTweetsStream(): Flow<Result<List<Tweet>>>
+    suspend fun refreshTweets()
     fun addTweet(tweetPO: TweetPO): Long
-
 }
 
 class TweetRepository(
@@ -28,6 +28,10 @@ class TweetRepository(
 
     override fun getRemoteTweetsStream(): Flow<Result<List<Tweet>>> {
         return tweetsRemoteDataSource.getTweetsStream()
+    }
+
+    override suspend fun refreshTweets() {
+        tweetsRemoteDataSource.refreshTasks()
     }
 
     override fun addTweet(tweetPO: TweetPO): Long {
