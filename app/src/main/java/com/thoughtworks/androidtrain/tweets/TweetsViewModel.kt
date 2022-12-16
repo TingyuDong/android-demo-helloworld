@@ -6,6 +6,7 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
 import kotlinx.coroutines.launch
@@ -25,8 +26,11 @@ class TweetsViewModel(
 
     private val _isRefreshing = MutableStateFlow(false)
 
-    private val _tweets = fetchTweetsUseCase.fetchRemoteTweets()
-        .map { handleResult(it) }
+    private var _tweets = combine(
+        fetchTweetsUseCase.fetchLocalTweets(), fetchTweetsUseCase.fetchRemoteTweets()
+    ) { tweetsLocalResult, tweetsRemoteResult ->
+        handleResult(tweetsLocalResult, tweetsRemoteResult)
+    }.flowOn(Dispatchers.IO)
 
     val uiState: StateFlow<TweetsUiState> = combine(
         _tweets, _message, _isRefreshing
@@ -36,37 +40,22 @@ class TweetsViewModel(
             message = message,
             isRefreshing = isRefreshing
         )
-            .apply {
-                this.tweets = fetchTweetsUseCase.fetchLocalTweets() + this.tweets
-            }
     }.stateIn(
         scope = viewModelScope,
         started = Lazily,
         initialValue = TweetsUiState(tweets = emptyList(), message = null, isRefreshing = true)
     )
 
-//    init {
-//        viewModelScope.launch {
-//            fetchTweets()
-//        }
-//    }
-
     fun saveComment(tweetId: Int, commentContent: String) {
         viewModelScope.launch {
             addCommentUseCase.invoke(tweetId, commentContent)
-            fetchTweets()
         }
     }
 
     fun saveTweet(tweet: Tweet) {
         viewModelScope.launch {
             addTweetUseCase.invoke(tweet)
-            fetchTweets()
         }
-    }
-
-    private fun fetchTweets() {
-        TODO("Not yet implemented")
     }
 
     fun refresh() {
@@ -81,8 +70,11 @@ class TweetsViewModel(
         _message.value = null
     }
 
-    private fun handleResult(tweetResult: Result<List<Tweet>>): List<Tweet> {
-        _message.value = tweetResult.exceptionOrNull()?.message
-        return tweetResult.getOrNull() ?: emptyList()
+    private fun handleResult(
+        tweetsLocalResult: Result<List<Tweet>>,
+        tweetRemoteResult: Result<List<Tweet>>
+    ): List<Tweet> {
+        _message.value = tweetRemoteResult.exceptionOrNull()?.message
+        return tweetRemoteResult.getOrNull() ?: tweetsLocalResult.getOrNull() ?: emptyList()
     }
 }
