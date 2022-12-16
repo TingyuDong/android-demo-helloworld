@@ -11,7 +11,6 @@ data class Tweet(
     val error: String?,
     @SerializedName("unknown error")
     val unknownError: String?
-
 ) {
     override fun toString(): String {
         return "Tweet(content=$content, sender=$sender, images=$images, comments=$comments," +
