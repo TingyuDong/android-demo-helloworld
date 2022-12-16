@@ -8,11 +8,12 @@ class RetrofitClientInstance {
     companion object{
         private const val BASE_URL = "https://thoughtworks-mobile-2018.herokuapp.com"
         fun getRetrofitInstance(): Retrofit{
-            val gson = GsonBuilder()
-                .serializeNulls()
-                .create()
             return Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create(
+                    GsonBuilder()
+                        .serializeNulls()
+                        .create()
+                ))
                 .baseUrl(BASE_URL)
                 .build()
         }
