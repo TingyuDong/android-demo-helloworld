@@ -5,9 +5,13 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TweetDao {
+    @Query("SELECT * FROM Tweets")
+    fun observeTasks(): Flow<List<TweetPO>>
+
     @Query("SELECT * FROM tweets")
     fun getAll(): List<TweetPO>
 
