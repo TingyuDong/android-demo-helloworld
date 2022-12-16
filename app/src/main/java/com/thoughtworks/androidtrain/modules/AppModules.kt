@@ -2,12 +2,13 @@ package com.thoughtworks.androidtrain.modules
 
 import androidx.room.Room
 import com.thoughtworks.androidtrain.TweetApplication
-import com.thoughtworks.androidtrain.TweetsViewModel
+import com.thoughtworks.androidtrain.tweets.TweetsViewModel
 import com.thoughtworks.androidtrain.data.repository.CommentRepository
 import com.thoughtworks.androidtrain.data.repository.ImageRepository
 import com.thoughtworks.androidtrain.data.repository.SenderRepository
 import com.thoughtworks.androidtrain.data.repository.TweetRepository
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
+import com.thoughtworks.androidtrain.data.source.local.room.TweetsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
@@ -32,7 +33,10 @@ val appModules = module {
         OkHttpUtils(get())
     }
     single {
-        TweetsRemoteDataSource(get(), get())
+        TweetsRemoteDataSource(get())
+    }
+    single {
+        TweetsLocalDataSource(get())
     }
     single {
         get<AppDatabase>().tweetDao()
@@ -53,7 +57,7 @@ val appModules = module {
         CommentRepository(get(), get())
     }
     single {
-        TweetRepository(get(), get())
+        TweetRepository(get(), get(), get())
     }
     single {
         ImageRepository(get())
@@ -68,12 +72,12 @@ val appModules = module {
         AddTweetUseCase(get(), get(), get(), get(), get())
     }
     single {
-        FetchTweetsUseCase(get(), get(), get(), get(), get())
+        FetchTweetsUseCase(get(), get(), get(), get())
     }
     single {
         TweetApplication()
     }
     viewModel {
-        TweetsViewModel(get(), get(), get(), get())
+        TweetsViewModel(get(), get(), get())
     }
 }
