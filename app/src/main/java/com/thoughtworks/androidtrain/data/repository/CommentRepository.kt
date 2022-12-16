@@ -8,7 +8,7 @@ import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import java.util.stream.Collectors
 
 interface CommentRepositoryInterface {
-    fun getComments(tweetId: Int): List<Comment>?
+    suspend fun getComments(tweetId: Int): List<Comment>?
     fun addComments(comments: List<Comment>, tweetId: Int)
     fun addComment(commentPO: CommentPO)
 }
@@ -18,26 +18,23 @@ class CommentRepository(private val commentDao: CommentDao, private val senderDa
 
     private val senderRepository = SenderRepository(senderDao)
 
-    override fun getComments(tweetId: Int): List<Comment>? {
+    override suspend fun getComments(tweetId: Int): List<Comment>? {
         val commentsPO = commentDao.getComments(tweetId)
-        if (commentsPO != null) {
-            return commentsPO.stream().map {
-                val senderPO = senderDao.getSender(it.senderName)
-                senderPO?.let { senderPo ->
-                    Sender(
-                        username = senderPo.userName,
-                        nick = senderPo.nick,
-                        avatar = senderPo.avatar
-                    )
-                }?.let { sender ->
+        return commentsPO?.map {
+            val senderPO = senderDao.getSender(it.senderName) ?: return null
+            senderPO.let { it1 ->
+                Sender(
+                    username = it1.userName,
+                    nick = senderPO.nick,
+                    avatar = senderPO.avatar
+                ).let { sender ->
                     Comment(
                         content = it.content,
                         sender = sender
                     )
                 }
-            }.collect(Collectors.toList())
+            }
         }
-        return null
     }
 
     override fun addComments(comments: List<Comment>, tweetId: Int) {
