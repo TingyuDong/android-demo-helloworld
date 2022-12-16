@@ -5,12 +5,12 @@ import com.thoughtworks.androidtrain.data.source.local.room.dao.SenderDao
 import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 
 interface SenderRepositoryInterface {
-    fun getSender(userName: String): Sender?
+    suspend fun getSender(userName: String): Sender?
     fun addSender(sender: Sender): Long?
 }
 
 class SenderRepository(private val senderDao: SenderDao) : SenderRepositoryInterface {
-    override fun getSender(userName: String): Sender? {
+    override suspend fun getSender(userName: String): Sender? {
         val senderPO = senderDao.getSender(userName)
         if (senderPO != null) {
             return Sender(
