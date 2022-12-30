@@ -27,15 +27,13 @@ private const val BASE_URL = "https://thoughtworks-mobile-2018.herokuapp.com"
 
 val appModules = module {
     single {
-        GsonConverterFactory.create(
-            GsonBuilder()
-                .serializeNulls()
-                .create()
-        )
+        GsonBuilder()
+            .serializeNulls()
+            .create()
     }
     single {
         Retrofit.Builder()
-            .addConverterFactory(get())
+            .addConverterFactory(GsonConverterFactory.create(get()))
             .baseUrl(BASE_URL)
             .build()
     }
