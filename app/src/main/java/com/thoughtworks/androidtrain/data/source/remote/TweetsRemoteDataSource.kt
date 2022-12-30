@@ -11,6 +11,7 @@ import okio.IOException
 
 class TweetsRemoteDataSource (
     private val ioDispatcher: CoroutineDispatcher,
+    private val service: TweetService
 ) {
     private val observableTweets = MutableStateFlow(runBlocking { getTweets() })
 
@@ -19,7 +20,6 @@ class TweetsRemoteDataSource (
     }
 
     private suspend fun getTweets(): Result<List<Tweet>> {
-        val service = RetrofitClientInstance.getRetrofitInstance().create(TweetService::class.java)
         return withContext(ioDispatcher) {
             try {
                 val response = service.listTweets().execute()
