@@ -16,5 +16,5 @@ interface ImageDao {
     suspend fun getImages(tweetId: Int): List<ImagePO>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllImages(commentsPO: List<ImagePO>)
+    suspend fun insertAllImages(commentsPO: List<ImagePO>)
 }
