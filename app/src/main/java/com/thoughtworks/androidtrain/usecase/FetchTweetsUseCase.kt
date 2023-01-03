@@ -25,7 +25,7 @@ open class FetchTweetsUseCase(
             tweetRepository.getLocalTweetsStream(),
             senderRepository.getSendersStream(),
             commentRepository.getCommentsStream(),
-            imageRepository.getCommentsStream()
+            imageRepository.getImagesStream()
         ) { tweetPOList, _, _, _ ->
             Result.Success(transformToTweetList(tweetPOList))
         }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import java.util.stream.Collectors
 
 interface ImageRepositoryInterface {
-    fun getCommentsStream(): Flow<List<ImagePO>>
+    fun getImagesStream(): Flow<List<ImagePO>>
     suspend fun getImages(tweetId: Int): List<Image>?
     fun addImages(images: List<Image>, tweetId: Int)
 }
