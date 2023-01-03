@@ -10,4 +10,12 @@ class TweetsLocalDataSource(
     fun getTweetsStream(): Flow<List<TweetPO>> {
         return tweetDao.observeTweets()
     }
+
+    fun getTweets(): List<TweetPO> {
+        return tweetDao.getAll()
+    }
+
+    fun addTweet(tweetPO: TweetPO): Long {
+        return tweetDao.insertTweet(tweetPO)
+    }
 }

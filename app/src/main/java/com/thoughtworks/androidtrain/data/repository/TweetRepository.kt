@@ -3,7 +3,6 @@ package com.thoughtworks.androidtrain.data.repository
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.Result
 import com.thoughtworks.androidtrain.data.source.local.room.TweetsLocalDataSource
-import com.thoughtworks.androidtrain.data.source.local.room.dao.TweetDao
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 import kotlinx.coroutines.flow.Flow
@@ -17,12 +16,11 @@ interface TweetRepositoryInterface {
 }
 
 class TweetRepository(
-    private val tweetDao: TweetDao,
     private val tweetsRemoteDataSource: TweetsRemoteDataSource,
     private val tweetsLocalDataSource: TweetsLocalDataSource
 ) : TweetRepositoryInterface {
     override fun getAllLocalTweets(): List<TweetPO> {
-        return tweetDao.getAll()
+        return tweetsLocalDataSource.getTweets()
     }
 
     override fun getRemoteTweetsStream(): Flow<Result<List<Tweet>>> {
@@ -38,6 +36,6 @@ class TweetRepository(
     }
 
     override fun addTweet(tweetPO: TweetPO): Long {
-        return tweetDao.insertTweet(tweetPO)
+        return tweetsLocalDataSource.addTweet(tweetPO)
     }
 }
