@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TweetDao {
-    @Query("SELECT * FROM Tweets")
-    fun observeTasks(): Flow<List<TweetPO>>
+    @Query("SELECT * FROM tweets")
+    fun observeTweets(): Flow<List<TweetPO>>
 
     @Query("SELECT * FROM tweets")
     fun getAll(): List<TweetPO>

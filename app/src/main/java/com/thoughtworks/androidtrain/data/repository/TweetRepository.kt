@@ -1,6 +1,7 @@
 package com.thoughtworks.androidtrain.data.repository
 
 import com.thoughtworks.androidtrain.data.model.Tweet
+import com.thoughtworks.androidtrain.data.Result
 import com.thoughtworks.androidtrain.data.source.local.room.TweetsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.dao.TweetDao
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface TweetRepositoryInterface {
     fun getAllLocalTweets(): List<TweetPO>
     fun getRemoteTweetsStream(): Flow<Result<List<Tweet>>>
-    fun getLocalTweetsStream(): Flow<Result<List<TweetPO>>>
+    fun getLocalTweetsStream(): Flow<List<TweetPO>>
     suspend fun refreshTweets()
     fun addTweet(tweetPO: TweetPO): Long
 }
@@ -28,13 +29,12 @@ class TweetRepository(
         return tweetsRemoteDataSource.getTweetsStream()
     }
 
-    override fun getLocalTweetsStream(): Flow<Result<List<TweetPO>>> {
+    override fun getLocalTweetsStream(): Flow<List<TweetPO>> {
         return tweetsLocalDataSource.getTweetsStream()
     }
 
     override suspend fun refreshTweets() {
-        tweetsRemoteDataSource.refreshTasks()
-
+        tweetsRemoteDataSource.refreshTweets()
     }
 
     override fun addTweet(tweetPO: TweetPO): Long {

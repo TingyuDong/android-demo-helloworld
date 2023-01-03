@@ -10,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
 import kotlinx.coroutines.launch
+import com.thoughtworks.androidtrain.data.Result
+import com.thoughtworks.androidtrain.data.Result.Success
 
 data class TweetsUiState(
     var tweets: List<Tweet> = emptyList(),
@@ -27,7 +29,7 @@ class TweetsViewModel(
     private val _isRefreshing = MutableStateFlow(false)
 
     private var _tweets = combine(
-        fetchTweetsUseCase.fetchLocalTweets(), fetchTweetsUseCase.fetchRemoteTweets()
+        fetchTweetsUseCase.getLocalTweets(), fetchTweetsUseCase.fetchRemoteTweets()
     ) { tweetsLocalResult, tweetsRemoteResult ->
         handleResult(tweetsLocalResult, tweetsRemoteResult)
     }.flowOn(Dispatchers.IO)
@@ -72,9 +74,23 @@ class TweetsViewModel(
 
     private fun handleResult(
         tweetsLocalResult: Result<List<Tweet>>,
-        tweetRemoteResult: Result<List<Tweet>>
+        tweetsRemoteResult: Result<List<Tweet>>
     ): List<Tweet> {
-        _message.value = tweetRemoteResult.exceptionOrNull()?.message
-        return tweetRemoteResult.getOrNull() ?: tweetsLocalResult.getOrNull() ?: emptyList()
+        return if(tweetsRemoteResult is Success) tweetsRemoteResult.data
+        else if (tweetsLocalResult is Success) {
+            showErrorMessage(tweetsRemoteResult.toString())
+            tweetsLocalResult.data
+        } else {
+            showErrorMessage(FAILED_TO_GET_THE_DATA)
+            emptyList()
+        }
     }
+
+    private fun showErrorMessage(message: String) {
+        _message.value = message
+    }
+
+
 }
+
+private const val FAILED_TO_GET_THE_DATA = "Failed to get the data"

@@ -19,7 +19,7 @@ open class AddTweetUseCase(
             TweetPO(
                 id = tweet.id,
                 content = tweet.content,
-                senderName = tweet.sender?.username,
+                senderName = tweet.sender?.username ?: return@withContext ,
                 error = tweet.error,
                 unknownError = tweet.unknownError
             )

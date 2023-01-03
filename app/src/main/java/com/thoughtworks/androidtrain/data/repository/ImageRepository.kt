@@ -3,20 +3,22 @@ package com.thoughtworks.androidtrain.data.repository
 import com.thoughtworks.androidtrain.data.model.Image
 import com.thoughtworks.androidtrain.data.source.local.room.dao.ImageDao
 import com.thoughtworks.androidtrain.data.source.local.room.entity.ImagePO
+import kotlinx.coroutines.flow.Flow
 import java.util.stream.Collectors
 
 interface ImageRepositoryInterface {
-    fun getImages(tweetId: Int): List<Image>?
+    fun getCommentsStream(): Flow<List<ImagePO>>
+    suspend fun getImages(tweetId: Int): List<Image>?
     fun addImages(images: List<Image>, tweetId: Int)
 }
 
 class ImageRepository(private val imageDao: ImageDao) : ImageRepositoryInterface {
-    override fun getImages(tweetId: Int): List<Image>? {
-        val imagesPO = imageDao.getImages(tweetId)
-        if (imagesPO != null) {
-            return imagesPO.stream().map { Image(url = it.url) }.collect(Collectors.toList())
-        }
-        return null
+    override fun getCommentsStream(): Flow<List<ImagePO>> {
+        return imageDao.observeImages()
+    }
+
+    override suspend fun getImages(tweetId: Int): List<Image>? {
+        return imageDao.getImages(tweetId)?.map { transformToImage(it) }
     }
 
     override fun addImages(images: List<Image>, tweetId: Int) {
@@ -26,5 +28,9 @@ class ImageRepository(private val imageDao: ImageDao) : ImageRepositoryInterface
         if (imagesCollect != null) {
             imageDao.insertAllImages(imagesCollect)
         }
+    }
+
+    private fun transformToImage(imagePO: ImagePO): Image {
+        return Image(url = imagePO.url)
     }
 }

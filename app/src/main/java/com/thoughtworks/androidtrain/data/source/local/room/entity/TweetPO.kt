@@ -12,7 +12,7 @@ class TweetPO(
     @ColumnInfo(name = "content")
     val content: String?,
     @ColumnInfo(name = "sender_name")
-    val senderName: String?,
+    val senderName: String,
     @ColumnInfo(name = "error")
     val error: String?,
     @ColumnInfo(name = "unknown_error")
