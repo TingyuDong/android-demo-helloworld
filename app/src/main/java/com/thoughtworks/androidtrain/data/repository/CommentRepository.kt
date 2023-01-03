@@ -1,7 +1,7 @@
 package com.thoughtworks.androidtrain.data.repository
 
 import com.thoughtworks.androidtrain.data.model.Comment
-import com.thoughtworks.androidtrain.data.source.local.room.dao.CommentDao
+import com.thoughtworks.androidtrain.data.source.local.room.CommentsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import kotlinx.coroutines.flow.Flow
 
@@ -9,26 +9,26 @@ interface CommentRepositoryInterface {
     fun getCommentsStream(): Flow<List<CommentPO>>
     suspend fun getComments(tweetId: Int): List<Comment>?
     suspend fun addComments(comments: List<Comment>, tweetId: Int)
-    fun addComment(commentPO: CommentPO)
+    suspend fun addComment(commentPO: CommentPO)
 }
 
 class CommentRepository(
-    private val commentDao: CommentDao,
+    private val commentDataSource: CommentsLocalDataSource,
     private val senderRepository: SenderRepository
 ) : CommentRepositoryInterface {
     override fun getCommentsStream(): Flow<List<CommentPO>> {
-        return commentDao.observeComments()
+        return commentDataSource.getCommentStream()
     }
 
     override suspend fun getComments(tweetId: Int): List<Comment>? {
-        val commentsPO = commentDao.getComments(tweetId)
+        val commentsPO = commentDataSource.getCommentsByTweetsId(tweetId)
         return commentsPO?.mapNotNull {
             transformToComment(it)
         }
     }
 
     override suspend fun addComments(comments: List<Comment>, tweetId: Int) {
-        commentDao.insertAllComments(comments.map { comment ->
+        commentDataSource.addAllComments(comments.map { comment ->
             senderRepository.addSender(comment.sender)
             transformToCommentPO(comment, tweetId)
         })
@@ -46,8 +46,8 @@ class CommentRepository(
         )
     }
 
-    override fun addComment(commentPO: CommentPO) {
-        commentDao.insertComment(commentPO)
+    override suspend fun addComment(commentPO: CommentPO) {
+        commentDataSource.addComment(commentPO)
     }
 
     private suspend fun transformToComment(commentPO: CommentPO): Comment? {

@@ -13,14 +13,14 @@ interface CommentDao {
     fun observeComments(): Flow<List<CommentPO>>
 
     @Query("SELECT * FROM comments")
-    fun getAll(): List<CommentPO>
+    fun getAllComments(): List<CommentPO>
 
     @Query("SELECT * FROM comments WHERE tweet_id =:tweetId")
-    fun getComments(tweetId: Int): List<CommentPO>?
+    suspend fun getCommentsByTweetId(tweetId: Int): List<CommentPO>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllComments(commentsPO: List<CommentPO>)
+    suspend fun insertAllComments(commentsPO: List<CommentPO>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertComment(commentPO: CommentPO): Long
+    suspend fun insertComment(commentPO: CommentPO): Long
 }
