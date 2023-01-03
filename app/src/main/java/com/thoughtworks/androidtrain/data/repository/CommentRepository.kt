@@ -28,16 +28,22 @@ class CommentRepository(
     }
 
     override suspend fun addComments(comments: List<Comment>, tweetId: Int) {
-        val commentsCollect = comments.map { comment ->
+        commentDao.insertAllComments(comments.map { comment ->
             senderRepository.addSender(comment.sender)
-            CommentPO(
-                id = 0,
-                tweetId = tweetId,
-                content = comment.content,
-                senderName = comment.sender.username
-            )
-        }
-        commentDao.insertAllComments(commentsCollect)
+            transformToCommentPO(comment, tweetId)
+        })
+    }
+
+    private fun transformToCommentPO(
+        comment: Comment,
+        tweetId: Int
+    ): CommentPO {
+        return CommentPO(
+            id = 0,
+            tweetId = tweetId,
+            content = comment.content,
+            senderName = comment.sender.username
+        )
     }
 
     override fun addComment(commentPO: CommentPO) {
