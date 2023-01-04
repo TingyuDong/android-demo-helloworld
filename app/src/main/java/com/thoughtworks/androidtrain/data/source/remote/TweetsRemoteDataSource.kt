@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 import okio.IOException
 
 class TweetsRemoteDataSource(
-    private val service: TweetService,
+    private val tweetsApiImpl: TweetsApiHelperImpl,
     private val ioDispatcher: CoroutineDispatcher
 ) {
     private val observableTweets = MutableStateFlow(runBlocking { getTweets() })
