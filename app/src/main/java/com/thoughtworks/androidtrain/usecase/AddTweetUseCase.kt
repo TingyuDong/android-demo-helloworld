@@ -7,10 +7,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 open class AddTweetUseCase(
-    private val senderRepository: SenderRepository,
-    private val commentRepository: CommentRepository,
-    private val imageRepository: ImageRepository,
-    private val tweetRepository: TweetRepository,
+    private val senderRepository: SendersRepository,
+    private val commentRepository: CommentsRepository,
+    private val imageRepository: ImagesRepository,
+    private val tweetRepository: TweetsRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) {
     suspend operator fun invoke(tweet: Tweet) = withContext(ioDispatcher) {

@@ -5,15 +5,15 @@ import com.thoughtworks.androidtrain.data.source.local.room.ImagesLocalDataSourc
 import com.thoughtworks.androidtrain.data.source.local.room.entity.ImagePO
 import kotlinx.coroutines.flow.Flow
 
-interface ImageRepositoryInterface {
+interface ImagesRepositoryInterface {
     fun getImagesStream(): Flow<List<ImagePO>>
     suspend fun getImages(tweetId: Int): List<Image>?
     suspend fun addImages(images: List<Image>, tweetId: Int)
 }
 
-class ImageRepository(
+class ImagesRepository(
     private val imageDataSource: ImagesLocalDataSource
-) : ImageRepositoryInterface {
+) : ImagesRepositoryInterface {
     override fun getImagesStream(): Flow<List<ImagePO>> {
         return imageDataSource.getImagesStream()
     }

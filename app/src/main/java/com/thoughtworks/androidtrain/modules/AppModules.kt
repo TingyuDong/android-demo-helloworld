@@ -4,14 +4,18 @@ import androidx.room.Room
 import com.google.gson.GsonBuilder
 import com.thoughtworks.androidtrain.TweetApplication
 import com.thoughtworks.androidtrain.tweets.TweetsViewModel
-import com.thoughtworks.androidtrain.data.repository.CommentRepository
-import com.thoughtworks.androidtrain.data.repository.ImageRepository
-import com.thoughtworks.androidtrain.data.repository.SenderRepository
-import com.thoughtworks.androidtrain.data.repository.TweetRepository
+import com.thoughtworks.androidtrain.data.repository.CommentsRepository
+import com.thoughtworks.androidtrain.data.repository.ImagesRepository
+import com.thoughtworks.androidtrain.data.repository.SendersRepository
+import com.thoughtworks.androidtrain.data.repository.TweetsRepository
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
+import com.thoughtworks.androidtrain.data.source.local.room.CommentsLocalDataSource
+import com.thoughtworks.androidtrain.data.source.local.room.ImagesLocalDataSource
+import com.thoughtworks.androidtrain.data.source.local.room.SendersLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.TweetsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 import com.thoughtworks.androidtrain.service.TweetService
+import com.thoughtworks.androidtrain.service.TweetsApiHelperImpl
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
@@ -41,6 +45,9 @@ val appModules = module {
         get<Retrofit>().create(TweetService::class.java)
     }
     single {
+        TweetsApiHelperImpl(get())
+    }
+    single {
         TweetsRemoteDataSource(get(), get())
     }
     single {
@@ -52,9 +59,6 @@ val appModules = module {
     }
     single {
         OkHttpUtils(get())
-    }
-    single {
-        TweetsLocalDataSource(get())
     }
     single {
         get<AppDatabase>().tweetDao()
@@ -69,16 +73,28 @@ val appModules = module {
         get<AppDatabase>().senderDao()
     }
     single {
-        SenderRepository(get())
+        CommentsLocalDataSource(get())
     }
     single {
-        CommentRepository(get(), get())
+        ImagesLocalDataSource(get())
     }
     single {
-        TweetRepository(get(), get(), get())
+        SendersLocalDataSource(get())
     }
     single {
-        ImageRepository(get())
+        TweetsLocalDataSource(get())
+    }
+    single {
+        CommentsRepository(get(), get())
+    }
+    single {
+        ImagesRepository(get())
+    }
+    single {
+        SendersRepository(get())
+    }
+    single {
+        TweetsRepository(get(), get())
     }
     single {
         Dispatchers.IO

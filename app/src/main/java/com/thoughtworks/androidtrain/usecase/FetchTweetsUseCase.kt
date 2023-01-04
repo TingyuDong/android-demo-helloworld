@@ -1,20 +1,20 @@
 package com.thoughtworks.androidtrain.usecase
 
 import com.thoughtworks.androidtrain.data.model.Tweet
-import com.thoughtworks.androidtrain.data.repository.CommentRepository
-import com.thoughtworks.androidtrain.data.repository.ImageRepository
-import com.thoughtworks.androidtrain.data.repository.SenderRepository
-import com.thoughtworks.androidtrain.data.repository.TweetRepository
+import com.thoughtworks.androidtrain.data.repository.CommentsRepository
+import com.thoughtworks.androidtrain.data.repository.ImagesRepository
+import com.thoughtworks.androidtrain.data.repository.SendersRepository
+import com.thoughtworks.androidtrain.data.repository.TweetsRepository
 import com.thoughtworks.androidtrain.data.Result
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.Flow
 
 open class FetchTweetsUseCase(
-    private val senderRepository: SenderRepository,
-    private val commentRepository: CommentRepository,
-    private val imageRepository: ImageRepository,
-    private val tweetRepository: TweetRepository,
+    private val senderRepository: SendersRepository,
+    private val commentRepository: CommentsRepository,
+    private val imageRepository: ImagesRepository,
+    private val tweetRepository: TweetsRepository,
 ) {
     open fun fetchRemoteTweets(): Flow<Result<List<Tweet>>> {
         return tweetRepository.getRemoteTweetsStream()

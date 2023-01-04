@@ -7,7 +7,7 @@ import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 import kotlinx.coroutines.flow.Flow
 
-interface TweetRepositoryInterface {
+interface TweetsRepositoryInterface {
     fun getAllLocalTweets(): List<TweetPO>
     fun getRemoteTweetsStream(): Flow<Result<List<Tweet>>>
     fun getLocalTweetsStream(): Flow<List<TweetPO>>
@@ -15,10 +15,10 @@ interface TweetRepositoryInterface {
     fun addTweet(tweetPO: TweetPO): Long
 }
 
-class TweetRepository(
+class TweetsRepository(
     private val tweetsRemoteDataSource: TweetsRemoteDataSource,
     private val tweetsLocalDataSource: TweetsLocalDataSource
-) : TweetRepositoryInterface {
+) : TweetsRepositoryInterface {
     override fun getAllLocalTweets(): List<TweetPO> {
         return tweetsLocalDataSource.getTweets()
     }
