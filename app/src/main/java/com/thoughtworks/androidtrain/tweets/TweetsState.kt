@@ -20,6 +20,10 @@ class TweetsState(
     private val viewModel: TweetsViewModel,
     private val context: Context
 ) {
+    init {
+        viewModel.start()
+    }
+
     fun saveComment(): (Int, String, MutableState<Boolean>) -> Unit =
         { tweetId: Int,
           commentContent: String,

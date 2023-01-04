@@ -48,6 +48,10 @@ class TweetsViewModel(
         initialValue = TweetsUiState(tweets = emptyList(), message = null, isRefreshing = true)
     )
 
+    fun start() {
+        refresh()
+    }
+
     fun saveComment(tweetId: Int, commentContent: String) {
         viewModelScope.launch {
             addCommentUseCase.invoke(tweetId, commentContent)
@@ -76,7 +80,7 @@ class TweetsViewModel(
         tweetsLocalResult: Result<List<Tweet>>,
         tweetsRemoteResult: Result<List<Tweet>>
     ): List<Tweet> {
-        return if(tweetsRemoteResult is Success) tweetsRemoteResult.data
+        return if (tweetsRemoteResult is Success) tweetsRemoteResult.data
         else if (tweetsLocalResult is Success) {
             showErrorMessage(tweetsRemoteResult.toString())
             tweetsLocalResult.data
