@@ -48,7 +48,7 @@ class TweetsViewModel(
         initialValue = TweetsUiState(tweets = emptyList(), message = null, isRefreshing = true)
     )
 
-    fun start() {
+    init {
         refresh()
     }
 
