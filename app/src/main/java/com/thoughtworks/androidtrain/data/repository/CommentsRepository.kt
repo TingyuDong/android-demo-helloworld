@@ -9,7 +9,7 @@ interface CommentsRepositoryInterface {
     fun getCommentsStream(): Flow<List<CommentPO>>
     suspend fun getComments(tweetId: Int): List<Comment>?
     suspend fun addComments(comments: List<Comment>, tweetId: Int)
-    suspend fun addComment(commentPO: CommentPO)
+    suspend fun addComment(tweetId: Int, comment: Comment)
 }
 
 class CommentsRepository(
@@ -34,6 +34,10 @@ class CommentsRepository(
         })
     }
 
+    override suspend fun addComment(tweetId: Int, comment: Comment) {
+        commentDataSource.addComment(transformToCommentPO(tweetId = tweetId, comment = comment))
+    }
+
     private fun transformToCommentPO(
         comment: Comment,
         tweetId: Int
@@ -44,10 +48,6 @@ class CommentsRepository(
             content = comment.content,
             senderName = comment.sender.username
         )
-    }
-
-    override suspend fun addComment(commentPO: CommentPO) {
-        commentDataSource.addComment(commentPO)
     }
 
     private suspend fun transformToComment(commentPO: CommentPO): Comment? {
