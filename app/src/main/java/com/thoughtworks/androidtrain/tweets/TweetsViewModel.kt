@@ -6,12 +6,16 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
 import kotlinx.coroutines.launch
 import com.thoughtworks.androidtrain.data.Result
 import com.thoughtworks.androidtrain.data.Result.Success
+import com.thoughtworks.androidtrain.data.Result.Error
+import com.thoughtworks.androidtrain.data.Result.Loading
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 
 data class TweetsUiState(
     var tweets: List<Tweet> = emptyList(),
@@ -32,7 +36,7 @@ class TweetsViewModel(
         fetchTweetsUseCase.getLocalTweets(), fetchTweetsUseCase.fetchRemoteTweets()
     ) { tweetsLocalResult, tweetsRemoteResult ->
         handleResult(tweetsLocalResult, tweetsRemoteResult)
-    }.flowOn(Dispatchers.IO)
+    }
 
     val uiState: StateFlow<TweetsUiState> = combine(
         _tweets, _message, _isRefreshing
@@ -42,11 +46,12 @@ class TweetsViewModel(
             message = message,
             isRefreshing = isRefreshing
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = Lazily,
-        initialValue = TweetsUiState(tweets = emptyList(), message = null, isRefreshing = true)
-    )
+    }
+        .stateIn(
+            scope = viewModelScope,
+            started = Lazily,
+            initialValue = TweetsUiState(tweets = emptyList(), message = null, isRefreshing = true)
+        )
 
     init {
         refresh()
@@ -80,21 +85,28 @@ class TweetsViewModel(
         tweetsLocalResult: Result<List<Tweet>>,
         tweetsRemoteResult: Result<List<Tweet>>
     ): List<Tweet> {
-        return if (tweetsRemoteResult is Success) tweetsRemoteResult.data
-        else if (tweetsLocalResult is Success) {
-            showErrorMessage(tweetsRemoteResult.toString())
-            tweetsLocalResult.data
-        } else {
-            showErrorMessage(FAILED_TO_GET_THE_DATA)
-            emptyList()
+        return when (tweetsRemoteResult) {
+            Loading -> emptyList()
+            is Success -> tweetsRemoteResult.data
+            is Error -> {
+                showErrorMessage(tweetsRemoteResult.toString())
+                showLocalTweets(tweetsLocalResult)
+            }
+        }
+    }
+
+    private fun showLocalTweets(tweetsLocalResult: Result<List<Tweet>>): List<Tweet> {
+        return when (tweetsLocalResult) {
+            Loading -> emptyList()
+            is Success -> tweetsLocalResult.data
+            is Error -> {
+                showErrorMessage(tweetsLocalResult.toString())
+                return emptyList()
+            }
         }
     }
 
     private fun showErrorMessage(message: String) {
         _message.value = message
     }
-
-
 }
-
-private const val FAILED_TO_GET_THE_DATA = "Failed to get the data"
