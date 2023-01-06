@@ -6,15 +6,19 @@ import com.thoughtworks.androidtrain.data.repository.ImagesRepository
 import com.thoughtworks.androidtrain.data.repository.SendersRepository
 import com.thoughtworks.androidtrain.data.repository.TweetsRepository
 import com.thoughtworks.androidtrain.data.Result
+import com.thoughtworks.androidtrain.data.Result.Success
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 
 open class FetchTweetsUseCase(
     private val senderRepository: SendersRepository,
     private val commentRepository: CommentsRepository,
     private val imageRepository: ImagesRepository,
     private val tweetRepository: TweetsRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) {
     open fun fetchRemoteTweets(): Flow<Result<List<Tweet>>> {
         return tweetRepository.getRemoteTweetsStream()
@@ -27,8 +31,9 @@ open class FetchTweetsUseCase(
             commentRepository.getCommentsStream(),
             imageRepository.getImagesStream()
         ) { tweetPOList, _, _, _ ->
-            Result.Success(transformToTweetList(tweetPOList))
+            Success(transformToTweetList(tweetPOList))
         }
+            .flowOn(ioDispatcher)
     }
 
     private suspend fun transformToTweetList(tweetPOList: List<TweetPO>): List<Tweet> {
