@@ -1,14 +1,14 @@
 package com.thoughtworks.androidtrain.usecase
 
 import com.thoughtworks.androidtrain.data.model.Tweet
-import com.thoughtworks.androidtrain.data.repository.TweetsRepository
+import com.thoughtworks.androidtrain.data.repository.TweetsRepositoryImpl
 import com.thoughtworks.androidtrain.data.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 
 open class FetchTweetsUseCase(
-    private val tweetRepository: TweetsRepository,
+    private val tweetRepository: TweetsRepositoryImpl,
     private val ioDispatcher: CoroutineDispatcher
 ) {
     open fun fetchRemoteTweets(): Flow<Result<List<Tweet>>> {
