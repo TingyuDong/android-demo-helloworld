@@ -8,6 +8,7 @@ import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.TextView
 import com.thoughtworks.androidtrain.utils.SharedPreferenceUtils
+import org.koin.android.ext.android.inject
 
 
 private const val IS_HINT_SHOWN = "isHintShown"
@@ -17,7 +18,7 @@ class SharedPreferenceActivity : AppCompatActivity() {
         const val TAG: String = "SharedPreferenceActivity"
     }
 
-    private val sharedPreferenceUtils = SharedPreferenceUtils()
+    private val sharedPreferenceUtils: SharedPreferenceUtils by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shared_preference)
