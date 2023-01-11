@@ -11,7 +11,7 @@ interface SendersRepositoryInterface {
     suspend fun addSender(sender: Sender): Long?
 }
 
-class SendersRepository(
+class SendersRepositoryImpl(
     private val senderDataSource: SendersLocalDataSource
 ) : SendersRepositoryInterface {
     override fun getSendersStream(): Flow<List<SenderPO>> {

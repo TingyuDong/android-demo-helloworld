@@ -5,17 +5,17 @@ import com.thoughtworks.androidtrain.data.source.local.room.CommentsLocalDataSou
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 import kotlinx.coroutines.flow.Flow
 
-interface CommentsRepositoryInterface {
+interface CommentsRepository {
     fun getCommentsStream(): Flow<List<CommentPO>>
     suspend fun getComments(tweetId: Int): List<Comment>?
     suspend fun addComments(comments: List<Comment>, tweetId: Int)
     suspend fun addComment(tweetId: Int, comment: Comment)
 }
 
-class CommentsRepository(
+class CommentsRepositoryImpl(
     private val commentDataSource: CommentsLocalDataSource,
-    private val senderRepository: SendersRepository
-) : CommentsRepositoryInterface {
+    private val senderRepository: SendersRepositoryImpl
+) : CommentsRepository {
     override fun getCommentsStream(): Flow<List<CommentPO>> {
         return commentDataSource.getCommentStream()
     }

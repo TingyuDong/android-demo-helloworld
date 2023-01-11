@@ -8,26 +8,20 @@ import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-interface TweetsRepositoryInterface {
-    fun getAllLocalTweets(): List<TweetPO>
+interface TweetsRepository {
     fun getRemoteTweetsStream(): Flow<Result<List<Tweet>>>
     fun getLocalTweetsStream(): Flow<Result<List<Tweet>>>
     suspend fun refreshTweets()
     fun addTweet(tweetPO: TweetPO): Long
-    suspend fun transformToTweetList(tweetPOList: List<TweetPO>): List<Tweet>
 }
 
-class TweetsRepository(
+class TweetsRepositoryImpl(
     private val tweetsRemoteDataSource: TweetsRemoteDataSource,
     private val tweetsLocalDataSource: TweetsLocalDataSource,
-    private val senderRepository: SendersRepository,
-    private val commentRepository: CommentsRepository,
-    private val imageRepository: ImagesRepository,
-) : TweetsRepositoryInterface {
-    override fun getAllLocalTweets(): List<TweetPO> {
-        return tweetsLocalDataSource.getTweets()
-    }
-
+    private val senderRepository: SendersRepositoryImpl,
+    private val commentRepository: CommentsRepositoryImpl,
+    private val imageRepository: ImagesRepositoryImpl,
+) : TweetsRepository {
     override fun getRemoteTweetsStream(): Flow<Result<List<Tweet>>> {
         return tweetsRemoteDataSource.getTweetsStream()
     }
@@ -51,7 +45,7 @@ class TweetsRepository(
         return tweetsLocalDataSource.addTweet(tweetPO)
     }
 
-    override suspend fun transformToTweetList(tweetPOList: List<TweetPO>): List<Tweet> {
+    private suspend fun transformToTweetList(tweetPOList: List<TweetPO>): List<Tweet> {
         return tweetPOList.map { tweetPO ->
             Tweet(
                 id = tweetPO.id,
