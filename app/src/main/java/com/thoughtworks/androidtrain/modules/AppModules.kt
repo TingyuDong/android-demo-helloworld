@@ -1,5 +1,7 @@
 package com.thoughtworks.androidtrain.modules
 
+import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.google.gson.GsonBuilder
 import com.thoughtworks.androidtrain.TweetApplication
@@ -27,6 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 private const val DATABASE_NAME = "tweet"
 private const val BASE_URL = "https://thoughtworks-mobile-2018.herokuapp.com"
+private const val PREFERENCE_FILE_KEY = "UserInfo"
 
 val retrofitModules = module {
     single {
@@ -161,7 +164,14 @@ val appModules = module {
         TweetApplication()
     }
 
+    single {
+        get<Application>().getSharedPreferences(
+            PREFERENCE_FILE_KEY,
+            Context.MODE_PRIVATE
+        )
+    }
+
     viewModel {
-        TweetsViewModel(get(), get(), get(), get())
+        TweetsViewModel(get(), get(), get())
     }
 }
