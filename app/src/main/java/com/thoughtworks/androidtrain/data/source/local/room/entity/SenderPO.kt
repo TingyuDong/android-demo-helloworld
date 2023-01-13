@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "sender")
-class SenderPO(
+data class SenderPO(
     @PrimaryKey
     @ColumnInfo(name = "user_name")
     val userName: String,
