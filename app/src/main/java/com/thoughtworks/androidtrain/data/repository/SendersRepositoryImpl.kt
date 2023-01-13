@@ -5,7 +5,7 @@ import com.thoughtworks.androidtrain.data.source.local.room.SendersLocalDataSour
 import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 import kotlinx.coroutines.flow.Flow
 
-interface SendersRepositoryInterface {
+interface SendersRepository {
     fun getSendersStream(): Flow<List<SenderPO>>
     suspend fun getSender(userName: String): Sender?
     suspend fun addSender(sender: Sender): Long?
@@ -13,7 +13,7 @@ interface SendersRepositoryInterface {
 
 class SendersRepositoryImpl(
     private val senderDataSource: SendersLocalDataSource
-) : SendersRepositoryInterface {
+) : SendersRepository {
     override fun getSendersStream(): Flow<List<SenderPO>> {
         return senderDataSource.getSendersStream()
     }

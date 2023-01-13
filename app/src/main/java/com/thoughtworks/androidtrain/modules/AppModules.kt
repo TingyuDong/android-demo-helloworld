@@ -131,7 +131,7 @@ val repositoryModules = module {
     }
 
     single {
-        TweetsRepositoryImpl(get(), get(), get(), get(), get())
+        TweetsRepositoryImpl(get(), get())
     }
 }
 
@@ -145,7 +145,7 @@ val useCaseModules = module {
     }
 
     factory {
-        FetchTweetsUseCase(get(), get())
+        FetchTweetsUseCase(get(), get(), get(), get(), get())
     }
 }
 
