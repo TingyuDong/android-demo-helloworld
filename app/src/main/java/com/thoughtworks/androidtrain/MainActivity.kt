@@ -184,15 +184,15 @@ class MainActivity : AppCompatActivity() {
         val tweetSender = Sender(
             username = "Aiolia",
             nick = "Aio",
-            avatar = "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
+            avatar = "https://c-ssl.dtstatic.com/uploads/blog/202102/15/20210215071709_3816f.thumb.1000_0.jpeg"
         )
         val commentSender = Sender(
             username = "Saga",
             nick = "Saga",
-            avatar = "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
+            avatar = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fblog%2F202110%2F31%2F20211031215023_805c2.thumb.1000_0.png&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1676014913&t=afdd7a4962220bce47930715a8cd439c"
         )
         val image = Image(
-            url = "https://thoughtworks-mobile-2018.herokuapp.com/images/user/avatar/001.jpeg"
+            url = "https://img2.baidu.com/it/u=1395980100,2999837177&fm=253&fmt=auto&app=120&f=JPEG?w=1200&h=675"
         )
         val comment = Comment(content = "真不错", sender = commentSender)
         tweetsViewModel.saveTweet(
