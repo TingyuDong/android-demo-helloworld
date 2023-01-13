@@ -2,6 +2,7 @@ package com.thoughtworks.androidtrain.data.repository
 
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.Result
+import com.thoughtworks.androidtrain.data.source.local.room.TweetWithSenderAndCommentsAndImages
 import com.thoughtworks.androidtrain.data.source.local.room.TweetsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
@@ -12,6 +13,7 @@ interface TweetsRepository {
     fun getLocalTweetsStream(): Flow<List<TweetPO>>
     suspend fun refreshTweets()
     fun addTweet(tweetPO: TweetPO): Long
+    fun getTweetsWithSenders(): Flow<List<TweetWithSenderAndCommentsAndImages>>
 }
 
 class TweetsRepositoryImpl(
@@ -32,5 +34,9 @@ class TweetsRepositoryImpl(
 
     override fun addTweet(tweetPO: TweetPO): Long {
         return tweetsLocalDataSource.addTweet(tweetPO)
+    }
+
+    override fun getTweetsWithSenders(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
+        return tweetsLocalDataSource.getTweetWithSender()
     }
 }

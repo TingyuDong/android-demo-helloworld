@@ -18,4 +18,8 @@ class TweetsLocalDataSource(
     fun addTweet(tweetPO: TweetPO): Long {
         return tweetDao.insertTweet(tweetPO)
     }
+
+    fun getTweetWithSender(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
+        return tweetDao.observeTweetsMap()
+    }
 }
