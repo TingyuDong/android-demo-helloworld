@@ -6,8 +6,8 @@ import com.thoughtworks.androidtrain.data.repository.*
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 
 open class FetchTweetsUseCase(
     private val tweetsRepository: TweetsRepository,
@@ -29,8 +29,13 @@ open class FetchTweetsUseCase(
     }
 
     private fun combineFlow(): Flow<Result<List<Tweet>>> {
-        return tweetsRepository.getLocalTweetsStream().map {
-            Result.Success(transformToTweetList(it))
+        return combine(
+            tweetsRepository.getLocalTweetsStream(),
+            sendersRepository.getSendersStream(),
+            imagesRepository.getImagesStream(),
+            commentsRepository.getCommentsStream()
+        ){ tweetPOList, _, _, _->
+            Result.Success(transformToTweetList(tweetPOList))
         }
     }
 
