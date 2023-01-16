@@ -3,26 +3,16 @@ package com.thoughtworks.androidtrain.data.repository
 import com.thoughtworks.androidtrain.data.model.Sender
 import com.thoughtworks.androidtrain.data.source.local.room.SendersLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
-import kotlinx.coroutines.flow.Flow
 
 interface SendersRepository {
-    fun getSendersStream(): Flow<List<SenderPO>>
-    suspend fun getSender(userName: String): Sender?
+    fun transformToSender(senderPO: SenderPO?): Sender?
     suspend fun addSender(sender: Sender): Long?
 }
 
 class SendersRepositoryImpl(
     private val senderDataSource: SendersLocalDataSource
 ) : SendersRepository {
-    override fun getSendersStream(): Flow<List<SenderPO>> {
-        return senderDataSource.getSendersStream()
-    }
-
-    override suspend fun getSender(userName: String): Sender? {
-        return transformToSender(senderDataSource.getSender(userName))
-    }
-
-    private fun transformToSender(senderPO: SenderPO?): Sender? {
+    override fun transformToSender(senderPO: SenderPO?): Sender? {
         senderPO ?: return null
         return Sender(
             username = senderPO.userName,

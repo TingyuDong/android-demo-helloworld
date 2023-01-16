@@ -7,15 +7,11 @@ import kotlinx.coroutines.flow.Flow
 class TweetsLocalDataSource(
     private val tweetDao: TweetDao,
 ) {
-    fun getTweetsStream(): Flow<List<TweetPO>> {
+    fun getTweetsStream(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
         return tweetDao.observeTweets()
     }
 
     fun addTweet(tweetPO: TweetPO): Long {
         return tweetDao.insertTweet(tweetPO)
-    }
-
-    fun getTweetsWithSenderAndCommentsAndImages(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
-        return tweetDao.observeTweetsMap()
     }
 }

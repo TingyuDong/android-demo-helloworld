@@ -30,8 +30,6 @@ class TweetsViewModel(
 ) : ViewModel() {
     private val _message = MutableStateFlow<String?>(null)
 
-    private val _tweetsWithSenders = fetchTweetsUseCase.getTweetsWithSenderAndCommentsAndImages()
-
     private val _isRefreshing = MutableStateFlow(false)
 
     private var _tweets = combine(
@@ -41,11 +39,11 @@ class TweetsViewModel(
     }
 
     val uiState: StateFlow<TweetsUiState> = combine(
-        _tweets, _message, _isRefreshing, _tweetsWithSenders
-    ) { tweets, message, isRefreshing, tweetsWithSenders ->
+        _tweets, _message, _isRefreshing
+    ) { tweets, message, isRefreshing ->
         TweetsUiState(
             tweets = tweets,
-            message = tweetsWithSenders.toString(),
+            message = message,
             isRefreshing = isRefreshing
         )
     }

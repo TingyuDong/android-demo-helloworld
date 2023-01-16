@@ -10,21 +10,20 @@ import kotlinx.coroutines.flow.Flow
 
 interface TweetsRepository {
     fun getRemoteTweetsStream(): Flow<Result<List<Tweet>>>
-    fun getLocalTweetsStream(): Flow<List<TweetPO>>
+    fun getLocalTweetsStream(): Flow<List<TweetWithSenderAndCommentsAndImages>>
     suspend fun refreshTweets()
     fun addTweet(tweetPO: TweetPO): Long
-    fun getTweetsWithSenderAndCommentsAndImages(): Flow<List<TweetWithSenderAndCommentsAndImages>>
 }
 
 class TweetsRepositoryImpl(
     private val tweetsRemoteDataSource: TweetsRemoteDataSource,
-    private val tweetsLocalDataSource: TweetsLocalDataSource,
+    private val tweetsLocalDataSource: TweetsLocalDataSource
 ) : TweetsRepository {
     override fun getRemoteTweetsStream(): Flow<Result<List<Tweet>>> {
         return tweetsRemoteDataSource.getTweetsStream()
     }
 
-    override fun getLocalTweetsStream(): Flow<List<TweetPO>> {
+    override fun getLocalTweetsStream(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
         return tweetsLocalDataSource.getTweetsStream()
     }
 
@@ -34,9 +33,5 @@ class TweetsRepositoryImpl(
 
     override fun addTweet(tweetPO: TweetPO): Long {
         return tweetsLocalDataSource.addTweet(tweetPO)
-    }
-
-    override fun getTweetsWithSenderAndCommentsAndImages(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
-        return tweetsLocalDataSource.getTweetsWithSenderAndCommentsAndImages()
     }
 }
