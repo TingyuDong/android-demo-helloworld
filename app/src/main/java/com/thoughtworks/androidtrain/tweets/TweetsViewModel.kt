@@ -30,7 +30,7 @@ class TweetsViewModel(
 ) : ViewModel() {
     private val _message = MutableStateFlow<String?>(null)
 
-    private val _tweetsWithSenders = fetchTweetsUseCase.fetchTweetsWithSenders()
+    private val _tweetsWithSenders = fetchTweetsUseCase.getTweetsWithSenderAndCommentsAndImages()
 
     private val _isRefreshing = MutableStateFlow(false)
 

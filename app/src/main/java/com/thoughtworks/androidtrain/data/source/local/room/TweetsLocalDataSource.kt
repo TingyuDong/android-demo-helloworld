@@ -15,7 +15,7 @@ class TweetsLocalDataSource(
         return tweetDao.insertTweet(tweetPO)
     }
 
-    fun getTweetWithSender(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
+    fun getTweetsWithSenderAndCommentsAndImages(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
         return tweetDao.observeTweetsMap()
     }
 }

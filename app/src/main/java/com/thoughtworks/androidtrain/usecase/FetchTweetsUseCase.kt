@@ -2,7 +2,11 @@ package com.thoughtworks.androidtrain.usecase
 
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.Result
-import com.thoughtworks.androidtrain.data.repository.*
+import com.thoughtworks.androidtrain.data.repository.CommentsRepository
+import com.thoughtworks.androidtrain.data.repository.ImagesRepository
+import com.thoughtworks.androidtrain.data.repository.SendersRepository
+import com.thoughtworks.androidtrain.data.repository.TweetsRepository
+import com.thoughtworks.androidtrain.data.source.local.room.TweetWithSenderAndCommentsAndImages
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -31,10 +35,8 @@ open class FetchTweetsUseCase(
     private fun combineFlow(): Flow<Result<List<Tweet>>> {
         return combine(
             tweetsRepository.getLocalTweetsStream(),
-            sendersRepository.getSendersStream(),
-            imagesRepository.getImagesStream(),
-            commentsRepository.getCommentsStream()
-        ){ tweetPOList, _, _, _->
+            tweetsRepository.getTweetsWithSenderAndCommentsAndImages()
+        ){ tweetPOList, _ ->
             Result.Success(transformToTweetList(tweetPOList))
         }
     }
@@ -51,5 +53,9 @@ open class FetchTweetsUseCase(
                 unknownError = tweetPO.unknownError
             )
         }
+    }
+
+    open fun getTweetsWithSenderAndCommentsAndImages(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
+        return tweetsRepository.getTweetsWithSenderAndCommentsAndImages()
     }
 }

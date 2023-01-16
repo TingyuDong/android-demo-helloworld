@@ -13,7 +13,7 @@ interface TweetsRepository {
     fun getLocalTweetsStream(): Flow<List<TweetPO>>
     suspend fun refreshTweets()
     fun addTweet(tweetPO: TweetPO): Long
-    fun getTweetsWithSenders(): Flow<List<TweetWithSenderAndCommentsAndImages>>
+    fun getTweetsWithSenderAndCommentsAndImages(): Flow<List<TweetWithSenderAndCommentsAndImages>>
 }
 
 class TweetsRepositoryImpl(
@@ -36,7 +36,7 @@ class TweetsRepositoryImpl(
         return tweetsLocalDataSource.addTweet(tweetPO)
     }
 
-    override fun getTweetsWithSenders(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
-        return tweetsLocalDataSource.getTweetWithSender()
+    override fun getTweetsWithSenderAndCommentsAndImages(): Flow<List<TweetWithSenderAndCommentsAndImages>> {
+        return tweetsLocalDataSource.getTweetsWithSenderAndCommentsAndImages()
     }
 }
