@@ -15,9 +15,6 @@ interface CommentDao {
     @Query("SELECT * FROM comments")
     fun getAllComments(): List<CommentPO>
 
-    @Query("SELECT * FROM comments WHERE tweet_id =:tweetId")
-    suspend fun getCommentsByTweetId(tweetId: Int): List<CommentPO>?
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllComments(commentsPO: List<CommentPO>)
 

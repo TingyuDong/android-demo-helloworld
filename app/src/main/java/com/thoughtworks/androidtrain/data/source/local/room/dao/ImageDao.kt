@@ -12,9 +12,6 @@ interface ImageDao {
     @Query("SELECT * FROM image")
     fun observeImages(): Flow<List<ImagePO>>
 
-    @Query("SELECT * FROM image WHERE tweet_id =:tweetId")
-    suspend fun getImages(tweetId: Int): List<ImagePO>?
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllImages(commentsPO: List<ImagePO>)
 }
