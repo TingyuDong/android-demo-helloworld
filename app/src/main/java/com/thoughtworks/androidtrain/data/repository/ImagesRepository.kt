@@ -1,7 +1,7 @@
 package com.thoughtworks.androidtrain.data.repository
 
 import com.thoughtworks.androidtrain.data.model.Image
-import com.thoughtworks.androidtrain.data.source.local.room.ImagesLocalDataSource
+import com.thoughtworks.androidtrain.data.source.local.room.dataSource.ImagesLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.entity.ImagePO
 
 interface ImagesRepository {

@@ -1,4 +1,4 @@
-package com.thoughtworks.androidtrain.data.source.local.room
+package com.thoughtworks.androidtrain.data.source.local.room.dataSource
 
 import com.thoughtworks.androidtrain.data.source.local.room.dao.CommentDao
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO

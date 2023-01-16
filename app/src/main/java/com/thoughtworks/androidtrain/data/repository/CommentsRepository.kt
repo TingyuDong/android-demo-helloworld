@@ -1,7 +1,7 @@
 package com.thoughtworks.androidtrain.data.repository
 
 import com.thoughtworks.androidtrain.data.model.Comment
-import com.thoughtworks.androidtrain.data.source.local.room.CommentsLocalDataSource
+import com.thoughtworks.androidtrain.data.source.local.room.dataSource.CommentsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.entity.CommentPO
 
 interface CommentsRepository {

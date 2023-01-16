@@ -15,10 +15,10 @@ import com.thoughtworks.androidtrain.data.repository.SendersRepository
 import com.thoughtworks.androidtrain.data.repository.TweetsRepository
 import com.thoughtworks.androidtrain.tweets.TweetsViewModel
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
-import com.thoughtworks.androidtrain.data.source.local.room.CommentsLocalDataSource
-import com.thoughtworks.androidtrain.data.source.local.room.ImagesLocalDataSource
-import com.thoughtworks.androidtrain.data.source.local.room.SendersLocalDataSource
-import com.thoughtworks.androidtrain.data.source.local.room.TweetsLocalDataSource
+import com.thoughtworks.androidtrain.data.source.local.room.dataSource.CommentsLocalDataSource
+import com.thoughtworks.androidtrain.data.source.local.room.dataSource.ImagesLocalDataSource
+import com.thoughtworks.androidtrain.data.source.local.room.dataSource.SendersLocalDataSource
+import com.thoughtworks.androidtrain.data.source.local.room.dataSource.TweetsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 import com.thoughtworks.androidtrain.service.TweetService
 import com.thoughtworks.androidtrain.service.TweetsApiHelperImpl
@@ -149,7 +149,7 @@ val useCaseModules = module {
     }
 
     factory {
-        FetchTweetsUseCase(get(), get(), get(), get(), get())
+        FetchTweetsUseCase(get(), get(), get(), get())
     }
 }
 

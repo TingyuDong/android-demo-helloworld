@@ -3,7 +3,7 @@ package com.thoughtworks.androidtrain.data.repository
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.Result
 import com.thoughtworks.androidtrain.data.source.local.room.TweetWithSenderAndCommentsAndImages
-import com.thoughtworks.androidtrain.data.source.local.room.TweetsLocalDataSource
+import com.thoughtworks.androidtrain.data.source.local.room.dataSource.TweetsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
 import kotlinx.coroutines.flow.Flow

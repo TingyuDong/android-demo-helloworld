@@ -1,7 +1,7 @@
 package com.thoughtworks.androidtrain.data.repository
 
 import com.thoughtworks.androidtrain.data.model.Sender
-import com.thoughtworks.androidtrain.data.source.local.room.SendersLocalDataSource
+import com.thoughtworks.androidtrain.data.source.local.room.dataSource.SendersLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.entity.SenderPO
 
 interface SendersRepository {
