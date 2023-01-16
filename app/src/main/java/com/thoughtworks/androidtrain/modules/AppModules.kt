@@ -5,11 +5,15 @@ import android.content.Context
 import androidx.room.Room
 import com.google.gson.GsonBuilder
 import com.thoughtworks.androidtrain.TweetApplication
-import com.thoughtworks.androidtrain.tweets.TweetsViewModel
 import com.thoughtworks.androidtrain.data.repository.CommentsRepositoryImpl
 import com.thoughtworks.androidtrain.data.repository.ImagesRepositoryImpl
 import com.thoughtworks.androidtrain.data.repository.SendersRepositoryImpl
 import com.thoughtworks.androidtrain.data.repository.TweetsRepositoryImpl
+import com.thoughtworks.androidtrain.data.repository.CommentsRepository
+import com.thoughtworks.androidtrain.data.repository.ImagesRepository
+import com.thoughtworks.androidtrain.data.repository.SendersRepository
+import com.thoughtworks.androidtrain.data.repository.TweetsRepository
+import com.thoughtworks.androidtrain.tweets.TweetsViewModel
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
 import com.thoughtworks.androidtrain.data.source.local.room.CommentsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.ImagesLocalDataSource
@@ -118,19 +122,19 @@ val dataSourceModules = module {
 }
 
 val repositoryModules = module {
-    single {
+    single<CommentsRepository> {
         CommentsRepositoryImpl(get(), get())
     }
 
-    single {
+    single<ImagesRepository> {
         ImagesRepositoryImpl(get())
     }
 
-    single {
+    single<SendersRepository> {
         SendersRepositoryImpl(get())
     }
 
-    single {
+    single<TweetsRepository> {
         TweetsRepositoryImpl(get(), get())
     }
 }

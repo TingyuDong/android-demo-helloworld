@@ -14,7 +14,7 @@ interface CommentsRepository {
 
 class CommentsRepositoryImpl(
     private val commentDataSource: CommentsLocalDataSource,
-    private val senderRepository: SendersRepositoryImpl
+    private val senderRepository: SendersRepository
 ) : CommentsRepository {
     override fun getCommentsStream(): Flow<List<CommentPO>> {
         return commentDataSource.getCommentStream()
@@ -56,5 +56,4 @@ class CommentsRepositoryImpl(
             sender = senderRepository.getSender(commentPO.senderName) ?: return null
         )
     }
-
 }

@@ -3,12 +3,12 @@ package com.thoughtworks.androidtrain.usecase
 import android.content.SharedPreferences
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.model.Sender
-import com.thoughtworks.androidtrain.data.repository.CommentsRepositoryImpl
+import com.thoughtworks.androidtrain.data.repository.CommentsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 open class AddCommentUseCase(
-    private val commentRepository: CommentsRepositoryImpl,
+    private val commentRepository: CommentsRepository,
     private val ioDispatcher: CoroutineDispatcher,
     private val sharedPreferences: SharedPreferences
 ) {
