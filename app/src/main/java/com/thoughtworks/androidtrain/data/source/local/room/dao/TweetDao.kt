@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.thoughtworks.androidtrain.data.source.local.room.TweetWithSenderAndCommentsAndImages
 import com.thoughtworks.androidtrain.data.source.local.room.entity.TweetPO
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +23,7 @@ interface TweetDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTweet(tweet: TweetPO): Long
 
+    @Transaction
     @Query("SELECT * FROM tweets")
     fun observeTweetsMap(): Flow<List<TweetWithSenderAndCommentsAndImages>>
 }
