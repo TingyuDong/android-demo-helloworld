@@ -1,3 +1,7 @@
+package com.thoughtworks.androidtrain.rule.tweets
+
+import com.thoughtworks.androidtrain.data.Result
+import com.thoughtworks.androidtrain.data.Result.Success
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.rule.DispatchersRule
 import com.thoughtworks.androidtrain.tweets.TweetsViewModel
@@ -5,26 +9,24 @@ import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TweetsViewModelTest {
     private lateinit var tweetsViewModel: TweetsViewModel
 
-    @Mock
     private lateinit var fetchTweetsUseCase: FetchTweetsUseCase
 
-    @Mock
     private lateinit var addCommentUseCase: AddCommentUseCase
 
-    @Mock
     private lateinit var addTweetsUseCase: AddTweetUseCase
 
     @get:Rule
@@ -32,7 +34,10 @@ class TweetsViewModelTest {
 
     @Before
     fun setupViewModel() {
-        MockitoAnnotations.openMocks(this)
+        fetchTweetsUseCase = Mockito.mock(FetchTweetsUseCase::class.java)
+        addCommentUseCase = Mockito.mock(AddCommentUseCase::class.java)
+        addTweetsUseCase = Mockito.mock(AddTweetUseCase::class.java)
+
         tweetsViewModel = TweetsViewModel(
             fetchTweetsUseCase = fetchTweetsUseCase,
             addCommentUseCase = addCommentUseCase,
@@ -41,8 +46,14 @@ class TweetsViewModelTest {
     }
 
     @Test
-    fun loadAllTweetsFromRepository() = runTest {
-        flow<Tweet> {  }.toList()
-
+    fun loadAllTweetsFromRepository_loadingTogglesAndDataLoaded() = runTest {
+        val flow = flow<Result<List<Tweet>>> { emit(Success(emptyList())) }
+        `when`(fetchTweetsUseCase.getTweets()).thenReturn(flow)
+        `when`(fetchTweetsUseCase.refreshTweets()).then {
+            fetchTweetsUseCase.getTweets()
+        }
+        tweetsViewModel.refresh()
+//        fetchTweetsUseCase.getTweets()
+        assertEquals(true, tweetsViewModel.uiState.first().isRefreshing)
     }
 }

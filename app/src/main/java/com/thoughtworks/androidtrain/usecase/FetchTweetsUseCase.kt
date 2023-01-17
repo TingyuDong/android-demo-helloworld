@@ -39,7 +39,7 @@ open class FetchTweetsUseCase(
         }
     }
 
-    suspend fun refreshTweets() {
+    open suspend fun refreshTweets() {
         tweetsRepository.refreshTweets()
     }
 

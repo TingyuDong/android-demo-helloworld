@@ -2,13 +2,12 @@ package com.thoughtworks.androidtrain.rule
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import org.junit.rules.ExternalResource
 
 class DispatchersRule : ExternalResource() {
-    private val testDispatcher = TestCoroutineDispatcher()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun before() {
@@ -18,6 +17,5 @@ class DispatchersRule : ExternalResource() {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun after() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
     }
 }

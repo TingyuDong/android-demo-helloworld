@@ -63,10 +63,6 @@ class TweetsViewModel(
             initialValue = TweetsUiState(tweets = emptyList(), message = null, isRefreshing = true)
         )
 
-    init {
-        refresh()
-    }
-
     fun saveComment(tweetId: Int, commentContent: String) {
         viewModelScope.launch {
             addCommentUseCase.invoke(tweetId, commentContent)

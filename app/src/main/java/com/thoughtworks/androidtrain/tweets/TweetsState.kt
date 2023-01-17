@@ -2,7 +2,10 @@ package com.thoughtworks.androidtrain.tweets
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
@@ -20,6 +23,10 @@ class TweetsState(
     private val viewModel: TweetsViewModel,
     private val context: Context
 ) {
+    init {
+        viewModel.refresh()
+    }
+
     fun saveComment(): (Int, String, MutableState<Boolean>) -> Unit =
         { tweetId: Int,
           commentContent: String,
