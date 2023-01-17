@@ -12,16 +12,21 @@ import com.thoughtworks.androidtrain.data.Result
 import com.thoughtworks.androidtrain.data.Result.Success
 import com.thoughtworks.androidtrain.data.Result.Error
 import com.thoughtworks.androidtrain.data.Result.Loading
+import com.thoughtworks.androidtrain.utils.Async
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.onStart
 
 data class TweetsUiState(
     var tweets: List<Tweet> = emptyList(),
     val message: String? = null,
     val isRefreshing: Boolean = false
 )
+
+private const val ERROR_WHILE_LOADING_TASKS = "Error while loading tasks"
 
 class TweetsViewModel(
     private val fetchTweetsUseCase: FetchTweetsUseCase,
@@ -32,20 +37,25 @@ class TweetsViewModel(
 
     private val _isRefreshing = MutableStateFlow(false)
 
-    private var _tweets = combine(
-        fetchTweetsUseCase.getLocalTweets(), fetchTweetsUseCase.fetchRemoteTweets()
-    ) { tweetsLocalResult, tweetsRemoteResult ->
-        handleResult(tweetsLocalResult, tweetsRemoteResult)
-    }
+    private var _tweetsAsync = fetchTweetsUseCase.getTweets().map {
+        handleResult(it)
+    }.onStart { emit(Async.Loading) }
 
     val uiState: StateFlow<TweetsUiState> = combine(
-        _tweets, _message, _isRefreshing
-    ) { tweets, message, isRefreshing ->
-        TweetsUiState(
-            tweets = tweets,
-            message = message,
-            isRefreshing = isRefreshing
-        )
+        _tweetsAsync, _message, _isRefreshing
+    ) { tweetsAsync, message, isRefreshing ->
+        when (tweetsAsync) {
+            Async.Loading -> {
+                TweetsUiState(isRefreshing = true)
+            }
+            is Async.Success ->{
+                TweetsUiState(
+                    tweets = tweetsAsync.data,
+                    message = message,
+                    isRefreshing = isRefreshing
+                )
+            }
+        }
     }
         .stateIn(
             scope = viewModelScope,
@@ -82,26 +92,14 @@ class TweetsViewModel(
     }
 
     private fun handleResult(
-        tweetsLocalResult: Result<List<Tweet>>,
-        tweetsRemoteResult: Result<List<Tweet>>
-    ): List<Tweet> {
-        return when (tweetsRemoteResult) {
-            Loading -> emptyList()
-            is Success -> tweetsRemoteResult.data
+        tweetsResult: Result<List<Tweet>>
+    ): Async<List<Tweet>> {
+        return when(tweetsResult) {
+            Loading -> Async.Loading
+            is Success -> Async.Success(tweetsResult.data)
             is Error -> {
-                showErrorMessage(tweetsRemoteResult.toString())
-                showLocalTweets(tweetsLocalResult)
-            }
-        }
-    }
-
-    private fun showLocalTweets(tweetsLocalResult: Result<List<Tweet>>): List<Tweet> {
-        return when (tweetsLocalResult) {
-            Loading -> emptyList()
-            is Success -> tweetsLocalResult.data
-            is Error -> {
-                showErrorMessage(tweetsLocalResult.toString())
-                return emptyList()
+                showErrorMessage(ERROR_WHILE_LOADING_TASKS)
+                Async.Success(emptyList())
             }
         }
     }

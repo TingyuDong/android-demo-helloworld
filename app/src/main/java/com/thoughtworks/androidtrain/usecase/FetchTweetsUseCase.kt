@@ -2,6 +2,9 @@ package com.thoughtworks.androidtrain.usecase
 
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.data.Result
+import com.thoughtworks.androidtrain.data.Result.Success
+import com.thoughtworks.androidtrain.data.Result.Error
+import com.thoughtworks.androidtrain.data.Result.Loading
 import com.thoughtworks.androidtrain.data.model.Comment
 import com.thoughtworks.androidtrain.data.repository.ImagesRepository
 import com.thoughtworks.androidtrain.data.repository.SendersRepository
@@ -9,9 +12,7 @@ import com.thoughtworks.androidtrain.data.repository.TweetsRepository
 import com.thoughtworks.androidtrain.data.source.local.room.CommentWithSender
 import com.thoughtworks.androidtrain.data.source.local.room.TweetWithSenderAndCommentsAndImages
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 
 open class FetchTweetsUseCase(
     private val tweetsRepository: TweetsRepository,
@@ -19,14 +20,23 @@ open class FetchTweetsUseCase(
     private val imagesRepository: ImagesRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) {
-    open fun fetchRemoteTweets(): Flow<Result<List<Tweet>>> {
+    private fun fetchRemoteTweets(): Flow<Result<List<Tweet>>> {
         return tweetsRepository.getRemoteTweetsStream()
     }
 
-    open fun getLocalTweets(): Flow<Result<List<Tweet>>> {
+    private fun getLocalTweets(): Flow<List<Tweet>> {
         return tweetsRepository.getLocalTweetsStream().map { tweetMapList ->
-            Result.Success(transformToTweetList(tweetMapList))
-        }.flowOn(ioDispatcher)
+            transformToTweetList(tweetMapList)
+        }
+            .flowOn(ioDispatcher)
+    }
+
+    open fun getTweets(): Flow<Result<List<Tweet>>> {
+        return combine(
+            fetchRemoteTweets(), getLocalTweets()
+        ) { tweetsLocalResult, tweetsRemoteResult ->
+            handleResult(tweetsRemoteResult, tweetsLocalResult)
+        }
     }
 
     suspend fun refreshTweets() {
@@ -62,5 +72,18 @@ open class FetchTweetsUseCase(
             content = commentWithSender.commentPO.content,
             sender = sendersRepository.transformToSender(commentWithSender.senderPO) ?: return null
         )
+    }
+
+    private fun handleResult(
+        tweetsLocalResult: List<Tweet>,
+        tweetsRemoteResult: Result<List<Tweet>>
+    ): Result<List<Tweet>> {
+        return when (tweetsRemoteResult) {
+            Loading -> Loading
+            is Success -> Success(tweetsRemoteResult.data)
+            is Error -> {
+                Success(tweetsLocalResult)
+            }
+        }
     }
 }
