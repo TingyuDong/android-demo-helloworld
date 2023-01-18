@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "comments")
+@Entity(tableName = "comment")
 data class CommentPO(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
