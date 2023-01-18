@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TweetDao {
     @Transaction
-    @Query("SELECT * FROM tweets")
+    @Query("SELECT * FROM tweet")
     fun observeTweets(): Flow<List<TweetWithSenderAndCommentsAndImages>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
