@@ -37,7 +37,7 @@ class TweetsViewModel(
 
     private val _isRefreshing = MutableStateFlow(false)
 
-    private var _tweetsAsync = fetchTweetsUseCase.getTweets()
+    private var _tweetsAsync = fetchTweetsUseCase.invoke()
         .map { handleResult(it) }
         .onStart { emit(Async.Loading) }
 

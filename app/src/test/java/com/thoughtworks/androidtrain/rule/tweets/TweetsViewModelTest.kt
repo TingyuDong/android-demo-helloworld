@@ -47,12 +47,15 @@ class TweetsViewModelTest {
 
     @Test
     fun loadAllTweetsFromRepository_loadingAndDataLoaded() = runTest {
+        //Given
         val flow = flowOf<Result<List<Tweet>>>(Success(emptyList()))
-        `when`(fetchTweetsUseCase.getTweets()).thenReturn(flow)
+        `when`(fetchTweetsUseCase.invoke()).thenReturn(flow)
         `when`(fetchTweetsUseCase.refreshTweets()).then {
-            fetchTweetsUseCase.getTweets()
+            fetchTweetsUseCase.invoke()
         }
+        //When
         tweetsViewModel.refresh()
+        //Then
         tweetsViewModel.uiState.test {
             assertEquals(true, awaitItem().isRefreshing)
         }

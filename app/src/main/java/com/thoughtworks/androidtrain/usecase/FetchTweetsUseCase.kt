@@ -31,7 +31,7 @@ open class FetchTweetsUseCase(
             .flowOn(ioDispatcher)
     }
 
-    open fun getTweets(): Flow<Result<List<Tweet>>> {
+    open operator fun invoke(): Flow<Result<List<Tweet>>> {
         return combine(
             fetchRemoteTweets(), getLocalTweets()
         ) { tweetsLocalResult, tweetsRemoteResult ->
