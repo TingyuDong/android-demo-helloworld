@@ -37,9 +37,9 @@ class TweetsViewModel(
 
     private val _isRefreshing = MutableStateFlow(false)
 
-    private var _tweetsAsync = fetchTweetsUseCase.getTweets().map {
-        handleResult(it)
-    }.onStart { emit(Async.Loading) }
+    private var _tweetsAsync = fetchTweetsUseCase.getTweets()
+        .map { handleResult(it) }
+        .onStart { emit(Async.Loading) }
 
     val uiState: StateFlow<TweetsUiState> = combine(
         _tweetsAsync, _message, _isRefreshing
@@ -48,7 +48,7 @@ class TweetsViewModel(
             Async.Loading -> {
                 TweetsUiState(isRefreshing = true)
             }
-            is Async.Success ->{
+            is Async.Success -> {
                 TweetsUiState(
                     tweets = tweetsAsync.data,
                     message = message,
@@ -90,7 +90,7 @@ class TweetsViewModel(
     private fun handleResult(
         tweetsResult: Result<List<Tweet>>
     ): Async<List<Tweet>> {
-        return when(tweetsResult) {
+        return when (tweetsResult) {
             Loading -> Async.Loading
             is Success -> Async.Success(tweetsResult.data)
             is Error -> {
