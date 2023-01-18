@@ -1,5 +1,6 @@
 package com.thoughtworks.androidtrain.rule.tweets
 
+import app.cash.turbine.test
 import com.thoughtworks.androidtrain.data.Result
 import com.thoughtworks.androidtrain.data.Result.Success
 import com.thoughtworks.androidtrain.data.model.Tweet
@@ -9,8 +10,7 @@ import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -46,14 +46,18 @@ class TweetsViewModelTest {
     }
 
     @Test
-    fun loadAllTweetsFromRepository_loadingTogglesAndDataLoaded() = runTest {
-        val flow = flow<Result<List<Tweet>>> { emit(Success(emptyList())) }
+    fun loadAllTweetsFromRepository_loadingAndDataLoaded() = runTest {
+        val flow = flowOf<Result<List<Tweet>>>(Success(emptyList()))
         `when`(fetchTweetsUseCase.getTweets()).thenReturn(flow)
         `when`(fetchTweetsUseCase.refreshTweets()).then {
             fetchTweetsUseCase.getTweets()
         }
         tweetsViewModel.refresh()
+        tweetsViewModel.uiState.test {
+            assertEquals(true, awaitItem().isRefreshing)
+        }
 //        fetchTweetsUseCase.getTweets()
-        assertEquals(true, tweetsViewModel.uiState.first().isRefreshing)
     }
+
+
 }
