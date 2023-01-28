@@ -11,6 +11,7 @@ import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -59,7 +60,7 @@ class TweetsViewModelTest {
         tweetsViewModel.uiState.test {
             assertEquals(true, awaitItem().isRefreshing)
         }
-//        fetchTweetsUseCase.getTweets()
+        advanceUntilIdle()
     }
 
 
