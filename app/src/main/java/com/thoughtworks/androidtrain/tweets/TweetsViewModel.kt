@@ -95,7 +95,7 @@ class TweetsViewModel(
         }
     }
 
-    private fun showErrorMessage(message: String) {
+    fun showErrorMessage(message: String) {
         _message.value = message
     }
 }

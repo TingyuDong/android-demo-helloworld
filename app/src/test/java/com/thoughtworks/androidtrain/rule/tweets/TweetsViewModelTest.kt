@@ -107,13 +107,24 @@ class TweetsViewModelTest {
         tweetsViewModel.refresh()
 
         //Then
-
         tweetsViewModel.uiState.test {
             assertEquals(false, awaitItem().isRefreshing)
         }
         tweetsViewModel.uiState.test {
             assertEquals(emptyList<Tweet>(), awaitItem().tweets)
         }
+        tweetsViewModel.uiState.test {
+            assertEquals(ERROR_WHILE_LOADING_TASKS, awaitItem().message)
+        }
+    }
+
+    @Test
+    fun showErrorMessages() = runTest {
+        //Given
+        //When
+        tweetsViewModel.showErrorMessage(ERROR_WHILE_LOADING_TASKS)
+
+        //Then
         tweetsViewModel.uiState.test {
             assertEquals(ERROR_WHILE_LOADING_TASKS, awaitItem().message)
         }
