@@ -93,5 +93,16 @@ class TweetsViewModelTest {
         }
     }
 
+    @Test
+    fun loadTweetsError() = runTest {
+        //Given
+        `when`(fetchTweetsUseCase.refreshTweets()).then {
+            flow.update {
+                Error(Exception())
+            }
+        }
+
+        //When
+        tweetsViewModel.refresh()
 
 }
