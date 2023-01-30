@@ -7,7 +7,7 @@ import org.junit.rules.ExternalResource
 
 class DispatchersRule : ExternalResource() {
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val testDispatcher = StandardTestDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun before() {

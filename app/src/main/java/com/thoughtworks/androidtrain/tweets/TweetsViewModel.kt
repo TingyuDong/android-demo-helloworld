@@ -6,19 +6,14 @@ import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
-import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
 import kotlinx.coroutines.launch
 import com.thoughtworks.androidtrain.data.Result
 import com.thoughtworks.androidtrain.data.Result.Success
 import com.thoughtworks.androidtrain.data.Result.Error
 import com.thoughtworks.androidtrain.data.Result.Loading
 import com.thoughtworks.androidtrain.utils.Async
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.onStart
+import com.thoughtworks.androidtrain.utils.WhileUiSubscribed
+import kotlinx.coroutines.flow.*
 
 data class TweetsUiState(
     var tweets: List<Tweet> = emptyList(),
@@ -58,8 +53,8 @@ class TweetsViewModel(
         }
     }
         .stateIn(
-            scope = viewModelScope,
-            started = Lazily,
+            scope = viewModelScope ,
+            started = WhileUiSubscribed,
             initialValue = TweetsUiState(tweets = emptyList(), message = null, isRefreshing = true)
         )
 
