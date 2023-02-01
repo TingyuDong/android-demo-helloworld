@@ -37,12 +37,7 @@ class TweetsViewModelTest {
 
     private lateinit var addTweetsUseCase: AddTweetUseCase
 
-    private val flow = MutableStateFlow<Result<List<Tweet>>>(Success(
-        listOf(
-            Tweet(0, "hello", null, null, null, null, null),
-            Tweet(0, "hello", null, null, null, null, null)
-        )
-    ))
+    private val flow = MutableStateFlow<Result<List<Tweet>>>(Success(emptyList()))
 
     @get:Rule
     val dispatchersRule = DispatchersRule()
