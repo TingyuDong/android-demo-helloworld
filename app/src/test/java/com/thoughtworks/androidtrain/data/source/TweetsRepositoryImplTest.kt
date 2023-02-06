@@ -29,16 +29,35 @@ class TweetsRepositoryImplTest {
     private val remoteTweet2 = Tweet(1, "hello2", null, null, null, null, null)
     private val newRemoteTweet = Tweet(2, "I'm new tweet", null, null, null, null, null)
 
-    //private val tweet3 = Tweet(2, "hello2", null, null, null, null, null)
     private val localTweet1 = TweetWithSenderAndCommentsAndImages(
-        tweetPO = TweetPO(id = 0, content = "hello3", senderName = "Aiolia", error = null, unknownError = null),
-        senderPO = SenderPO(userName = "Aiolia", nick = "Aio", avatar = "https://developer.android.com/avatar/0231.jpg"),
+        tweetPO = TweetPO(
+            id = 0,
+            content = "hello3",
+            senderName = "Aiolia",
+            error = null,
+            unknownError = null
+        ),
+        senderPO = SenderPO(
+            userName = "Aiolia",
+            nick = "Aio",
+            avatar = "https://developer.android.com/avatar/0231.jpg"
+        ),
         commentPOList = null,
         imagePOList = null
     )
     private val newLocalTweet = TweetWithSenderAndCommentsAndImages(
-        tweetPO = TweetPO(id = 1, content = "I'm new tweet", senderName = "Aiolia", error = null, unknownError = null),
-        senderPO = SenderPO(userName = "Aiolia", nick = "Aio", avatar = "https://developer.android.com/avatar/0231.jpg"),
+        tweetPO = TweetPO(
+            id = 1,
+            content = "I'm new tweet",
+            senderName = "Aiolia",
+            error = null,
+            unknownError = null
+        ),
+        senderPO = SenderPO(
+            userName = "Aiolia",
+            nick = "Aio",
+            avatar = "https://developer.android.com/avatar/0231.jpg"
+        ),
         commentPOList = null,
         imagePOList = null
     )
@@ -47,14 +66,15 @@ class TweetsRepositoryImplTest {
     private val localTweets = listOf(localTweet1).sortedBy { it.tweetPO.id }
     private val newRemoteTweets = listOf(newRemoteTweet).sortedBy { it.id }
     private val newLocalTweets = listOf(localTweet1, newLocalTweet).sortedBy { it.tweetPO.id }
-    private lateinit var tweetsRemoteDataSource: TweetsRemoteDataSource
-    private lateinit var tweetsLocalDataSource: TweetsLocalDataSource
     private var remoteTweetsStream: MutableStateFlow<Result<List<Tweet>>> =
         MutableStateFlow(Result.Loading)
     private var _localTweetsStream: MutableStateFlow<List<TweetWithSenderAndCommentsAndImages>> =
         MutableStateFlow(localTweets)
     private var localTweetsStream: Flow<List<TweetWithSenderAndCommentsAndImages>> =
         _localTweetsStream
+
+    private lateinit var tweetsRemoteDataSource: TweetsRemoteDataSource
+    private lateinit var tweetsLocalDataSource: TweetsLocalDataSource
 
     private lateinit var tweetsRepository: TweetsRepository
 
@@ -64,6 +84,7 @@ class TweetsRepositoryImplTest {
     @Before
     fun createRepository() {
         tweetsRemoteDataSource = Mockito.mock(TweetsRemoteDataSource::class.java)
+
         tweetsLocalDataSource = Mockito.mock(TweetsLocalDataSource::class.java)
 
         tweetsRepository = TweetsRepositoryImpl(tweetsRemoteDataSource, tweetsLocalDataSource)
