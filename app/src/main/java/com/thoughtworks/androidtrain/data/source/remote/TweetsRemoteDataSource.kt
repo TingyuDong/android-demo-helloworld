@@ -12,17 +12,23 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class TweetsRemoteDataSource(
+interface TweetsRemoteDataSource {
+    fun getTweetsStream(): Flow<Result<List<Tweet>>>
+    suspend fun getTweets()
+    suspend fun refreshTweets()
+}
+
+open class TweetsRemoteDataSourceImpl(
     private val tweetsApiImpl: TweetsApiHelperImpl,
     private val ioDispatcher: CoroutineDispatcher
-) {
+) : TweetsRemoteDataSource {
     private var observableTweets = MutableStateFlow<Result<List<Tweet>>>(Loading)
 
-    fun getTweetsStream(): Flow<Result<List<Tweet>>> {
+    override fun getTweetsStream(): Flow<Result<List<Tweet>>> {
         return observableTweets
     }
 
-    private suspend fun getTweets() {
+    override suspend fun getTweets() {
         tweetsApiImpl.getTweets()
             .flowOn(ioDispatcher)
             .catch { e ->
@@ -32,7 +38,7 @@ class TweetsRemoteDataSource(
             }
     }
 
-    suspend fun refreshTweets() {
+    override suspend fun refreshTweets() {
         getTweets()
     }
 }

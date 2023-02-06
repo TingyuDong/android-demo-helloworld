@@ -21,6 +21,7 @@ import com.thoughtworks.androidtrain.data.source.local.room.dataSource.ImagesLoc
 import com.thoughtworks.androidtrain.data.source.local.room.dataSource.SendersLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.dataSource.TweetsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSource
+import com.thoughtworks.androidtrain.data.source.remote.TweetsRemoteDataSourceImpl
 import com.thoughtworks.androidtrain.service.TweetService
 import com.thoughtworks.androidtrain.service.TweetsApiHelperImpl
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
@@ -113,8 +114,8 @@ val remoteDataSourceModules = module {
         apiHelperModules,
     )
 
-    single {
-        TweetsRemoteDataSource(get(), get())
+    single<TweetsRemoteDataSource> {
+        TweetsRemoteDataSourceImpl(get(), get())
     }
 }
 
