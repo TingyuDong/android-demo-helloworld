@@ -15,6 +15,7 @@ import com.thoughtworks.androidtrain.data.repository.SendersRepository
 import com.thoughtworks.androidtrain.data.repository.TweetsRepository
 import com.thoughtworks.androidtrain.tweets.TweetsViewModel
 import com.thoughtworks.androidtrain.data.source.local.room.AppDatabase
+import com.thoughtworks.androidtrain.data.source.local.room.dataSource.TweetsLocalDataSourceImpl
 import com.thoughtworks.androidtrain.data.source.local.room.dataSource.CommentsLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.dataSource.ImagesLocalDataSource
 import com.thoughtworks.androidtrain.data.source.local.room.dataSource.SendersLocalDataSource
@@ -101,8 +102,8 @@ val localDataModules = module {
         SendersLocalDataSource(get())
     }
 
-    single {
-        TweetsLocalDataSource(get())
+    single<TweetsLocalDataSource> {
+        TweetsLocalDataSourceImpl(get())
     }
 }
 
