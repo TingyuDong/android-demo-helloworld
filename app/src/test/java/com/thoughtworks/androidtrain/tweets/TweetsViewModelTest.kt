@@ -1,4 +1,4 @@
-package com.thoughtworks.androidtrain.rule.tweets
+package com.thoughtworks.androidtrain.tweets
 
 import app.cash.turbine.test
 import com.thoughtworks.androidtrain.data.Result
@@ -6,7 +6,6 @@ import com.thoughtworks.androidtrain.data.Result.Success
 import com.thoughtworks.androidtrain.data.Result.Error
 import com.thoughtworks.androidtrain.data.model.Tweet
 import com.thoughtworks.androidtrain.rule.DispatchersRule
-import com.thoughtworks.androidtrain.tweets.TweetsViewModel
 import com.thoughtworks.androidtrain.usecase.AddCommentUseCase
 import com.thoughtworks.androidtrain.usecase.AddTweetUseCase
 import com.thoughtworks.androidtrain.usecase.FetchTweetsUseCase
